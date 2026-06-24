@@ -17,10 +17,10 @@ const Marquee = ({ slice }) => {
           field={slice.primary.heading}
           components={{
             strong: ({ children }) => (
-              <strong className="font-mono font-medium text-white not-italic">
-                <div className="bg-linear-to-b from-[#FF6A50] to-[#40D9FA] inline p-1">
-                  {children}
-                </div>
+              <strong className="font-mono p-1  font-medium text-white not-italic">
+                <span className="bg-linear-to-b from-[#FF6A50] to-[#40D9FA] inline bg-black p-px">
+                  <span className="bg-black ">{children}</span>
+                </span>
               </strong>
             ),
           }}

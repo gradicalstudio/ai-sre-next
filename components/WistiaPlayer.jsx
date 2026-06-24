@@ -9,7 +9,6 @@ const getWistiaId = (url) => {
   return match?.[1] ?? null;
 };
 
-// Detect iOS Safari once at module level
 const isIOS =
   typeof navigator !== "undefined" &&
   /iPad|iPhone|iPod/.test(navigator.userAgent) &&
@@ -23,15 +22,12 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
   const videoId = getWistiaId(wistiaUrl);
 
-  // iOS-only: explicitly drive play + manual loop since iOS ignores autoPlay
-  // and loop can silently fail on playsInline videos
   useEffect(() => {
     if (!isIOS) return;
 
     const video = previewVideoRef.current;
     if (!video) return;
 
-    // Set imperatively — iOS respects these more reliably than JSX attrs
     video.muted = true;
     video.playsInline = true;
 
@@ -45,7 +41,6 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       video.addEventListener("canplay", tryPlay, { once: true });
     }
 
-    // Manual loop fallback for iOS
     const handleEnded = () => {
       video.currentTime = 0;
       video.play().catch(() => {});
@@ -84,29 +79,34 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
     if (!interactive) player.setAttribute("aria-hidden", "true");
   };
 
+  // Shared resume logic — called from both fullscreenchange and
+  // webkitendfullscreen so either path reliably restores the preview
+  const resumePreview = () => {
+    const player = playerRef.current;
+    const previewVideo = previewVideoRef.current;
+
+    setPlayerInteractive(false);
+
+    player?.pause?.();
+    if (player) {
+      player.muted = true;
+      player.currentTime = 0;
+    }
+
+    hasEnteredFullscreen.current = false;
+
+    if (isIOS && previewVideo) {
+      previewVideo.muted = true;
+      previewVideo.play().catch(() => {});
+    } else {
+      previewVideo?.play?.().catch(() => {});
+    }
+  };
+
   useEffect(() => {
     const handleFullscreenChange = () => {
-      const player = playerRef.current;
-      const previewVideo = previewVideoRef.current;
-
       if (!document.fullscreenElement) {
-        setPlayerInteractive(false);
-
-        player?.pause?.();
-        if (player) {
-          player.muted = true;
-          player.currentTime = 0;
-        }
-
-        hasEnteredFullscreen.current = false;
-
-        if (isIOS && previewVideo) {
-          // iOS needs an explicit muted + play() call to resume preview
-          previewVideo.muted = true;
-          previewVideo.play().catch(() => {});
-        } else {
-          previewVideo?.play?.().catch(() => {});
-        }
+        resumePreview();
       } else {
         setPlayerInteractive(true);
       }
@@ -117,7 +117,10 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
-      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
+      document.removeEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange,
+      );
     };
   }, []);
 
@@ -138,11 +141,19 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       } else if (player.webkitRequestFullscreen) {
         await player.webkitRequestFullscreen();
       } else {
+        // iOS Safari path
         const innerVideo =
           player.shadowRoot?.querySelector("video") ??
           player.querySelector?.("video");
         if (innerVideo?.webkitEnterFullscreen) {
           setPlayerInteractive(true);
+
+          // webkitendfullscreen fires on the inner <video> element directly
+          // on iOS — more reliable than document fullscreenchange for this path
+          innerVideo.addEventListener("webkitendfullscreen", resumePreview, {
+            once: true,
+          });
+
           innerVideo.webkitEnterFullscreen();
         }
       }
@@ -217,7 +228,13 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
           <div className="flex items-center gap-3 text-white tracking-wide text-sm font-medium drop-shadow-md">
             <span>Watch Event Recap</span>
             <div className="bg-[#3ED4F5] rounded-full p-2.5 shadow-lg shadow-[#3ED4F5]/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="ml-0.5">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                className="ml-0.5"
+              >
                 <path d="M3 2L10 6L3 10V2Z" fill="#04050F" />
               </svg>
             </div>
