@@ -40,12 +40,12 @@ const ImageCarousel = ({ slice }) => {
       >
         <div className="flex">
           {slice.primary.carousel_image.map((item, index) => (
-            <div key={index} className="flex-none  w-[80%] md:w-[30%] xl:w-[23%] pr-4">
-              <div className="relative h-50 md:h-55 xl:h-100">
+            <div key={index} className="flex-none  w-[50%] md:w-[30%] xl:w-[23%] pr-4">
+              <div className="relative bg-[#222433] h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100">
                 <PrismicNextImage
                   field={item.image}
                   fill
-                  className="object-contain object-top"
+                  className="object-cover object-center"
                 />
               </div>
             </div>
