@@ -137,7 +137,7 @@ const Events = ({ slice }) => {
                   displayedEvents.map((item, index) => (
                     <div
                       key={index}
-                      className="flex  items-center gap-4 p-2 border border-[#FF6A50] lg:border-[#04050F] lg:hover:border-[#FF6A50] transition-colors"
+                      className="flex  items-center gap-4 p-4 md:p-2 border border-[#FF6A50] lg:border-[#04050F] lg:hover:border-[#FF6A50] transition-colors"
                     >
                       {/* Icon */}
                       <div className="hidden lg:block lg:w-30 xl:w-40 h-auto shrink-0  overflow-hidden bg-white/5">
