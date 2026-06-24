@@ -6,17 +6,9 @@ const getWistiaId = (url) => {
   const match = url?.match(
     /(?:wistia\.com\/(?:medias|s)\/|wistia\.net\/medias\/)([a-zA-Z0-9]+)/,
   );
-
   return match?.[1] ?? null;
 };
 
-/**
- * Renders a muted, looping <video> preview (your own mp4) layered with a
- * custom hover overlay. The real <wistia-player> is pre-mounted but kept
- * fully hidden/inert until the user clicks — at which point we unmute,
- * play, and request fullscreen on it. Because the Wistia player is never
- * visible at rest, its native hover controls never have a chance to show.
- */
 const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
   const scriptLoaded = useRef(false);
   const playerRef = useRef(null);
@@ -25,11 +17,8 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
   const videoId = getWistiaId(wistiaUrl);
 
-  // Load wistia scripts immediately so the player is fully upgraded and
-  // ready to go the instant the user clicks (no load delay at click time).
   useEffect(() => {
     if (!videoId || scriptLoaded.current) return;
-
     scriptLoaded.current = true;
 
     const script1 = document.createElement("script");
@@ -51,9 +40,6 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       const previewVideo = previewVideoRef.current;
 
       if (!document.fullscreenElement) {
-        // User exited fullscreen (Esc, swipe, browser chrome, or our own
-        // double-click handler) — reset Wistia player back to its
-        // hidden/inert resting state and resume the preview loop.
         player?.pause?.();
 
         if (player) {
@@ -62,17 +48,17 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         }
 
         hasEnteredFullscreen.current = false;
-
-        previewVideo?.play?.().catch(() => {
-          // Autoplay can occasionally be blocked on resume; not critical.
-        });
+        previewVideo?.play?.().catch(() => {});
       }
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
+    // iOS Safari fires this event instead
+    document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
+      document.removeEventListener("webkitfullscreenchange", handleFullscreenChange);
     };
   }, []);
 
@@ -85,18 +71,28 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
     try {
       previewVideo?.pause?.();
-
-      player.muted = false;
+      player.currentTime = 0;
       hasEnteredFullscreen.current = true;
-      player.currentTime = 0; // always restart the recap from the beginning
 
-      await player.requestFullscreen?.();
+      // 1. Enter fullscreen first
+      if (player.requestFullscreen) {
+        await player.requestFullscreen();
+      } else if (player.webkitRequestFullscreen) {
+        // Safari desktop fallback
+        await player.webkitRequestFullscreen();
+      } else {
+        // iOS Safari: try to reach the underlying <video> element
+        const innerVideo = player.shadowRoot?.querySelector("video") ?? player.querySelector?.("video");
+        if (innerVideo?.webkitEnterFullscreen) {
+          innerVideo.webkitEnterFullscreen();
+        }
+      }
+
+      // 2. Unmute and play after fullscreen is established
+      player.muted = false;
       await player.play?.();
     } catch (error) {
       console.error("Wistia fullscreen error:", error);
-
-      // If fullscreen/play failed, go back to showing the preview rather
-      // than leaving the user looking at a frozen hidden element.
       previewVideo?.play?.().catch(() => {});
     }
   };
@@ -116,8 +112,6 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       onDoubleClick={handleDoubleClick}
       style={{ aspectRatio: "16/9" }}
     >
-      {/* Preview layer: plain, inert video — no Wistia UI can ever attach
-          to this, so hover is 100% controlled by us. */}
       <video
         ref={previewVideoRef}
         src={previewSrc}
@@ -135,38 +129,42 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         }}
       />
 
-      {/* Wistia player: pre-mounted so it's fully upgraded and ready, but
-          fully hidden and non-interactive until fullscreen is requested
-          on click. Sits behind the preview and is never shown at rest. */}
+      {/* Moved off-screen instead of opacity:0 so Wistia can mount its UI,
+          but still invisible and non-interactive to the user */}
       <wistia-player
         ref={playerRef}
         media-id={videoId}
         muted
-        controls-visible-on-load="false"
+        // Removed controls-visible-on-load="false" — let Wistia manage this
         seo="false"
         aria-hidden="true"
         style={{
           position: "absolute",
-          inset: 0,
+          top: "-9999px",
+          left: "-9999px",
           width: "100%",
           height: "100%",
-          opacity: 0,
           pointerEvents: "none",
           zIndex: -1,
         }}
       />
 
-      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-        <div className="flex items-center gap-2 text-white tracking-wide text-sm">
-          <span>Watch Event Recap</span>
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+  
+  <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-linear-to-t from-[#FF6A50]/50 from-0% to-transparent to-100%" />
 
-          <div className="bg-[#3ED4F5] rounded-full p-2">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M3 2L10 6L3 10V2Z" fill="#04050F" />
-            </svg>
-          </div>
-        </div>
+  <div className="absolute inset-0 flex items-center justify-center">
+    <div className="flex items-center gap-3 text-white tracking-wide text-sm font-medium drop-shadow-md">
+      <span>Watch Event Recap</span>
+      <div className="bg-[#3ED4F5] rounded-full p-2.5 shadow-lg shadow-[#3ED4F5]/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="ml-0.5">
+          <path d="M3 2L10 6L3 10V2Z" fill="#04050F" />
+        </svg>
       </div>
+    </div>
+  </div>
+
+</div>
     </div>
   );
 };

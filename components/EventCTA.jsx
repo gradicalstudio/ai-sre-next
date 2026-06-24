@@ -28,17 +28,17 @@ const EventCTA = ({
 }) => {
   return (
     <div
-      className={`group bg-[#FF6A50] lg:bg-[#04050F] w-fit transition-all duration-350  lg:hover:bg-[#FF6A50] inline-flex  md:w-fit cursor-pointer items-center  rounded-sm px-2 py-0.5 lg:px-3 lg:py-[6.5px]${outerClassName} `}
+      className={`group bg-[#FF6A50] lg:bg-[#04050F] w-fit transition-all duration-350  lg:hover:bg-[#FF6A50] inline-flex  md:w-fit cursor-pointer items-center  rounded-xs px-2 py-0.5 lg:px-3 lg:py-[6.5px]${outerClassName} `}
     >
       <PrismicNextLink
         field={link}
         className={`text-white  w-fit md:w-fit rounded-full pl-2.5 pr-1.5 py-0.5 lg:pl-4 lg:pr-2.5 lg:py-2 flex items-center  bg-[#04050F] ${prismicLinkClassName}`}
       >
         <div
-          className={`flex items-center justify-center text-xs md:text-base  gap-1 md:gap-2 w-full ${innerClassName}`}
+          className={`flex items-center justify-center text-xs md:text-sm lg:text-base  gap-1 md:gap-2 w-full ${innerClassName}`}
         >
           <span>{link.text}</span>
-          <ArrowIcon className={`size-3.5 md:size-5 ${arrowClassName}`} />
+          <ArrowIcon className={`size-3.5 md:size-4 lg:size-5 ${arrowClassName}`} />
         </div>
       </PrismicNextLink>
     </div>

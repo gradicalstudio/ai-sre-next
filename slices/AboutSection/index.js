@@ -32,9 +32,9 @@ const AboutSection = ({ slice }) => {
               >
                 <div>
                   {/* Line */}
-                  {i !== 0 && (
+                  {/* {i !== 0 && (
                     <div className="sm:hidden w-full h-px my-5 bg-[#A2A2A2]" />
-                  )}
+                  )} */}
 
                   <div className="mb-4 md:mb-6 lg:mb-7.5 2xl:mb-9.5 h-auto w-20 md:w-20 lg:w-25 xl:w-30 ">
                     <PrismicNextImage field={item.icon} className="" />
