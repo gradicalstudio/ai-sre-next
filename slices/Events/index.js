@@ -72,7 +72,7 @@ const Events = ({ slice }) => {
                 </div>
 
                 {/* Tab bar */}
-                <div className="flex flex-col lg:flex-row w-full md:items-center justify-between gap-6 ">
+                <div className="flex flex-col md:flex-row w-full md:items-center justify-between gap-6 ">
                   {activeTab === "upcoming" ? (
                     <div className="text-white text-sm  lg:text-lg xl:text-xl font-medium">
                       <PrismicRichText
@@ -137,7 +137,7 @@ const Events = ({ slice }) => {
                   displayedEvents.map((item, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-4 p-2 border border-[#04050F] hover:border-red-500 transition-colors"
+                      className="flex  items-center gap-4 p-2 border border-[#FF6A50] lg:border-[#04050F] lg:hover:border-[#FF6A50] transition-colors"
                     >
                       {/* Icon */}
                       <div className="hidden lg:block lg:w-30 xl:w-40 h-auto shrink-0  overflow-hidden bg-white/5">
@@ -148,20 +148,27 @@ const Events = ({ slice }) => {
                       </div>
 
                       {/* Meta */}
-                      <div className="flex flex-col flex-1 min-w-0">
-                        <span className="text-white/50 text-[10px] lg:text-sm xl:text-base mb-1 font-mono font-normal tracking-wide">
+                      <div className="flex flex-col  flex-1 min-w-0">
+                        <span className="text-white/50 text-xs lg:text-sm xl:text-base mb-1 font-mono font-normal tracking-wide">
                           <PrismicRichText field={item.location} />
                         </span>
-                        <span className="text-white font-medium text-xs lg:text-xl xl:text-2xl  leading-tight">
+                        <span className="text-white font-medium text-sm lg:text-xl xl:text-2xl  leading-tight">
                           <PrismicRichText field={item.title} />
                         </span>
                         <span className="text-white/50  text-[10px] lg:text-base xl:text-lg mt-0.5">
                           <PrismicRichText field={item.date} />
                         </span>
+                        <div className="md:hidden mt-3 ">
+                          {item.cta_button && (
+                            <EventCTA innerClassName="text-sm!" link={item.cta_button} />
+                          )}
+                        </div>
                       </div>
 
                       {/* CTA */}
-                      {item.cta_button && <EventCTA link={item.cta_button} />}
+                      <div className="hidden md:block">
+                        {item.cta_button && <EventCTA link={item.cta_button} />}
+                      </div>
                     </div>
                   ))
                 )}
