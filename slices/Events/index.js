@@ -74,13 +74,13 @@ const Events = ({ slice }) => {
                 {/* Tab bar */}
                 <div className="flex flex-col md:flex-row w-full md:items-center justify-between gap-6 ">
                   {activeTab === "upcoming" ? (
-                    <div className="text-white text-sm  lg:text-lg xl:text-xl font-medium">
+                    <div className="text-white text-xl  lg:text-lg xl:text-xl font-medium">
                       <PrismicRichText
                         field={slice.primary.upcomingeventsheading}
                       />
                     </div>
                   ) : (
-                    <div className="text-white text-sm lg:text-lg xl:text-xl font-medium">
+                    <div className="text-white text-xl lg:text-lg xl:text-xl font-medium">
                       <PrismicRichText
                         field={slice.primary.pasteventsheading}
                       />
@@ -149,13 +149,13 @@ const Events = ({ slice }) => {
 
                       {/* Meta */}
                       <div className="flex flex-col  flex-1 min-w-0">
-                        <span className="text-white/50 text-xs lg:text-sm xl:text-base mb-1 font-mono font-normal tracking-wide">
+                        <span className="text-white/50 text-base lg:text-sm xl:text-base mb-1 font-mono font-normal tracking-wide">
                           <PrismicRichText field={item.location} />
                         </span>
-                        <span className="text-white font-medium text-sm lg:text-xl xl:text-2xl  leading-tight">
+                        <span className="text-white font-medium text-xl lg:text-xl xl:text-2xl  leading-tight">
                           <PrismicRichText field={item.title} />
                         </span>
-                        <span className="text-white/50  text-[10px] lg:text-base xl:text-lg mt-0.5">
+                        <span className="text-white/50  text-sm lg:text-base xl:text-lg mt-0.5">
                           <PrismicRichText field={item.date} />
                         </span>
                         <div className="md:hidden mt-3 ">

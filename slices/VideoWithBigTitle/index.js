@@ -23,7 +23,7 @@ const VideoWithBigTitle = ({ slice }) => {
           </div>
           <div className="mb-5 md:mb-7 lg:mb-0">
             <img
-              className="w-12 md:w-25 lg:w-30 xl:w-35 h-auto"
+              className="w-20 md:w-25 lg:w-30 xl:w-35 h-auto"
               src="./devOps.png"
             />
           </div>
