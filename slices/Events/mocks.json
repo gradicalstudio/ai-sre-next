@@ -1,0 +1,140 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"main_heading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Minim minim reprehenderit tempor id ad consectetur quis Lorem id elit. Sint sit ipsum nulla ea id sint deserunt anim est aute aliquip. Anim pariatur labore fugiat irure in ullamco laboris ut ex tempor officia aute fugiat."
+						}
+					}
+				]
+			},
+			"upcomingeventsheading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Officia ipsum excepteur tempor qui quis cupidatat nulla irure. Ex anim ad magna. Enim sit est dolor commodo anim nostrud eu sunt aliquip dolor commodo enim."
+						}
+					}
+				]
+			},
+			"pasteventsheading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Sint culpa aliquip in laboris amet dolore. Quis nisi mollit deserunt sit ex eu magna sit ad ex ea deserunt ut magna."
+						}
+					}
+				]
+			},
+			"events": {
+				"__TYPE__": "GroupContentType",
+				"value": [
+					{
+						"__TYPE__": "GroupItemContent",
+						"value": [
+							[
+								"icon",
+								{
+									"origin": {
+										"id": "main",
+										"url": "https://images.unsplash.com/photo-1589321599763-d66926c29613",
+										"width": 3168,
+										"height": 4752
+									},
+									"url": "https://images.unsplash.com/photo-1589321599763-d66926c29613",
+									"width": 3168,
+									"height": 4752,
+									"edit": {
+										"zoom": 1,
+										"crop": {
+											"x": 0,
+											"y": 0
+										},
+										"background": "transparent"
+									},
+									"alt": "word",
+									"credits": null,
+									"__TYPE__": "ImageContent",
+									"thumbnails": {}
+								}
+							],
+							[
+								"location",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Eiusmod eiusmod qui voluptate nulla laborum exercitation tempor nostrud nostrud officia quis ut."
+											}
+										}
+									]
+								}
+							],
+							[
+								"title",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Occaecat laborum consequat est qui nulla deserunt incididunt aliqua esse ad voluptate cillum duis magna quis. Pariatur tempor ad ut deserunt et."
+											}
+										}
+									]
+								}
+							],
+							[
+								"date_text",
+								{
+									"__TYPE__": "FieldContent",
+									"type": "Date",
+									"value": "2012-02-03"
+								}
+							],
+							[
+								"date",
+								{
+									"__TYPE__": "StructuredTextContent",
+									"value": [
+										{
+											"type": "paragraph",
+											"content": {
+												"text": "Est quis anim occaecat duis elit eu ea amet cillum eu labore qui. Ut Lorem esse esse ex fugiat id non fugiat ea Lorem commodo amet irure elit exercitation."
+											}
+										}
+									]
+								}
+							],
+							[
+								"cta_button",
+								{
+									"key": "39aafaf2-a9ed-4cb4-9f7d-cc919ff68af9",
+									"__TYPE__": "LinkContent",
+									"value": {
+										"__TYPE__": "ExternalLink",
+										"url": "http://twitter.com",
+										"text": "courage"
+									}
+								}
+							]
+						]
+					}
+				]
+			}
+		},
+		"items": []
+	}
+]

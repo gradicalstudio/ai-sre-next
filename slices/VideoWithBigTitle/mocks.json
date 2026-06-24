@@ -1,0 +1,53 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"heading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Aliquip exercitation occaecat quis esse est aute minim."
+						}
+					}
+				]
+			},
+			"video_link": {
+				"key": "351e1b0d-4598-4cee-bc83-3bfddfdc1b8d",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "engineer"
+				}
+			},
+			"short_description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Ea pariatur anim mollit in. Eu aliqua tempor non dolor voluptate ad veniam. Magna Lorem do veniam officia do velit in et reprehenderit in laborum."
+						}
+					}
+				]
+			},
+			"preview_video": {
+				"key": "11970a71-ef33-41cf-9ed0-ade88be67c4b",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "FileLink",
+					"id": "mock_Media_link",
+					"kind": "file",
+					"name": "mock_name",
+					"url": "https://source.unsplash.com/daily",
+					"size": "0",
+					"text": "reader"
+				}
+			}
+		},
+		"items": []
+	}
+]

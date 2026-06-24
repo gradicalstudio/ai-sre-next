@@ -1,0 +1,40 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"heading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Cupidatat ullamco in pariatur ut aute amet quis Lorem laborum nostrud aliqua voluptate."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Labore reprehenderit excepteur ex aute pariatur non proident sunt elit qui commodo pariatur incididunt irure anim."
+						}
+					}
+				]
+			},
+			"cta_button": {
+				"key": "0a7a54d3-891d-43dd-8916-77e044246d85",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "clear"
+				}
+			}
+		},
+		"items": []
+	}
+]
