@@ -45,7 +45,7 @@ const ImageCarousel = ({ slice }) => {
                 <PrismicNextImage
                   field={item.image}
                   fill
-                  className="object-cover object-center "
+                  className="object-cover object-center"
                 />
               </div>
             </div>
