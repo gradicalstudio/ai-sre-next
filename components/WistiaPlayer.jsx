@@ -9,6 +9,12 @@ const getWistiaId = (url) => {
   return match?.[1] ?? null;
 };
 
+// Detect iOS Safari once at module level
+const isIOS =
+  typeof navigator !== "undefined" &&
+  /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+  !window.MSStream;
+
 const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
   const scriptLoaded = useRef(false);
   const playerRef = useRef(null);
@@ -16,6 +22,41 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
   const hasEnteredFullscreen = useRef(false);
 
   const videoId = getWistiaId(wistiaUrl);
+
+  // iOS-only: explicitly drive play + manual loop since iOS ignores autoPlay
+  // and loop can silently fail on playsInline videos
+  useEffect(() => {
+    if (!isIOS) return;
+
+    const video = previewVideoRef.current;
+    if (!video) return;
+
+    // Set imperatively — iOS respects these more reliably than JSX attrs
+    video.muted = true;
+    video.playsInline = true;
+
+    const tryPlay = () => {
+      video.play().catch(() => {});
+    };
+
+    if (video.readyState >= 2) {
+      tryPlay();
+    } else {
+      video.addEventListener("canplay", tryPlay, { once: true });
+    }
+
+    // Manual loop fallback for iOS
+    const handleEnded = () => {
+      video.currentTime = 0;
+      video.play().catch(() => {});
+    };
+    video.addEventListener("ended", handleEnded);
+
+    return () => {
+      video.removeEventListener("ended", handleEnded);
+      video.removeEventListener("canplay", tryPlay);
+    };
+  }, [previewSrc]);
 
   useEffect(() => {
     if (!videoId || scriptLoaded.current) return;
@@ -34,7 +75,6 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
     document.body.appendChild(script2);
   }, [videoId]);
 
-  // Helper to enable/disable interactivity on the Wistia player
   const setPlayerInteractive = (interactive) => {
     const player = playerRef.current;
     if (!player) return;
@@ -50,7 +90,6 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       const previewVideo = previewVideoRef.current;
 
       if (!document.fullscreenElement) {
-        // Exited fullscreen — lock the player back down
         setPlayerInteractive(false);
 
         player?.pause?.();
@@ -60,9 +99,15 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         }
 
         hasEnteredFullscreen.current = false;
-        previewVideo?.play?.().catch(() => {});
+
+        if (isIOS && previewVideo) {
+          // iOS needs an explicit muted + play() call to resume preview
+          previewVideo.muted = true;
+          previewVideo.play().catch(() => {});
+        } else {
+          previewVideo?.play?.().catch(() => {});
+        }
       } else {
-        // Entered fullscreen — unlock so Wistia touch handlers work
         setPlayerInteractive(true);
       }
     };
@@ -93,13 +138,10 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       } else if (player.webkitRequestFullscreen) {
         await player.webkitRequestFullscreen();
       } else {
-        // iOS Safari — reach into the shadow DOM for the native <video>
         const innerVideo =
           player.shadowRoot?.querySelector("video") ??
           player.querySelector?.("video");
         if (innerVideo?.webkitEnterFullscreen) {
-          // For iOS, enable interactivity now since fullscreenchange
-          // may not fire reliably for webkitEnterFullscreen
           setPlayerInteractive(true);
           innerVideo.webkitEnterFullscreen();
         }
@@ -110,7 +152,13 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
     } catch (error) {
       console.error("Wistia fullscreen error:", error);
       setPlayerInteractive(false);
-      previewVideo?.play?.().catch(() => {});
+
+      if (isIOS && previewVideo) {
+        previewVideo.muted = true;
+        previewVideo.play().catch(() => {});
+      } else {
+        previewVideo?.play?.().catch(() => {});
+      }
     }
   };
 
@@ -158,7 +206,7 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
           left: "-9999px",
           width: "100%",
           height: "100%",
-          pointerEvents: "none", // re-enabled dynamically on fullscreen enter
+          pointerEvents: "none",
           zIndex: -1,
         }}
       />
