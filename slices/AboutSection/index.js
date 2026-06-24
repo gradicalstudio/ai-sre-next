@@ -24,7 +24,7 @@ const AboutSection = ({ slice }) => {
         {/* Bottom */}
         <div>
           {/* Cards */}
-          <div className="  text-white flex flex-col md:flex-row md:gap-15 lg:gap-15 2xl:gap-24 4xl:gap-30 ">
+          <div className="  text-white flex flex-col md:flex-row gap-6 md:gap-15 lg:gap-15 2xl:gap-24 4xl:gap-30 ">
             {slice.primary.overview_cards.map((item, i) => (
               <div
                 key={i}
@@ -36,7 +36,7 @@ const AboutSection = ({ slice }) => {
                     <div className="sm:hidden w-full h-px my-5 bg-[#A2A2A2]" />
                   )} */}
 
-                  <div className="mb-4 md:mb-6 lg:mb-7.5 2xl:mb-9.5 h-auto w-20 md:w-20 lg:w-25 xl:w-30 ">
+                  <div className="mb-3 md:mb-6 lg:mb-7.5 2xl:mb-9.5 h-auto w-20 md:w-20 lg:w-25 xl:w-30 ">
                     <PrismicNextImage field={item.icon} className="" />
                   </div>
                   <div className="text-xl lg:text-[22px] xl:text-[26px] 4xl:text-[28px]">

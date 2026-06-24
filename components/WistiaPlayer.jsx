@@ -34,14 +34,26 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
     document.body.appendChild(script2);
   }, [videoId]);
 
+  // Helper to enable/disable interactivity on the Wistia player
+  const setPlayerInteractive = (interactive) => {
+    const player = playerRef.current;
+    if (!player) return;
+    player.style.pointerEvents = interactive ? "auto" : "none";
+    player.style.zIndex = interactive ? "9999" : "-1";
+    player.removeAttribute("aria-hidden");
+    if (!interactive) player.setAttribute("aria-hidden", "true");
+  };
+
   useEffect(() => {
     const handleFullscreenChange = () => {
       const player = playerRef.current;
       const previewVideo = previewVideoRef.current;
 
       if (!document.fullscreenElement) {
-        player?.pause?.();
+        // Exited fullscreen — lock the player back down
+        setPlayerInteractive(false);
 
+        player?.pause?.();
         if (player) {
           player.muted = true;
           player.currentTime = 0;
@@ -49,11 +61,13 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
         hasEnteredFullscreen.current = false;
         previewVideo?.play?.().catch(() => {});
+      } else {
+        // Entered fullscreen — unlock so Wistia touch handlers work
+        setPlayerInteractive(true);
       }
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
-    // iOS Safari fires this event instead
     document.addEventListener("webkitfullscreenchange", handleFullscreenChange);
 
     return () => {
@@ -74,25 +88,28 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       player.currentTime = 0;
       hasEnteredFullscreen.current = true;
 
-      // 1. Enter fullscreen first
       if (player.requestFullscreen) {
         await player.requestFullscreen();
       } else if (player.webkitRequestFullscreen) {
-        // Safari desktop fallback
         await player.webkitRequestFullscreen();
       } else {
-        // iOS Safari: try to reach the underlying <video> element
-        const innerVideo = player.shadowRoot?.querySelector("video") ?? player.querySelector?.("video");
+        // iOS Safari — reach into the shadow DOM for the native <video>
+        const innerVideo =
+          player.shadowRoot?.querySelector("video") ??
+          player.querySelector?.("video");
         if (innerVideo?.webkitEnterFullscreen) {
+          // For iOS, enable interactivity now since fullscreenchange
+          // may not fire reliably for webkitEnterFullscreen
+          setPlayerInteractive(true);
           innerVideo.webkitEnterFullscreen();
         }
       }
 
-      // 2. Unmute and play after fullscreen is established
       player.muted = false;
       await player.play?.();
     } catch (error) {
       console.error("Wistia fullscreen error:", error);
+      setPlayerInteractive(false);
       previewVideo?.play?.().catch(() => {});
     }
   };
@@ -129,13 +146,10 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         }}
       />
 
-      {/* Moved off-screen instead of opacity:0 so Wistia can mount its UI,
-          but still invisible and non-interactive to the user */}
       <wistia-player
         ref={playerRef}
         media-id={videoId}
         muted
-        // Removed controls-visible-on-load="false" — let Wistia manage this
         seo="false"
         aria-hidden="true"
         style={{
@@ -144,27 +158,24 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
           left: "-9999px",
           width: "100%",
           height: "100%",
-          pointerEvents: "none",
+          pointerEvents: "none", // re-enabled dynamically on fullscreen enter
           zIndex: -1,
         }}
       />
 
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-  
-  <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-linear-to-t from-[#FF6A50]/50 from-0% to-transparent to-100%" />
-
-  <div className="absolute inset-0 flex items-center justify-center">
-    <div className="flex items-center gap-3 text-white tracking-wide text-sm font-medium drop-shadow-md">
-      <span>Watch Event Recap</span>
-      <div className="bg-[#3ED4F5] rounded-full p-2.5 shadow-lg shadow-[#3ED4F5]/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="ml-0.5">
-          <path d="M3 2L10 6L3 10V2Z" fill="#04050F" />
-        </svg>
+        <div className="absolute bottom-0 left-0 right-0 h-[40%] bg-linear-to-t from-[#FF6A50]/50 from-0% to-transparent to-100%" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="flex items-center gap-3 text-white tracking-wide text-sm font-medium drop-shadow-md">
+            <span>Watch Event Recap</span>
+            <div className="bg-[#3ED4F5] rounded-full p-2.5 shadow-lg shadow-[#3ED4F5]/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" className="ml-0.5">
+                <path d="M3 2L10 6L3 10V2Z" fill="#04050F" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-
-</div>
     </div>
   );
 };
