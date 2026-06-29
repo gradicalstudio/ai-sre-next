@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
+import Link from "next/link";
 
 const MenuIcon = ({ size = 24 }) => (
   <svg
@@ -148,8 +149,9 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     <header className="sticky top-0 z-350 bg-[#04050F] text-white">
       <div className="max-w-[1920px] mx-auto flex items-center justify-between px-4 lg:px-9 h-16 lg:h-15">
         {/* Brand logo */}
-        <PrismicNextImage field={brand_logo} className="h-8 lg:h-8 w-auto" />
-
+        <Link href="/">
+          <PrismicNextImage field={brand_logo} className="h-8 lg:h-8 w-auto cursor-pointer" />
+        </Link>
         <div className="flex gap-10">
           {/* Desktop nav */}
           <nav className="hidden lg:flex font-mono text-white items-center gap-8">
