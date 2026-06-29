@@ -1,0 +1,440 @@
+{
+  "id": "agenda",
+  "type": "SharedSlice",
+  "name": "Agenda",
+  "description": "Agenda",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "show_slice": {
+          "type": "Boolean",
+          "config": {
+            "label": "Show Slice",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": false
+          }
+        },
+        "heading": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Heading",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "blocks": {
+          "type": "Group",
+          "config": {
+            "label": "Blocks",
+            "repeat": true,
+            "fields": {
+              "time": {
+                "type": "Text",
+                "config": {
+                  "label": "Time",
+                  "placeholder": ""
+                }
+              },
+              "title": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Title",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "title_or_images": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Title or Images",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "short_description": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Short description",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "speaker": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker One",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "speaker_name": {
+                "type": "Text",
+                "config": {
+                  "label": "Speaker One Name",
+                  "placeholder": ""
+                }
+              },
+              "linkedinone": {
+                "type": "Link",
+                "config": {
+                  "label": "LinkedInOne",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "speaker_two": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker Two",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "speaker_two_name": {
+                "type": "Text",
+                "config": {
+                  "label": "Speaker Two Name",
+                  "placeholder": ""
+                }
+              },
+              "linkedintwo": {
+                "type": "Link",
+                "config": {
+                  "label": "LinkedInTwo",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "speaker_three_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker Three Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "speaker_three_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Speaker Three Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "speaker_three_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Speaker Three LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "speaker_four_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker Four Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "speaker_four_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Speaker Four Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "speaker_four_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Speaker Four LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "speaker_five_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker Five Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "speaker_five_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Speaker Five Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "speaker_five_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Speaker Five LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "moderator_one_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Moderator One Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "moderator_one_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Moderator One Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "moderator_one_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Moderator One LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "moderator_two_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Moderator Two Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "moderator_two_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Moderator Two Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "moderator_two_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Moderator Two LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "moderator_three_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Moderator Three Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "moderator_three_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Moderator Three Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "moderator_three_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Moderator Three LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "moderator_four_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Moderator Four Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "moderator_four_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Moderator Four Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "moderator_four_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Moderator Four LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "facilitator_one_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Facilitator One Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "facilitator_one_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Facilitator One Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "facilitator_one_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Facilitator One LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "facilitator_two_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Facilitator Two Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "facilitator_two_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Facilitator Two Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "facilitator_two_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Facilitator Two LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "facilitator_three_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Facilitator Three Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "facilitator_three_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Facilitator Three Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "facilitator_three_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Facilitator Three LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              },
+              "facilitator_four_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Facilitator Four Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "facilitator_four_name": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Facilitator Four Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "facilitator_four_linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "Facilitator Four LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

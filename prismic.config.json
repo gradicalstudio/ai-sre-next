@@ -1,4 +1,7 @@
 {
   "repositoryName": "ai-sre-next",
-  "routes": []
+  "routes": [
+    { "type": "home_page", "path": "/" },
+    { "type": "page", "path": "/:uid" }
+  ]
 }

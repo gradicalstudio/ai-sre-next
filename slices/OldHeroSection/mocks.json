@@ -1,0 +1,95 @@
+[
+	{
+		"__TYPE__": "SharedSliceContent",
+		"variation": "default",
+		"primary": {
+			"heading": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Aliquip ad reprehenderit aute duis magna mollit voluptate excepteur proident anim aliquip dolor excepteur anim. Ipsum mollit velit occaecat sunt minim velit labore dolore duis."
+						}
+					}
+				]
+			},
+			"description": {
+				"__TYPE__": "StructuredTextContent",
+				"value": [
+					{
+						"type": "paragraph",
+						"content": {
+							"text": "Nostrud qui amet non cillum pariatur eu sint aliquip."
+						}
+					}
+				]
+			},
+			"date_text": {
+				"__TYPE__": "FieldContent",
+				"value": "clock",
+				"type": "Text"
+			},
+			"date": {
+				"key": "7c58b144-fcee-4620-8053-c1d2ccabfe8b",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "six"
+				}
+			},
+			"time": {
+				"__TYPE__": "FieldContent",
+				"value": "only",
+				"type": "Text"
+			},
+			"location": {
+				"key": "09c97789-9eec-4657-b9ed-68ef8905a5ce",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "http://twitter.com",
+					"text": "gun"
+				}
+			},
+			"image_or_video": {
+				"origin": {
+					"id": "main",
+					"url": "https://images.unsplash.com/photo-1600804931749-2da4ce26c869",
+					"width": 3199,
+					"height": 3199
+				},
+				"url": "https://images.unsplash.com/photo-1600804931749-2da4ce26c869",
+				"width": 3199,
+				"height": 3199,
+				"edit": {
+					"zoom": 1,
+					"crop": {
+						"x": 0,
+						"y": 0
+					},
+					"background": "transparent"
+				},
+				"alt": "exact",
+				"credits": null,
+				"__TYPE__": "ImageContent",
+				"thumbnails": {}
+			},
+			"video_toggle": {
+				"__TYPE__": "BooleanContent",
+				"value": true
+			},
+			"cta_link": {
+				"key": "c7fb2329-dc6e-426d-be78-f818442dfba0",
+				"__TYPE__": "LinkContent",
+				"value": {
+					"__TYPE__": "ExternalLink",
+					"url": "https://slicemachine.dev",
+					"text": "rhyme"
+				}
+			}
+		},
+		"items": []
+	}
+]
