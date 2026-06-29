@@ -187,6 +187,8 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                     key={item.key ?? index}
                     item={item}
                     isActive={isActive}
+                    activeEventTab={activeEventTab}
+                    onTabChange={setActiveEventTab}
                   />
                 );
               }
