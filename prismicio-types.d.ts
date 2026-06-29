@@ -1155,11 +1155,11 @@ type EventsSliceVariation = EventsSliceDefault;
 export type EventsSlice = prismic.SharedSlice<"events", EventsSliceVariation>;
 
 /**
- * Primary content in *Hero → Default → Primary*
+ * Primary content in *HeroSection → Default → Primary*
  */
 export interface HeroSectionSliceDefaultPrimary {
   /**
-   * Heading field in *Hero → Default → Primary*
+   * Heading field in *HeroSection → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1169,7 +1169,7 @@ export interface HeroSectionSliceDefaultPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Description field in *Hero → Default → Primary*
+   * Description field in *HeroSection → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1179,7 +1179,7 @@ export interface HeroSectionSliceDefaultPrimary {
   description: prismic.RichTextField;
 
   /**
-   * CTA Button field in *Hero → Default → Primary*
+   * CTA Button field in *HeroSection → Default → Primary*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -1196,7 +1196,7 @@ export interface HeroSectionSliceDefaultPrimary {
 }
 
 /**
- * Default variation for Hero Slice
+ * Default variation for HeroSection Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
@@ -1209,83 +1209,12 @@ export type HeroSectionSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
- * Slice variation for *Hero*
+ * Slice variation for *HeroSection*
  */
 type HeroSectionSliceVariation = HeroSectionSliceDefault;
 
 /**
- * Hero Shared Slice
- *
- * - **API ID**: `hero_section`
- * - **Description**: HeroSection
- * - **Documentation**: https://prismic.io/docs/slices
- */
-export type HeroSectionSlice = prismic.SharedSlice<
-  "hero_section",
-  HeroSectionSliceVariation
->;
-
-/**
- * Primary content in *Hero → Default → Primary*
- */
-export interface HeroSectionSliceDefaultPrimary {
-  /**
-   * Heading field in *Hero → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: *None*
-   * - **API ID Path**: hero_section.default.primary.heading
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  heading: prismic.RichTextField;
-
-  /**
-   * Description field in *Hero → Default → Primary*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: *None*
-   * - **API ID Path**: hero_section.default.primary.description
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  description: prismic.RichTextField;
-
-  /**
-   * CTA Button field in *Hero → Default → Primary*
-   *
-   * - **Field Type**: Link
-   * - **Placeholder**: *None*
-   * - **API ID Path**: hero_section.default.primary.cta_button
-   * - **Documentation**: https://prismic.io/docs/fields/link
-   */
-  cta_button: prismic.LinkField<
-    string,
-    string,
-    unknown,
-    prismic.FieldState,
-    never
-  >;
-}
-
-/**
- * Default variation for Hero Slice
- *
- * - **API ID**: `default`
- * - **Description**: Default
- * - **Documentation**: https://prismic.io/docs/slices
- */
-export type HeroSectionSliceDefault = prismic.SharedSliceVariation<
-  "default",
-  Simplify<HeroSectionSliceDefaultPrimary>,
-  never
->;
-
-/**
- * Slice variation for *Hero*
- */
-type HeroSectionSliceVariation = HeroSectionSliceDefault;
-
-/**
- * Hero Shared Slice
+ * HeroSection Shared Slice
  *
  * - **API ID**: `hero_section`
  * - **Description**: HeroSection
@@ -2204,10 +2133,6 @@ declare module "@prismicio/client" {
       EventsSliceDefaultPrimary,
       EventsSliceVariation,
       EventsSliceDefault,
-      HeroSectionSlice,
-      HeroSectionSliceDefaultPrimary,
-      HeroSectionSliceVariation,
-      HeroSectionSliceDefault,
       HeroSectionSlice,
       HeroSectionSliceDefaultPrimary,
       HeroSectionSliceVariation,
