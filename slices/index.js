@@ -6,16 +6,13 @@ export const components = {
   about_section: dynamic(() => import("./AboutSection")),
   agenda: dynamic(() => import("./Agenda")),
   events: dynamic(() => import("./Events")),
-  hero_section: dynamic(() => import("./Hero")),
-  hero_section: dynamic(() => import("./Hero")),
+  hero_section: dynamic(() => import("./HeroSection")),
   image_carousel: dynamic(() => import("./ImageCarousel")),
   marquee: dynamic(() => import("./Marquee")),
   old_hero_section: dynamic(() => import("./OldHeroSection")),
   participants: dynamic(() => import("./Participants")),
   report_slice: dynamic(() => import("./ReportSlice")),
-  speakers_of_bangalore_edition: dynamic(
-    () => import("./SpeakersOfBangaloreEdition"),
-  ),
+  speakers_of_bangalore_edition: dynamic(() => import("./SpeakersOfBangaloreEdition")),
   video_showcase: dynamic(() => import("./VideoShowcase")),
   video_with_big_title: dynamic(() => import("./VideoWithBigTitle")),
 };
