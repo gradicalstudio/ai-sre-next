@@ -106,7 +106,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
       .map((id) => document.getElementById(id))
       .filter(Boolean);
     if (sections.length === 0) return;
-
     const ratios = new Map();
 
     observerRef.current = new IntersectionObserver(
@@ -129,12 +128,18 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
         setActiveId(bestRatio > 0 ? bestId : null);
       },
-      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0 },
     );
 
     sections.forEach((section) => observerRef.current.observe(section));
     return () => observerRef.current?.disconnect();
   }, [nav_links]);
+  
+  useEffect(() => {
+    const handler = (e) => setActiveEventTab(e.detail);
+    window.addEventListener("tabchange", handler);
+    return () => window.removeEventListener("tabchange", handler);
+  }, []);
 
   const handleNavClick = (e, id) => {
     e.preventDefault();
@@ -187,6 +192,8 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                     key={item.key ?? index}
                     item={item}
                     isActive={isActive}
+                    activeEventTab={activeEventTab}
+                    onTabChange={setActiveEventTab}
                   />
                 );
               }
