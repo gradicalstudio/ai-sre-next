@@ -7,9 +7,9 @@ const DROPDOWN_ITEMS = [
   { label: "Past Events", tab: "past" },
 ];
 
-export default function NavDropdown({ item, isActive }) {
+export default function NavDropdown({ item, isActive, activeEventTab, onTabChange }) {
   const [open, setOpen] = useState(false);
-  const [activeEventTab, setActiveEventTab] = useState();
+  // const [activeEventTab, setActiveEventTab] = useState();
   const closeTimer = useRef(null);
 
   const handleMouseEnter = () => {
@@ -73,7 +73,7 @@ export default function NavDropdown({ item, isActive }) {
               href={`?tab=${tab}`}
               scroll={false}
               onClick={() => {
-                setActiveEventTab(tab);
+                onTabChange(tab); 
                 setOpen(false);
                 setTimeout(() => {
                   document

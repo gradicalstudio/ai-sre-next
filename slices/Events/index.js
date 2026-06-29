@@ -48,7 +48,8 @@ const EventsInner = ({ slice }) => {
     return eventDate < today;
   });
 
-  const displayedEvents = activeTab === "upcoming" ? upcomingEvents : pastEvents;
+  const displayedEvents =
+    activeTab === "upcoming" ? upcomingEvents : pastEvents;
 
   return (
     <section
@@ -84,16 +85,33 @@ const EventsInner = ({ slice }) => {
                 <div className="flex flex-col md:flex-row w-full md:items-center justify-between gap-6 ">
                   {activeTab === "upcoming" ? (
                     <div className="text-white text-xl  lg:text-lg xl:text-xl font-medium">
-                      <PrismicRichText field={slice.primary.upcomingeventsheading} />
+                      <PrismicRichText
+                        field={slice.primary.upcomingeventsheading}
+                      />
                     </div>
                   ) : (
                     <div className="text-white text-xl lg:text-lg xl:text-xl font-medium">
-                      <PrismicRichText field={slice.primary.pasteventsheading} />
+                      <PrismicRichText
+                        field={slice.primary.pasteventsheading}
+                      />
                     </div>
                   )}
                   <div className="flex w-fit  gap-6 shrink-0">
                     <button
-                      onClick={() => setActiveTab("upcoming")}
+                      onClick={() => {
+                        setActiveTab("upcoming");
+                        // ← add this block
+                        const url = new URL(window.location.href);
+                        url.searchParams.set("tab", "upcoming");
+                        window.history.pushState(
+                          {},
+                          "",
+                          url.pathname + url.search,
+                        );
+                        window.dispatchEvent(
+                          new CustomEvent("tabchange", { detail: "upcoming" }),
+                        );
+                      }}
                       className={`flex items-center text-xs  lg:text-sm xl:text-lg cursor-pointer gap-2  font-medium transition-colors whitespace-nowrap ${
                         activeTab === "upcoming"
                           ? "text-white"
@@ -102,14 +120,29 @@ const EventsInner = ({ slice }) => {
                     >
                       <span
                         className={`w-2 h-2 rounded-full inline-block transition-colors ${
-                          activeTab === "upcoming" ? "bg-[#FF6A50]" : "bg-[#04050F]"
+                          activeTab === "upcoming"
+                            ? "bg-[#FF6A50]"
+                            : "bg-[#04050F]"
                         }`}
                       />
                       <p>Upcoming Events</p>
                     </button>
 
                     <button
-                      onClick={() => setActiveTab("past")}
+                      onClick={() => {
+                        setActiveTab("past");
+                        // ← add this block
+                        const url = new URL(window.location.href);
+                        url.searchParams.set("tab", "past");
+                        window.history.pushState(
+                          {},
+                          "",
+                          url.pathname + url.search,
+                        );
+                        window.dispatchEvent(
+                          new CustomEvent("tabchange", { detail: "past" }),
+                        );
+                      }}
                       className={`flex items-center text-xs lg:text-sm xl:text-lg gap-2 cursor-pointer  font-medium transition-colors whitespace-nowrap ${
                         activeTab === "past"
                           ? "text-white "
@@ -157,7 +190,10 @@ const EventsInner = ({ slice }) => {
                         </span>
                         <div className="md:hidden mt-3 ">
                           {item.cta_button && (
-                            <EventCTA innerClassName="text-sm!" link={item.cta_button} />
+                            <EventCTA
+                              innerClassName="text-sm!"
+                              link={item.cta_button}
+                            />
                           )}
                         </div>
                       </div>
