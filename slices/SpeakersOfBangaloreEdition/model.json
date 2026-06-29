@@ -1,0 +1,149 @@
+{
+  "id": "speakers_of_bangalore_edition",
+  "type": "SharedSlice",
+  "name": "SpeakersOfBangaloreEdition",
+  "description": "SpeakersOfBangaloreEdition",
+  "variations": [
+    {
+      "id": "default",
+      "name": "Default",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "heading": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Heading",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "speaker": {
+          "type": "Group",
+          "config": {
+            "label": "Speaker",
+            "repeat": true,
+            "fields": {
+              "speaker_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "name_rich": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "role_rich": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Role",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    },
+    {
+      "id": "secondaryVar",
+      "name": "secondaryVar",
+      "docURL": "...",
+      "version": "initial",
+      "description": "Default",
+      "imageUrl": "",
+      "primary": {
+        "show_slice": {
+          "type": "Boolean",
+          "config": {
+            "label": "Show Slice",
+            "placeholder_false": "false",
+            "placeholder_true": "true",
+            "default_value": false
+          }
+        },
+        "heading": {
+          "type": "StructuredText",
+          "config": {
+            "label": "Heading",
+            "placeholder": "",
+            "allowTargetBlank": true,
+            "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+          }
+        },
+        "speaker": {
+          "type": "Group",
+          "config": {
+            "label": "Speaker",
+            "repeat": true,
+            "fields": {
+              "speaker_image": {
+                "type": "Image",
+                "config": {
+                  "label": "Speaker Image",
+                  "constraint": {},
+                  "thumbnails": []
+                }
+              },
+              "name_rich_text": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Name",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "role_rich_text": {
+                "type": "StructuredText",
+                "config": {
+                  "label": "Role",
+                  "placeholder": "",
+                  "allowTargetBlank": true,
+                  "multi": "paragraph,preformatted,heading1,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+                }
+              },
+              "linkedin": {
+                "type": "Link",
+                "config": {
+                  "label": "LinkedIn",
+                  "placeholder": "",
+                  "select": null,
+                  "allowTargetBlank": true,
+                  "allowText": true,
+                  "repeat": false
+                }
+              }
+            }
+          }
+        }
+      },
+      "items": {}
+    }
+  ]
+}

@@ -271,10 +271,77 @@ export type HomePageDocument<Lang extends string = string> =
     Lang
   >;
 
+type PageDocumentDataSlicesSlice =
+  | AgendaSlice
+  | SpeakersOfBangaloreEditionSlice
+  | ParticipantsSlice
+  | OldHeroSectionSlice
+  | VideoShowcaseSlice;
+
+/**
+ * Content for Page documents
+ */
+interface PageDocumentData {
+  /**
+   * Slice Zone field in *Page*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices: prismic.SliceZone<PageDocumentDataSlicesSlice>; /**
+   * Meta Title field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: page.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *Page*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: page.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *Page*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: page.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * Page document from Prismic
+ *
+ * - **API ID**: `page`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type PageDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
+
 export type AllDocumentTypes =
   | FooterDocument
   | HeaderDocument
-  | HomePageDocument;
+  | HomePageDocument
+  | PageDocument;
 
 /**
  * Item in *AboutSection → Default → Primary → Overview Cards*
@@ -367,6 +434,582 @@ export type AboutSectionSlice = prismic.SharedSlice<
   "about_section",
   AboutSectionSliceVariation
 >;
+
+/**
+ * Item in *Agenda → Default → Primary → Blocks*
+ */
+export interface AgendaSliceDefaultPrimaryBlocksItem {
+  /**
+   * Time field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].time
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  time: prismic.KeyTextField;
+
+  /**
+   * Title field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * Title or Images field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].title_or_images
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title_or_images: prismic.RichTextField;
+
+  /**
+   * Short description field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].short_description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  short_description: prismic.RichTextField;
+
+  /**
+   * Speaker One field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker: prismic.ImageField<never>;
+
+  /**
+   * Speaker One Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_name
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  speaker_name: prismic.KeyTextField;
+
+  /**
+   * LinkedInOne field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].linkedinone
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  linkedinone: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Speaker Two field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_two
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker_two: prismic.ImageField<never>;
+
+  /**
+   * Speaker Two Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_two_name
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  speaker_two_name: prismic.KeyTextField;
+
+  /**
+   * LinkedInTwo field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].linkedintwo
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  linkedintwo: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Speaker Three Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_three_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker_three_image: prismic.ImageField<never>;
+
+  /**
+   * Speaker Three Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_three_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  speaker_three_name: prismic.RichTextField;
+
+  /**
+   * Speaker Three LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_three_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  speaker_three_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Speaker Four Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_four_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker_four_image: prismic.ImageField<never>;
+
+  /**
+   * Speaker Four Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_four_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  speaker_four_name: prismic.RichTextField;
+
+  /**
+   * Speaker Four LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_four_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  speaker_four_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Speaker Five Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_five_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker_five_image: prismic.ImageField<never>;
+
+  /**
+   * Speaker Five Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_five_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  speaker_five_name: prismic.RichTextField;
+
+  /**
+   * Speaker Five LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].speaker_five_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  speaker_five_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Moderator One Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_one_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  moderator_one_image: prismic.ImageField<never>;
+
+  /**
+   * Moderator One Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_one_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  moderator_one_name: prismic.RichTextField;
+
+  /**
+   * Moderator One LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_one_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  moderator_one_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Moderator Two Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_two_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  moderator_two_image: prismic.ImageField<never>;
+
+  /**
+   * Moderator Two Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_two_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  moderator_two_name: prismic.RichTextField;
+
+  /**
+   * Moderator Two LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_two_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  moderator_two_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Moderator Three Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_three_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  moderator_three_image: prismic.ImageField<never>;
+
+  /**
+   * Moderator Three Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_three_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  moderator_three_name: prismic.RichTextField;
+
+  /**
+   * Moderator Three LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_three_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  moderator_three_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Moderator Four Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_four_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  moderator_four_image: prismic.ImageField<never>;
+
+  /**
+   * Moderator Four Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_four_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  moderator_four_name: prismic.RichTextField;
+
+  /**
+   * Moderator Four LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].moderator_four_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  moderator_four_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Facilitator One Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_one_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  facilitator_one_image: prismic.ImageField<never>;
+
+  /**
+   * Facilitator One Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_one_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  facilitator_one_name: prismic.RichTextField;
+
+  /**
+   * Facilitator One LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_one_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  facilitator_one_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Facilitator Two Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_two_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  facilitator_two_image: prismic.ImageField<never>;
+
+  /**
+   * Facilitator Two Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_two_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  facilitator_two_name: prismic.RichTextField;
+
+  /**
+   * Facilitator Two LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_two_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  facilitator_two_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Facilitator Three Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_three_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  facilitator_three_image: prismic.ImageField<never>;
+
+  /**
+   * Facilitator Three Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_three_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  facilitator_three_name: prismic.RichTextField;
+
+  /**
+   * Facilitator Three LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_three_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  facilitator_three_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Facilitator Four Image field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_four_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  facilitator_four_image: prismic.ImageField<never>;
+
+  /**
+   * Facilitator Four Name field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_four_name
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  facilitator_four_name: prismic.RichTextField;
+
+  /**
+   * Facilitator Four LinkedIn field in *Agenda → Default → Primary → Blocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[].facilitator_four_linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  facilitator_four_linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * Primary content in *Agenda → Default → Primary*
+ */
+export interface AgendaSliceDefaultPrimary {
+  /**
+   * Show Slice field in *Agenda → Default → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: agenda.default.primary.show_slice
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  show_slice: prismic.BooleanField;
+
+  /**
+   * Heading field in *Agenda → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Blocks field in *Agenda → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: agenda.default.primary.blocks[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  blocks: prismic.GroupField<Simplify<AgendaSliceDefaultPrimaryBlocksItem>>;
+}
+
+/**
+ * Default variation for Agenda Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type AgendaSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<AgendaSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Agenda*
+ */
+type AgendaSliceVariation = AgendaSliceDefault;
+
+/**
+ * Agenda Shared Slice
+ *
+ * - **API ID**: `agenda`
+ * - **Description**: Agenda
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type AgendaSlice = prismic.SharedSlice<"agenda", AgendaSliceVariation>;
 
 /**
  * Item in *Events → Default → Primary → Events*
@@ -583,6 +1226,77 @@ export type HeroSectionSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *Hero → Default → Primary*
+ */
+export interface HeroSectionSliceDefaultPrimary {
+  /**
+   * Heading field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero_section.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Description field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero_section.default.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * CTA Button field in *Hero → Default → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: hero_section.default.primary.cta_button
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  cta_button: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * Default variation for Hero Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSectionSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<HeroSectionSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Hero*
+ */
+type HeroSectionSliceVariation = HeroSectionSliceDefault;
+
+/**
+ * Hero Shared Slice
+ *
+ * - **API ID**: `hero_section`
+ * - **Description**: HeroSection
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type HeroSectionSlice = prismic.SharedSlice<
+  "hero_section",
+  HeroSectionSliceVariation
+>;
+
+/**
  * Item in *ImageCarousel → Default → Primary → Carousel Image*
  */
 export interface ImageCarouselSliceDefaultPrimaryCarouselImageItem {
@@ -715,6 +1429,227 @@ export type MarqueeSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *OldHeroSection → Default → Primary*
+ */
+export interface OldHeroSectionSliceDefaultPrimary {
+  /**
+   * Heading field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Description field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * Date text field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.date_text
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  date_text: prismic.KeyTextField;
+
+  /**
+   * Date field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.date
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  date: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+
+  /**
+   * Time field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.time
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  time: prismic.KeyTextField;
+
+  /**
+   * Location field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.location
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  location: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Image or Video field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.image_or_video
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image_or_video: prismic.ImageField<never>;
+
+  /**
+   * Video Toggle field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: old_hero_section.default.primary.video_toggle
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  video_toggle: prismic.BooleanField;
+
+  /**
+   * CTA Link field in *OldHeroSection → Default → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: old_hero_section.default.primary.cta_link
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  cta_link: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * Default variation for OldHeroSection Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type OldHeroSectionSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<OldHeroSectionSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *OldHeroSection*
+ */
+type OldHeroSectionSliceVariation = OldHeroSectionSliceDefault;
+
+/**
+ * OldHeroSection Shared Slice
+ *
+ * - **API ID**: `old_hero_section`
+ * - **Description**: OldHeroSection
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type OldHeroSectionSlice = prismic.SharedSlice<
+  "old_hero_section",
+  OldHeroSectionSliceVariation
+>;
+
+/**
+ * Item in *Participants → Default → Primary → Companies*
+ */
+export interface ParticipantsSliceDefaultPrimaryCompaniesItem {
+  /**
+   * Logo field in *Participants → Default → Primary → Companies*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: participants.default.primary.companies[].logo
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  logo: prismic.ImageField<never>;
+
+  /**
+   * Link field in *Participants → Default → Primary → Companies*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: participants.default.primary.companies[].link
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  link: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+}
+
+/**
+ * Primary content in *Participants → Default → Primary*
+ */
+export interface ParticipantsSliceDefaultPrimary {
+  /**
+   * Show Slice field in *Participants → Default → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: participants.default.primary.show_slice
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  show_slice: prismic.BooleanField;
+
+  /**
+   * Companies field in *Participants → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: participants.default.primary.companies[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  companies: prismic.GroupField<
+    Simplify<ParticipantsSliceDefaultPrimaryCompaniesItem>
+  >;
+}
+
+/**
+ * Default variation for Participants Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ParticipantsSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ParticipantsSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *Participants*
+ */
+type ParticipantsSliceVariation = ParticipantsSliceDefault;
+
+/**
+ * Participants Shared Slice
+ *
+ * - **API ID**: `participants`
+ * - **Description**: Participants
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ParticipantsSlice = prismic.SharedSlice<
+  "participants",
+  ParticipantsSliceVariation
+>;
+
+/**
  * Primary content in *ReportSlice → Default → Primary*
  */
 export interface ReportSliceSliceDefaultPrimary {
@@ -787,6 +1722,220 @@ type ReportSliceSliceVariation = ReportSliceSliceDefault;
 export type ReportSliceSlice = prismic.SharedSlice<
   "report_slice",
   ReportSliceSliceVariation
+>;
+
+/**
+ * Item in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+ */
+export interface SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem {
+  /**
+   * Speaker Image field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.default.primary.speaker[].speaker_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker_image: prismic.ImageField<never>;
+
+  /**
+   * Name field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.default.primary.speaker[].name_rich
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  name_rich: prismic.RichTextField;
+
+  /**
+   * Role field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.default.primary.speaker[].role_rich
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  role_rich: prismic.RichTextField;
+
+  /**
+   * LinkedIn field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.default.primary.speaker[].linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * Item in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+ */
+export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem {
+  /**
+   * Speaker Image field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.speaker[].speaker_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  speaker_image: prismic.ImageField<never>;
+
+  /**
+   * Name field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.speaker[].name_rich_text
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  name_rich_text: prismic.RichTextField;
+
+  /**
+   * Role field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.speaker[].role_rich_text
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  role_rich_text: prismic.RichTextField;
+
+  /**
+   * LinkedIn field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.speaker[].linkedin
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  linkedin: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * Primary content in *SpeakersOfBangaloreEdition → Default → Primary*
+ */
+export interface SpeakersOfBangaloreEditionSliceDefaultPrimary {
+  /**
+   * Heading field in *SpeakersOfBangaloreEdition → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Speaker field in *SpeakersOfBangaloreEdition → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.default.primary.speaker[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  speaker: prismic.GroupField<
+    Simplify<SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem>
+  >;
+}
+
+/**
+ * Default variation for SpeakersOfBangaloreEdition Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type SpeakersOfBangaloreEditionSliceDefault =
+  prismic.SharedSliceVariation<
+    "default",
+    Simplify<SpeakersOfBangaloreEditionSliceDefaultPrimary>,
+    never
+  >;
+
+/**
+ * Primary content in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+ */
+export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimary {
+  /**
+   * Show Slice field in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.show_slice
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  show_slice: prismic.BooleanField;
+
+  /**
+   * Heading field in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Speaker field in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: speakers_of_bangalore_edition.secondaryVar.primary.speaker[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  speaker: prismic.GroupField<
+    Simplify<SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem>
+  >;
+}
+
+/**
+ * secondaryVar variation for SpeakersOfBangaloreEdition Slice
+ *
+ * - **API ID**: `secondaryVar`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type SpeakersOfBangaloreEditionSliceSecondaryVar =
+  prismic.SharedSliceVariation<
+    "secondaryVar",
+    Simplify<SpeakersOfBangaloreEditionSliceSecondaryVarPrimary>,
+    never
+  >;
+
+/**
+ * Slice variation for *SpeakersOfBangaloreEdition*
+ */
+type SpeakersOfBangaloreEditionSliceVariation =
+  | SpeakersOfBangaloreEditionSliceDefault
+  | SpeakersOfBangaloreEditionSliceSecondaryVar;
+
+/**
+ * SpeakersOfBangaloreEdition Shared Slice
+ *
+ * - **API ID**: `speakers_of_bangalore_edition`
+ * - **Description**: SpeakersOfBangaloreEdition
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type SpeakersOfBangaloreEditionSlice = prismic.SharedSlice<
+  "speakers_of_bangalore_edition",
+  SpeakersOfBangaloreEditionSliceVariation
 >;
 
 /**
@@ -1036,17 +2185,29 @@ declare module "@prismicio/client" {
       HomePageDocument,
       HomePageDocumentData,
       HomePageDocumentDataSlicesSlice,
+      PageDocument,
+      PageDocumentData,
+      PageDocumentDataSlicesSlice,
       AllDocumentTypes,
       AboutSectionSlice,
       AboutSectionSliceDefaultPrimaryOverviewCardsItem,
       AboutSectionSliceDefaultPrimary,
       AboutSectionSliceVariation,
       AboutSectionSliceDefault,
+      AgendaSlice,
+      AgendaSliceDefaultPrimaryBlocksItem,
+      AgendaSliceDefaultPrimary,
+      AgendaSliceVariation,
+      AgendaSliceDefault,
       EventsSlice,
       EventsSliceDefaultPrimaryEventsItem,
       EventsSliceDefaultPrimary,
       EventsSliceVariation,
       EventsSliceDefault,
+      HeroSectionSlice,
+      HeroSectionSliceDefaultPrimary,
+      HeroSectionSliceVariation,
+      HeroSectionSliceDefault,
       HeroSectionSlice,
       HeroSectionSliceDefaultPrimary,
       HeroSectionSliceVariation,
@@ -1061,10 +2222,27 @@ declare module "@prismicio/client" {
       MarqueeSliceDefaultPrimary,
       MarqueeSliceVariation,
       MarqueeSliceDefault,
+      OldHeroSectionSlice,
+      OldHeroSectionSliceDefaultPrimary,
+      OldHeroSectionSliceVariation,
+      OldHeroSectionSliceDefault,
+      ParticipantsSlice,
+      ParticipantsSliceDefaultPrimaryCompaniesItem,
+      ParticipantsSliceDefaultPrimary,
+      ParticipantsSliceVariation,
+      ParticipantsSliceDefault,
       ReportSliceSlice,
       ReportSliceSliceDefaultPrimary,
       ReportSliceSliceVariation,
       ReportSliceSliceDefault,
+      SpeakersOfBangaloreEditionSlice,
+      SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem,
+      SpeakersOfBangaloreEditionSliceDefaultPrimary,
+      SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem,
+      SpeakersOfBangaloreEditionSliceSecondaryVarPrimary,
+      SpeakersOfBangaloreEditionSliceVariation,
+      SpeakersOfBangaloreEditionSliceDefault,
+      SpeakersOfBangaloreEditionSliceSecondaryVar,
       VideoShowcaseSlice,
       VideoShowcaseSliceDefaultPrimaryVideoblocksItem,
       VideoShowcaseSliceDefaultPrimary,
