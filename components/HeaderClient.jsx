@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from "next/link";
+import NavDropdown from "./NavDropdown";
 
 const MenuIcon = ({ size = 24 }) => (
   <svg
@@ -36,6 +37,7 @@ const CloseIcon = ({ size = 24 }) => (
     <line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
+
 const ArrowIcon = ({ className }) => (
   <svg
     width="20"
@@ -77,8 +79,12 @@ const ArrowAsset = ({ arrowAssetClass }) => (
     <path d="M4.19657 2.90165H2.90625V1.61133H4.19657V2.90165Z" fill="white" />
   </svg>
 );
-// nav_links items ARE link fields directly — no nested item.link.
-// Prismic link fields expose their own .text and .url.
+
+const DROPDOWN_ITEMS = [
+  { label: "Upcoming Events", tab: "upcoming" },
+  { label: "Past Events", tab: "past" },
+];
+
 const getHashId = (link) => {
   const url = link?.url ?? "";
   const hashIndex = url.indexOf("#");
@@ -88,9 +94,10 @@ const getHashId = (link) => {
 const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const [activeId, setActiveId] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [eventsAccordionOpen, setEventsAccordionOpen] = useState(false);
   const observerRef = useRef(null);
+  const [activeEventTab, setActiveEventTab] = useState();
 
-  // Scroll-spy: watch all sections referenced by nav_links
   useEffect(() => {
     const ids = nav_links.map((item) => getHashId(item)).filter(Boolean);
     if (ids.length === 0) return;
@@ -98,7 +105,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     const sections = ids
       .map((id) => document.getElementById(id))
       .filter(Boolean);
-
     if (sections.length === 0) return;
 
     const ratios = new Map();
@@ -112,8 +118,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           );
         });
 
-        // pick the section with the highest ratio among ALL observed sections,
-        // not just the ones in this callback batch
         let bestId = null;
         let bestRatio = 0;
         ratios.forEach((ratio, id) => {
@@ -125,14 +129,10 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
         setActiveId(bestRatio > 0 ? bestId : null);
       },
-      {
-        rootMargin: "-40% 0px -40% 0px",
-        threshold: 0,
-      },
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 },
     );
 
     sections.forEach((section) => observerRef.current.observe(section));
-
     return () => observerRef.current?.disconnect();
   }, [nav_links]);
 
@@ -145,19 +145,51 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     setMobileOpen(false);
   };
 
+  // ✅ handles mobile dropdown item click — sets tab param, closes menu, smooth scrolls
+  const handleMobileEventClick = (tab) => {
+    setActiveEventTab(tab); // ✅ track which sub-item is active
+    setMobileOpen(false);
+    setEventsAccordionOpen(false);
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", tab);
+    window.history.pushState({}, "", url.pathname + url.search);
+    window.dispatchEvent(new Event("popstate"));
+
+    setTimeout(() => {
+      document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
+    }, 50);
+  };
+
   return (
     <header className="sticky top-0 z-350 bg-[#04050F] text-white">
       <div className="max-w-[1920px] mx-auto flex items-center justify-between px-4 lg:px-9 h-16 lg:h-15">
         {/* Brand logo */}
         <Link href="/">
-          <PrismicNextImage field={brand_logo} className="h-8 lg:h-8 w-auto cursor-pointer" />
+          <PrismicNextImage
+            field={brand_logo}
+            className="h-8 lg:h-8 w-auto cursor-pointer"
+          />
         </Link>
+
         <div className="flex gap-10">
           {/* Desktop nav */}
           <nav className="hidden lg:flex font-mono text-white items-center gap-8">
             {nav_links.map((item, index) => {
               const id = getHashId(item);
               const isActive = id && id === activeId;
+              const isEventsLink =
+                item.text?.toLowerCase() === "events" || id === "events";
+
+              if (isEventsLink) {
+                return (
+                  <NavDropdown
+                    key={item.key ?? index}
+                    item={item}
+                    isActive={isActive}
+                  />
+                );
+              }
 
               return (
                 <a
@@ -207,7 +239,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           >
             {nav_cta?.text || "Register for Meetup"}
             <span className="text-[#FF6A50]">
-              <ArrowAsset arrowAssetClass="size-4 mt-px"/>
+              <ArrowAsset arrowAssetClass="size-4 mt-px" />
             </span>
           </PrismicNextLink>
 
@@ -227,6 +259,78 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           {nav_links.map((item, index) => {
             const id = getHashId(item);
             const isActive = id && id === activeId;
+            const isEventsLink =
+              item.text?.toLowerCase() === "events" || id === "events";
+
+            if (isEventsLink) {
+              return (
+                <div key={item.key ?? index}>
+                  {/* Accordion trigger */}
+                  <button
+                    onClick={() => setEventsAccordionOpen((prev) => !prev)}
+                    className={`flex items-center justify-between w-full py-3 text-base font-medium uppercase tracking-wide transition-colors ${
+                      isActive ? "text-white" : "text-white/50"
+                    }`}
+                  >
+                    <span className="flex items-center gap-3">
+                      <span
+                        className={`w-2 h-2 rounded-full inline-block shrink-0 transition-colors ${
+                          isActive
+                            ? "bg-[#FF6A50]"
+                            : "bg-transparent border border-white/30"
+                        }`}
+                      />
+                      {item.text}
+                    </span>
+                    {/* Chevron rotates when open */}
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={`transition-transform duration-200 ${eventsAccordionOpen ? "rotate-180" : ""}`}
+                    >
+                      <polyline points="6 9 12 15 18 9" />
+                    </svg>
+                  </button>
+
+                  {/* Accordion body */}
+                  {eventsAccordionOpen && (
+                    <div className="flex flex-col pl-5 mb-2 border-l border-white/10">
+                      {DROPDOWN_ITEMS.map(({ label, tab }) => (
+                        <button
+                          key={tab}
+                          onClick={() => handleMobileEventClick(tab)}
+                          className="flex items-center gap-2 py-2.5 text-sm font-medium uppercase tracking-wide transition-colors text-left"
+                        >
+                          {/* ✅ only orange when this tab is active AND user is in the events section */}
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 transition-colors ${
+                              isActive && activeEventTab === tab
+                                ? "bg-[#FF6A50]"
+                                : "bg-transparent border border-white/30"
+                            }`}
+                          />
+                          <span
+                            className={
+                              isActive && activeEventTab === tab
+                                ? "text-white"
+                                : "text-white/50"
+                            }
+                          >
+                            {label}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            }
 
             return (
               <a
