@@ -11,6 +11,12 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
+            "report_slice": {
+              "type": "SharedSlice"
+            },
+            "video_showcase": {
+              "type": "SharedSlice"
+            },
             "marquee": {
               "type": "SharedSlice"
             },

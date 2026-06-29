@@ -8,5 +8,7 @@ export const components = {
   hero_section: dynamic(() => import("./Hero")),
   image_carousel: dynamic(() => import("./ImageCarousel")),
   marquee: dynamic(() => import("./Marquee")),
+  report_slice: dynamic(() => import("./ReportSlice")),
+  video_showcase: dynamic(() => import("./VideoShowcase")),
   video_with_big_title: dynamic(() => import("./VideoWithBigTitle")),
 };
