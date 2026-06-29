@@ -199,6 +199,8 @@ export type HeaderDocument<Lang extends string = string> =
   >;
 
 type HomePageDocumentDataSlicesSlice =
+  | ReportSliceSlice
+  | VideoShowcaseSlice
   | MarqueeSlice
   | EventsSlice
   | VideoWithBigTitleSlice
@@ -713,6 +715,219 @@ export type MarqueeSlice = prismic.SharedSlice<
 >;
 
 /**
+ * Primary content in *ReportSlice → Default → Primary*
+ */
+export interface ReportSliceSliceDefaultPrimary {
+  /**
+   * Asset field in *ReportSlice → Default → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: report_slice.default.primary.asset
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  asset: prismic.ImageField<never>;
+
+  /**
+   * Heading field in *ReportSlice → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: report_slice.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Description field in *ReportSlice → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: report_slice.default.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * Subscription info field in *ReportSlice → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: report_slice.default.primary.subscription_info
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  subscription_info: prismic.RichTextField;
+}
+
+/**
+ * Default variation for ReportSlice Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ReportSliceSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<ReportSliceSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *ReportSlice*
+ */
+type ReportSliceSliceVariation = ReportSliceSliceDefault;
+
+/**
+ * ReportSlice Shared Slice
+ *
+ * - **API ID**: `report_slice`
+ * - **Description**: ReportSlice
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type ReportSliceSlice = prismic.SharedSlice<
+  "report_slice",
+  ReportSliceSliceVariation
+>;
+
+/**
+ * Item in *VideoShowcase → Default → Primary → VideoBlocks*
+ */
+export interface VideoShowcaseSliceDefaultPrimaryVideoblocksItem {
+  /**
+   * Thumbnail Image field in *VideoShowcase → Default → Primary → VideoBlocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[].thumbnail_image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  thumbnail_image: prismic.ImageField<never>;
+
+  /**
+   * Thumbnail Logo field in *VideoShowcase → Default → Primary → VideoBlocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[].thumbnail_logo
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  thumbnail_logo: prismic.ImageField<never>;
+
+  /**
+   * Video Link field in *VideoShowcase → Default → Primary → VideoBlocks*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[].video_link
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  video_link: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Name of person field in *VideoShowcase → Default → Primary → VideoBlocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[].name_of_person
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  name_of_person: prismic.RichTextField;
+
+  /**
+   * Role of person, Company field in *VideoShowcase → Default → Primary → VideoBlocks*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[].role_of_person_company
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  role_of_person_company: prismic.RichTextField;
+
+  /**
+   * Company Logo field in *VideoShowcase → Default → Primary → VideoBlocks*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[].company_logo
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  company_logo: prismic.ImageField<never>;
+}
+
+/**
+ * Primary content in *VideoShowcase → Default → Primary*
+ */
+export interface VideoShowcaseSliceDefaultPrimary {
+  /**
+   * Heading field in *VideoShowcase → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Description field in *VideoShowcase → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * VideoBlocks field in *VideoShowcase → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_showcase.default.primary.videoblocks[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  videoblocks: prismic.GroupField<
+    Simplify<VideoShowcaseSliceDefaultPrimaryVideoblocksItem>
+  >;
+}
+
+/**
+ * Default variation for VideoShowcase Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type VideoShowcaseSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<VideoShowcaseSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *VideoShowcase*
+ */
+type VideoShowcaseSliceVariation = VideoShowcaseSliceDefault;
+
+/**
+ * VideoShowcase Shared Slice
+ *
+ * - **API ID**: `video_showcase`
+ * - **Description**: VideoShowcase
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type VideoShowcaseSlice = prismic.SharedSlice<
+  "video_showcase",
+  VideoShowcaseSliceVariation
+>;
+
+/**
  * Primary content in *VideoWithBigTitle → Default → Primary*
  */
 export interface VideoWithBigTitleSliceDefaultPrimary {
@@ -846,6 +1061,15 @@ declare module "@prismicio/client" {
       MarqueeSliceDefaultPrimary,
       MarqueeSliceVariation,
       MarqueeSliceDefault,
+      ReportSliceSlice,
+      ReportSliceSliceDefaultPrimary,
+      ReportSliceSliceVariation,
+      ReportSliceSliceDefault,
+      VideoShowcaseSlice,
+      VideoShowcaseSliceDefaultPrimaryVideoblocksItem,
+      VideoShowcaseSliceDefaultPrimary,
+      VideoShowcaseSliceVariation,
+      VideoShowcaseSliceDefault,
       VideoWithBigTitleSlice,
       VideoWithBigTitleSliceDefaultPrimary,
       VideoWithBigTitleSliceVariation,

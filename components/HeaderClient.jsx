@@ -201,11 +201,11 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             field={nav_cta}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-sm font-medium"
+            className="flex items-center gap-1.5 text-xs font-medium"
           >
             {nav_cta?.text || "Register for Meetup"}
             <span className="text-[#FF6A50]">
-              <ArrowAsset arrowAssetClass="size-4.5 mt-px"/>
+              <ArrowAsset arrowAssetClass="size-4 mt-px"/>
             </span>
           </PrismicNextLink>
 
