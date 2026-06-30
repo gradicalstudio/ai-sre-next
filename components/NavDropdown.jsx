@@ -9,7 +9,6 @@ const DROPDOWN_ITEMS = [
 
 export default function NavDropdown({ item, isActive, activeEventTab, onTabChange }) {
   const [open, setOpen] = useState(false);
-  // const [activeEventTab, setActiveEventTab] = useState();
   const closeTimer = useRef(null);
 
   const handleMouseEnter = () => {

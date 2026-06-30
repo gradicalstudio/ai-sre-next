@@ -96,22 +96,30 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [eventsAccordionOpen, setEventsAccordionOpen] = useState(false);
   const observerRef = useRef(null);
+  const mutationObserverRef = useRef(null);
+  const observedIdsRef = useRef(new Set());
+  const ratiosRef = useRef(new Map());
   const [activeEventTab, setActiveEventTab] = useState();
 
+  // --- Active-section tracking ---
+  // Some sections (notably #events, which is wrapped in <Suspense> because it
+  // uses useSearchParams) don't exist in the DOM yet when this effect first
+  // runs — they're injected after hydration resolves. A plain
+  // IntersectionObserver only sees elements that exist at the moment
+  // observe() is called, so it permanently misses sections that mount late.
+  // A MutationObserver watches the DOM and starts observing each target
+  // section the instant it actually appears, no matter when that happens.
   useEffect(() => {
     const ids = nav_links.map((item) => getHashId(item)).filter(Boolean);
     if (ids.length === 0) return;
 
-    const sections = ids
-      .map((id) => document.getElementById(id))
-      .filter(Boolean);
-    if (sections.length === 0) return;
-    const ratios = new Map();
+    observedIdsRef.current = new Set();
+    ratiosRef.current = new Map();
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          ratios.set(
+          ratiosRef.current.set(
             entry.target.id,
             entry.isIntersecting ? entry.intersectionRatio : 0,
           );
@@ -119,7 +127,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
         let bestId = null;
         let bestRatio = 0;
-        ratios.forEach((ratio, id) => {
+        ratiosRef.current.forEach((ratio, id) => {
           if (ratio > bestRatio) {
             bestRatio = ratio;
             bestId = id;
@@ -131,10 +139,43 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
       { rootMargin: "0px 0px -10% 0px", threshold: 0 },
     );
 
-    sections.forEach((section) => observerRef.current.observe(section));
-    return () => observerRef.current?.disconnect();
+    // Try to observe any of the target sections that already exist right now.
+    const tryObserveAll = () => {
+      ids.forEach((id) => {
+        if (observedIdsRef.current.has(id)) return;
+        const el = document.getElementById(id);
+        if (el) {
+          observerRef.current.observe(el);
+          observedIdsRef.current.add(id);
+        }
+      });
+    };
+
+    tryObserveAll();
+
+    // Watch the DOM for the remaining sections being added later (e.g. the
+    // Suspense-wrapped Events section resolving post-hydration), and start
+    // observing each one as soon as it shows up. Stops watching once every
+    // target id has been found.
+    if (observedIdsRef.current.size < ids.length) {
+      mutationObserverRef.current = new MutationObserver(() => {
+        tryObserveAll();
+        if (observedIdsRef.current.size >= ids.length) {
+          mutationObserverRef.current?.disconnect();
+        }
+      });
+      mutationObserverRef.current.observe(document.body, {
+        childList: true,
+        subtree: true,
+      });
+    }
+
+    return () => {
+      observerRef.current?.disconnect();
+      mutationObserverRef.current?.disconnect();
+    };
   }, [nav_links]);
-  
+
   useEffect(() => {
     const handler = (e) => setActiveEventTab(e.detail);
     window.addEventListener("tabchange", handler);
@@ -150,7 +191,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     setMobileOpen(false);
   };
 
-  // ✅ handles mobile dropdown item click — sets tab param, closes menu, smooth scrolls
   const handleMobileEventClick = (tab) => {
     setActiveEventTab(tab); // ✅ track which sub-item is active
     setMobileOpen(false);
