@@ -67,7 +67,7 @@ export default function FooterClient({
       tl.fromTo(
         [letters, imageWrapRef.current],
         { opacity: 0, y: 80, filter: "blur(10px)" },
-        { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1 },
+        { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.5 },
       );
 
       //   tl.to(
@@ -84,7 +84,8 @@ export default function FooterClient({
         lineScaleRef.current,
         {
           scaleX: 1,
-          duration: 0.6,
+          duration: 0.7,
+          ease: "power4.in",
           // Free the compositor layer once the one-time animation is done.
           onComplete: () => {
             gsap.set(lineScaleRef.current, { willChange: "auto" });
@@ -99,7 +100,7 @@ export default function FooterClient({
           opacity: 1,
           duration: 0.5,
         },
-        ">",
+        ">+0.2",
       );
 
       tl.to(
@@ -107,8 +108,8 @@ export default function FooterClient({
         {
           y: 0,
           opacity: 1,
-          duration: 0.4,
-          stagger: 0.05,
+          duration: 0.5,
+          stagger: 0.09,
         },
         ">",
       );
@@ -154,7 +155,7 @@ export default function FooterClient({
         <div className="flex flex-col pt-3 lg:pt-5 font-medium">
           <div
             ref={lineScaleRef}
-            className="w-full mb-4.25 h-px bg-black will-change-transform"
+            className="w-full mb-4.25 h-0.5 bg-black will-change-transform"
             style={{ transform: "scaleX(0)", transformOrigin: "left center" }}
           />
           <div className="flex flex-col md:flex-row lg:items-center justify-between gap-6">
