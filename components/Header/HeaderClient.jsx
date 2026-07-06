@@ -111,23 +111,13 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const mutationObserverRef = useRef(null);
   const observedIdsRef = useRef(new Set());
   const ratiosRef = useRef(new Map());
-
   const menuToggleRef = useRef(null);
   const mobileNavRef = useRef(null);
   const eventsTriggerRef = useRef(null);
 
-  // Shared Events tab state — replaces the old activeEventTab state +
-  // window CustomEvent("tabchange") bridge between this file, NavDropdown,
-  // and Events.jsx.
   const activeEventTab = useEventsStore((state) => state.activeTab);
   const setActiveEventTab = useEventsStore((state) => state.setActiveTab);
 
-  // --- Active-section tracking ---
-  // Some sections may not exist in the DOM yet when this effect first runs.
-  // A plain IntersectionObserver only sees elements present at the moment
-  // observe() is called, so it permanently misses sections that mount late.
-  // A MutationObserver watches the DOM and starts observing each target
-  // section the instant it actually appears, no matter when that happens.
   useEffect(() => {
     const ids = nav_links.map((item) => getHashId(item)).filter(Boolean);
     if (ids.length === 0) return;
@@ -155,7 +145,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
         setActiveId(bestRatio > 0 ? bestId : null);
       },
-      { rootMargin: "0px 0px -10% 0px", threshold: 0 },
+      { rootMargin: "-60% 0px 0px 0px", threshold: 0 },
     );
 
     const tryObserveAll = () => {
@@ -198,8 +188,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     }
   }, []);
 
-  // Manage focus: lock body scroll, move focus into the panel on open,
-  // trap Tab inside it, and close on Escape.
   useEffect(() => {
     if (!mobileOpen) return;
 
@@ -248,8 +236,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     closeMobileMenu({ returnFocus: false });
   };
 
-  // Mobile dropdown item click — sets the shared tab state, closes menu,
-  // smooth scrolls. No URL writing, no CustomEvent needed anymore.
   const handleMobileEventClick = (tab) => {
     setActiveEventTab(tab);
     closeMobileMenu({ returnFocus: false });
@@ -265,7 +251,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
         {/* Brand logo */}
         <Link
           href="/"
-          className="rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
+          className="rounded-sm  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
         >
           <PrismicNextImage
             field={brand_logo}
@@ -307,7 +293,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                       e.preventDefault();
                     }
                   }}
-                  className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] ${
+                  className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors rounded-sm  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] ${
                     isActive ? "text-white" : "text-white hover:text-white/80"
                   }`}
                 >
@@ -331,7 +317,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
               field={nav_cta}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-[#242424] hover:bg-white/20 transition-colors text-sm font-medium px-4 py-2 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
+              className="flex items-center gap-1.5 bg-[#242424] hover:bg-white/20 transition-colors text-sm font-medium px-4 py-2 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
             >
               {nav_cta?.text || "Register for Meetup"}
               <span className="sr-only"> (opens in a new tab)</span>
@@ -348,7 +334,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             field={nav_cta}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
+            className="flex items-center gap-1.5 text-xs font-medium rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
           >
             {nav_cta?.text || "Register for Meetup"}
             <span className="sr-only"> (opens in a new tab)</span>
@@ -361,12 +347,14 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             ref={menuToggleRef}
             type="button"
             onClick={() =>
-              mobileOpen ? closeMobileMenu({ returnFocus: false }) : setMobileOpen(true)
+              mobileOpen
+                ? closeMobileMenu({ returnFocus: false })
+                : setMobileOpen(true)
             }
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
-            className="cursor-pointer p-2.5 -m-2.5 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
+            className="cursor-pointer p-2.5 -m-2.5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
           >
             {mobileOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
           </button>
@@ -397,7 +385,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                     onClick={() => setEventsAccordionOpen((prev) => !prev)}
                     aria-expanded={eventsAccordionOpen}
                     aria-controls="mobile-events-panel"
-                    className={`flex items-center justify-between w-full py-3 text-base font-medium uppercase tracking-wide transition-colors rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation ${
+                    className={`flex items-center justify-between w-full py-3 text-base font-medium uppercase tracking-wide transition-colors rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation ${
                       isActive ? "text-white" : "text-white/50"
                     }`}
                   >
@@ -446,7 +434,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                               ? "true"
                               : undefined
                           }
-                          className="flex items-center gap-2 py-2.5 text-sm font-medium uppercase tracking-wide transition-colors text-left rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
+                          className="flex items-center gap-2 py-2.5 text-sm font-medium uppercase tracking-wide transition-colors text-left rounded-sm  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
                         >
                           {/* only orange when this tab is active AND user is in the events section */}
                           <span
@@ -486,7 +474,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                     e.preventDefault();
                   }
                 }}
-                className={`flex items-center gap-3 py-3 text-base font-medium uppercase tracking-wide transition-colors rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation] ${
+                className={`flex items-center gap-3 py-3 text-base font-medium uppercase tracking-wide transition-colors rounded-sm  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation ${
                   isActive ? "text-white" : "text-white/50"
                 }`}
               >
