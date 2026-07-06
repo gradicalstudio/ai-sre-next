@@ -1,0 +1,57 @@
+{
+  "format": "custom",
+  "id": "floatingpopup",
+  "label": "FloatingPopUp",
+  "repeatable": false,
+  "status": true,
+  "json": {
+    "Main": {
+      "show_hide_toggle": {
+        "type": "Boolean",
+        "config": {
+          "label": "Show Hide Toggle",
+          "placeholder_false": "Hide",
+          "placeholder_true": "Show",
+          "default_value": false
+        }
+      },
+      "popups": {
+        "type": "Group",
+        "config": {
+          "label": "PopUps",
+          "repeat": true,
+          "fields": {
+            "image": {
+              "type": "Image",
+              "config": {
+                "label": "Image",
+                "constraint": {},
+                "thumbnails": []
+              }
+            },
+            "title": {
+              "type": "StructuredText",
+              "config": {
+                "label": "Title",
+                "placeholder": "",
+                "allowTargetBlank": true,
+                "multi": "paragraph,preformatted,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
+              }
+            },
+            "popup_link": {
+              "type": "Link",
+              "config": {
+                "label": "PopUp Link",
+                "placeholder": "",
+                "select": null,
+                "allowTargetBlank": true,
+                "allowText": true,
+                "repeat": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,82 +1,160 @@
 "use client";
 import { PrismicRichText } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
-import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState, Suspense } from "react";
 import EventCTA from "@/components/EventCTA";
+import { useEventsStore } from "@/store/eventsStore";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useMemo, useRef, useState } from "react";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const EMBED_SRC = "https://www.unicorn.studio/embed/ATGD5bKuLj8x2tOWjnD7";
 
 /**
  * @typedef {import("@prismicio/client").Content.EventsSlice} EventsSlice
  * @typedef {import("@prismicio/react").SliceComponentProps<EventsSlice>} EventsProps
  * @type {import("react").FC<EventsProps>}
  */
+const Events = ({ slice }) => {
+  const activeTab = useEventsStore((state) => state.activeTab);
+  const setActiveTab = useEventsStore((state) => state.setActiveTab);
+  const headingRef = useRef(null);
+  const iframeRef = useRef(null);
+  const innerContainerRef = useRef(null);
+  const sectionRef = useRef(null);
 
-// ✅ All your logic moves into this inner component
-const EventsInner = ({ slice }) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [activeTab, setActiveTab] = useState("upcoming");
+  const [shouldLoadEmbed, setShouldLoadEmbed] = useState(false);
 
   useEffect(() => {
-    const tab = searchParams.get("tab");
-    if (tab === "past" || tab === "upcoming") {
-      setActiveTab(tab);
-      const url = new URL(window.location.href);
-      url.searchParams.delete("tab");
-      router.replace(url.pathname + url.hash, { scroll: false });
-    }
-  }, [searchParams]);
+    if (shouldLoadEmbed) return;
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldLoadEmbed(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "800px 0px" },
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shouldLoadEmbed]);
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const ctx = gsap.context(() => {
+      if (prefersReducedMotion) {
+        gsap.set(iframeRef.current, { opacity: 1 });
+        gsap.set(headingRef.current, { y: 0, opacity: 1 });
+        gsap.set(innerContainerRef.current, { y: 0, opacity: 1 });
+        return;
+      }
+
+      gsap.set([iframeRef.current, innerContainerRef.current], {
+        willChange: "transform, opacity",
+      });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: iframeRef.current,
+          start: "top 70%",
+          once: true,
+        },
+        onComplete: () => {
+          gsap.set([iframeRef.current, innerContainerRef.current], {
+            willChange: "auto",
+          });
+        },
+      });
+
+      tl.fromTo(
+        iframeRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.8 },
+      ).fromTo(
+        [headingRef.current, innerContainerRef.current],
+        { y: 10, opacity: 0 },
+        { y: 0, opacity: 1 },
+      );
+    }, iframeRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const events = slice.primary.events ?? [];
 
-  const upcomingEvents = events.filter((item) => {
-    const rawDate = item.date?.[0]?.text;
-    if (!rawDate) return false;
-    const eventDate = new Date(rawDate);
-    eventDate.setHours(0, 0, 0, 0);
-    return eventDate >= today;
-  });
+  const { upcomingEvents, pastEvents } = useMemo(() => {
+    const upcoming = [];
+    const past = [];
 
-  const pastEvents = events.filter((item) => {
-    const rawDate = item.date?.[0]?.text;
-    if (!rawDate) return false;
-    const eventDate = new Date(rawDate);
-    eventDate.setHours(0, 0, 0, 0);
-    return eventDate < today;
-  });
+    events.forEach((item) => {
+      const rawDate = item.date?.[0]?.text;
+      if (!rawDate) return;
+      const eventDate = new Date(rawDate);
+      eventDate.setHours(0, 0, 0, 0);
+      if (eventDate >= today) {
+        upcoming.push(item);
+      } else {
+        past.push(item);
+      }
+    });
+
+    return { upcomingEvents: upcoming, pastEvents: past };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [events]);
 
   const displayedEvents =
     activeTab === "upcoming" ? upcomingEvents : pastEvents;
 
+  const getEventKey = (item, index) =>
+    item.id ??
+    `${item.title?.[0]?.text ?? "event"}-${item.date?.[0]?.text ?? index}`;
+
   return (
     <section
+      ref={sectionRef}
       id="events"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
       className=" max-w-[1920px] mx-auto w-full  lg:px-9  mb-22.5 md:mb-45"
     >
-      {/* ...everything else is identical, no changes below this line... */}
       <div className="">
-        <div className="lg:px-15 h-110 lg:h-120 xl:h-150 relative flex items-center justify-center xl:px-24 2xl:px-30 4xl:px-33.25">
-          <iframe
-            src="https://www.unicorn.studio/embed/ATGD5bKuLj8x2tOWjnD7"
-            loading="lazy"
-            style={{ willChange: "transform", transform: "translateZ(0)" }}
-            className="lg:w-[1569px] w-full h-full z-100"
-            allowFullScreen
-          />
-          <div
-            style={{ willChange: "transform", transform: "translateZ(0)" }}
-            className=" text-white  absolute w-full h-fit lg:w-180 xl:w-250 4xl:w-300 4xl:h-fit z-102 px-3 "
-          >
-            <div className="text-black text-[28px] xl:text-[42px] leading-none font-medium mb-5 4xl:mb-5">
+        <div
+          ref={iframeRef}
+          className="lg:px-15 h-110 lg:h-120 xl:h-150 relative opacity-0 flex items-center justify-center xl:px-24 2xl:px-30 4xl:px-33.25"
+        >
+          {shouldLoadEmbed && (
+            <iframe
+              src={EMBED_SRC}
+              title=""
+              aria-hidden="true"
+              tabIndex={-1}
+              className="lg:w-[1569px] w-full h-full z-100"
+              allowFullScreen
+            />
+          )}
+          <div className="absolute w-full h-fit lg:w-180 xl:w-250 4xl:w-300 4xl:h-fit z-102 px-3">
+            <div
+              ref={headingRef}
+              className="text-black opacity-0 text-[28px] xl:text-[42px] leading-none font-medium mb-5 4xl:mb-5"
+            >
               <PrismicRichText field={slice.primary.main_heading} />
             </div>
 
-            <div className="w-full  bg-[#04050F] p-1  ">
+            <div
+              ref={innerContainerRef}
+              className="w-full opacity-0 bg-[#04050F] p-1  "
+            >
               <div className="flex items-center border border-white/10 p-5 justify-between w-full">
                 <div className="text-white/60 text-sm">
                   <PrismicRichText field={slice.primary.description} />
@@ -96,71 +174,70 @@ const EventsInner = ({ slice }) => {
                       />
                     </div>
                   )}
-                  <div className="flex w-fit  gap-6 shrink-0">
+                  <div
+                    role="tablist"
+                    aria-label="Event timeframe"
+                    className="flex w-fit  gap-6 shrink-0"
+                  >
                     <button
-                      onClick={() => {
-                        setActiveTab("upcoming");
-                        // ← add this block
-                        const url = new URL(window.location.href);
-                        url.searchParams.set("tab", "upcoming");
-                        window.history.pushState(
-                          {},
-                          "",
-                          url.pathname + url.search,
-                        );
-                        window.dispatchEvent(
-                          new CustomEvent("tabchange", { detail: "upcoming" }),
-                        );
-                      }}
-                      className={`flex items-center text-xs  lg:text-sm xl:text-lg cursor-pointer gap-2  font-medium transition-colors whitespace-nowrap ${
+                      type="button"
+                      role="tab"
+                      id="events-tab-upcoming"
+                      aria-selected={activeTab === "upcoming"}
+                      aria-controls="events-tabpanel"
+                      onClick={() => setActiveTab("upcoming")}
+                      className={`flex items-center text-xs  lg:text-sm xl:text-lg cursor-pointer gap-2  font-medium transition-colors whitespace-nowrap rounded-sm focus-visible:outline md:focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation ${
                         activeTab === "upcoming"
                           ? "text-white"
                           : "text-white/40 hover:text-white/70"
                       }`}
                     >
                       <span
+                        aria-hidden="true"
                         className={`w-2 h-2 rounded-full inline-block transition-colors ${
                           activeTab === "upcoming"
                             ? "bg-[#FF6A50]"
                             : "bg-[#04050F]"
                         }`}
                       />
-                      <p>Upcoming Events</p>
+                      <span>Upcoming Events</span>
                     </button>
 
                     <button
-                      onClick={() => {
-                        setActiveTab("past");
-                        // ← add this block
-                        const url = new URL(window.location.href);
-                        url.searchParams.set("tab", "past");
-                        window.history.pushState(
-                          {},
-                          "",
-                          url.pathname + url.search,
-                        );
-                        window.dispatchEvent(
-                          new CustomEvent("tabchange", { detail: "past" }),
-                        );
-                      }}
-                      className={`flex items-center text-xs lg:text-sm xl:text-lg gap-2 cursor-pointer  font-medium transition-colors whitespace-nowrap ${
+                      type="button"
+                      role="tab"
+                      id="events-tab-past"
+                      aria-selected={activeTab === "past"}
+                      aria-controls="events-tabpanel"
+                      onClick={() => setActiveTab("past")}
+                      className={`flex items-center text-xs lg:text-sm xl:text-lg gap-2 cursor-pointer  font-medium transition-colors whitespace-nowrap rounded-sm focus-visible:outline md:focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation ${
                         activeTab === "past"
                           ? "text-white "
                           : "text-white/40 hover:text-white/70"
                       }`}
                     >
                       <span
+                        aria-hidden="true"
                         className={`w-2 h-2 rounded-full inline-block transition-colors ${
                           activeTab === "past" ? "bg-[#FF6A50]" : "bg-[#04050F]"
                         }`}
                       />
-                      <p>Past Events</p>
+                      <span>Past Events</span>
                     </button>
                   </div>
                 </div>
               </div>
 
-              <div className="flex border-x border-b p-4 border-white/10 flex-col gap-3">
+              <div
+                role="tabpanel"
+                id="events-tabpanel"
+                aria-labelledby={
+                  activeTab === "upcoming"
+                    ? "events-tab-upcoming"
+                    : "events-tab-past"
+                }
+                className="flex border-x border-b p-4 border-white/10 flex-col gap-3"
+              >
                 {displayedEvents.length === 0 ? (
                   <p className="text-white/40 text-sm py-6 text-center">
                     No {activeTab} events at the moment.
@@ -168,7 +245,7 @@ const EventsInner = ({ slice }) => {
                 ) : (
                   displayedEvents.map((item, index) => (
                     <div
-                      key={index}
+                      key={getEventKey(item, index)}
                       className="flex  items-center gap-4 p-4 md:p-2 border border-[#FF6A50] lg:border-[#04050F] lg:hover:border-[#FF6A50] transition-colors"
                     >
                       <div className="hidden lg:block lg:w-30 xl:w-40 h-auto shrink-0  overflow-hidden bg-white/5">
@@ -212,12 +289,5 @@ const EventsInner = ({ slice }) => {
     </section>
   );
 };
-
-// ✅ Outer component wraps with Suspense — this is the default export Prismic calls
-const Events = ({ slice }) => (
-  <Suspense fallback={null}>
-    <EventsInner slice={slice} />
-  </Suspense>
-);
 
 export default Events;

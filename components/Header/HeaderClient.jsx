@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from "next/link";
-import NavDropdown from "./NavDropdown";
+import NavDropdown from "../NavDropdown";
+import { useEventsStore } from "@/store/eventsStore";
 
 const MenuIcon = ({ size = 24 }) => (
   <svg
@@ -15,6 +16,8 @@ const MenuIcon = ({ size = 24 }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
+    focusable="false"
   >
     <line x1="3" y1="6" x2="21" y2="6" />
     <line x1="3" y1="12" x2="21" y2="12" />
@@ -32,6 +35,8 @@ const CloseIcon = ({ size = 24 }) => (
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    aria-hidden="true"
+    focusable="false"
   >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
@@ -46,6 +51,8 @@ const ArrowIcon = ({ className }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={className}
+    aria-hidden="true"
+    focusable="false"
   >
     <path d="M8.67057 16.6676H6.00391V14.001H8.67057V16.6676Z" fill="white" />
     <path d="M11.3307 13.9997H8.66406V11.333H11.3307V13.9997Z" fill="white" />
@@ -64,6 +71,8 @@ const ArrowAsset = ({ arrowAssetClass }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     className={arrowAssetClass}
+    aria-hidden="true"
+    focusable="false"
   >
     <path
       d="M4.19657 8.06376H2.90625V6.77344H4.19657V8.06376Z"
@@ -91,6 +100,9 @@ const getHashId = (link) => {
   return hashIndex !== -1 ? url.slice(hashIndex + 1) : null;
 };
 
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const [activeId, setActiveId] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -99,13 +111,20 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const mutationObserverRef = useRef(null);
   const observedIdsRef = useRef(new Set());
   const ratiosRef = useRef(new Map());
-  const [activeEventTab, setActiveEventTab] = useState();
+
+  const menuToggleRef = useRef(null);
+  const mobileNavRef = useRef(null);
+  const eventsTriggerRef = useRef(null);
+
+  // Shared Events tab state — replaces the old activeEventTab state +
+  // window CustomEvent("tabchange") bridge between this file, NavDropdown,
+  // and Events.jsx.
+  const activeEventTab = useEventsStore((state) => state.activeTab);
+  const setActiveEventTab = useEventsStore((state) => state.setActiveTab);
 
   // --- Active-section tracking ---
-  // Some sections (notably #events, which is wrapped in <Suspense> because it
-  // uses useSearchParams) don't exist in the DOM yet when this effect first
-  // runs — they're injected after hydration resolves. A plain
-  // IntersectionObserver only sees elements that exist at the moment
+  // Some sections may not exist in the DOM yet when this effect first runs.
+  // A plain IntersectionObserver only sees elements present at the moment
   // observe() is called, so it permanently misses sections that mount late.
   // A MutationObserver watches the DOM and starts observing each target
   // section the instant it actually appears, no matter when that happens.
@@ -139,7 +158,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
       { rootMargin: "0px 0px -10% 0px", threshold: 0 },
     );
 
-    // Try to observe any of the target sections that already exist right now.
     const tryObserveAll = () => {
       ids.forEach((id) => {
         if (observedIdsRef.current.has(id)) return;
@@ -153,10 +171,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
     tryObserveAll();
 
-    // Watch the DOM for the remaining sections being added later (e.g. the
-    // Suspense-wrapped Events section resolving post-hydration), and start
-    // observing each one as soon as it shows up. Stops watching once every
-    // target id has been found.
     if (observedIdsRef.current.size < ids.length) {
       mutationObserverRef.current = new MutationObserver(() => {
         tryObserveAll();
@@ -176,11 +190,54 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     };
   }, [nav_links]);
 
-  useEffect(() => {
-    const handler = (e) => setActiveEventTab(e.detail);
-    window.addEventListener("tabchange", handler);
-    return () => window.removeEventListener("tabchange", handler);
+  const closeMobileMenu = useCallback(({ returnFocus = true } = {}) => {
+    setMobileOpen(false);
+    setEventsAccordionOpen(false);
+    if (returnFocus) {
+      menuToggleRef.current?.focus();
+    }
   }, []);
+
+  // Manage focus: lock body scroll, move focus into the panel on open,
+  // trap Tab inside it, and close on Escape.
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
+
+    const panel = mobileNavRef.current;
+    const focusables = panel
+      ? Array.from(panel.querySelectorAll(FOCUSABLE_SELECTOR))
+      : [];
+    focusables[0]?.focus();
+
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeMobileMenu();
+        return;
+      }
+      if (e.key !== "Tab" || focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.documentElement.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [mobileOpen, eventsAccordionOpen, closeMobileMenu]);
 
   const handleNavClick = (e, id) => {
     e.preventDefault();
@@ -188,18 +245,14 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     if (target) {
       target.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    setMobileOpen(false);
+    closeMobileMenu({ returnFocus: false });
   };
 
+  // Mobile dropdown item click — sets the shared tab state, closes menu,
+  // smooth scrolls. No URL writing, no CustomEvent needed anymore.
   const handleMobileEventClick = (tab) => {
-    setActiveEventTab(tab); // ✅ track which sub-item is active
-    setMobileOpen(false);
-    setEventsAccordionOpen(false);
-
-    const url = new URL(window.location.href);
-    url.searchParams.set("tab", tab);
-    window.history.pushState({}, "", url.pathname + url.search);
-    window.dispatchEvent(new Event("popstate"));
+    setActiveEventTab(tab);
+    closeMobileMenu({ returnFocus: false });
 
     setTimeout(() => {
       document.getElementById("events")?.scrollIntoView({ behavior: "smooth" });
@@ -207,10 +260,13 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   };
 
   return (
-    <header className="sticky top-0 z-350 bg-[#04050F] text-white">
+    <header className="sticky top-0 z-500 bg-[#04050F] text-white">
       <div className="max-w-[1920px] mx-auto flex items-center justify-between px-4 lg:px-9 h-16 lg:h-15">
         {/* Brand logo */}
-        <Link href="/">
+        <Link
+          href="/"
+          className="rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
+        >
           <PrismicNextImage
             field={brand_logo}
             className="h-8 lg:h-8 w-auto cursor-pointer"
@@ -219,7 +275,10 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
         <div className="flex gap-10">
           {/* Desktop nav */}
-          <nav className="hidden lg:flex font-mono text-white items-center gap-8">
+          <nav
+            aria-label="Primary"
+            className="hidden lg:flex font-mono text-white items-center gap-8"
+          >
             {nav_links.map((item, index) => {
               const id = getHashId(item);
               const isActive = id && id === activeId;
@@ -232,8 +291,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                     key={item.key ?? index}
                     item={item}
                     isActive={isActive}
-                    activeEventTab={activeEventTab}
-                    onTabChange={setActiveEventTab}
                   />
                 );
               }
@@ -242,12 +299,20 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                 <a
                   key={item.key ?? index}
                   href={item?.url ?? "#"}
-                  onClick={(e) => id && handleNavClick(e, id)}
-                  className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors ${
+                  aria-current={isActive ? "location" : undefined}
+                  onClick={(e) => {
+                    if (id) {
+                      handleNavClick(e, id);
+                    } else if (!item?.url) {
+                      e.preventDefault();
+                    }
+                  }}
+                  className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] ${
                     isActive ? "text-white" : "text-white hover:text-white/80"
                   }`}
                 >
                   <span
+                    aria-hidden="true"
                     className={`w-2 h-2 rounded-full inline-block transition-colors ${
                       isActive
                         ? "bg-[#FF6A50]"
@@ -266,9 +331,10 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
               field={nav_cta}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-[#242424] hover:bg-white/20 transition-colors text-sm font-medium px-4 py-2 rounded-full"
+              className="flex items-center gap-1.5 bg-[#242424] hover:bg-white/20 transition-colors text-sm font-medium px-4 py-2 rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
             >
               {nav_cta?.text || "Register for Meetup"}
+              <span className="sr-only"> (opens in a new tab)</span>
               <span className="text-[#FF6A50]">
                 <ArrowIcon className="size-4 mt-0.5" />
               </span>
@@ -282,18 +348,25 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             field={nav_cta}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-xs font-medium"
+            className="flex items-center gap-1.5 text-xs font-medium rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
           >
             {nav_cta?.text || "Register for Meetup"}
+            <span className="sr-only"> (opens in a new tab)</span>
             <span className="text-[#FF6A50]">
               <ArrowAsset arrowAssetClass="size-4 mt-px" />
             </span>
           </PrismicNextLink>
 
           <button
-            onClick={() => setMobileOpen((prev) => !prev)}
+            ref={menuToggleRef}
+            type="button"
+            onClick={() =>
+              mobileOpen ? closeMobileMenu({ returnFocus: false }) : setMobileOpen(true)
+            }
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            className="cursor-pointer"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+            className="cursor-pointer p-2.5 -m-2.5 rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
           >
             {mobileOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
           </button>
@@ -302,7 +375,12 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
       {/* Mobile menu panel */}
       {mobileOpen && (
-        <nav className="lg:hidden flex flex-col gap-1 px-4 pb-6 bg-[#04050F] border-t border-white/10">
+        <nav
+          id="mobile-nav"
+          aria-label="Primary"
+          ref={mobileNavRef}
+          className="lg:hidden flex flex-col gap-1 px-4 pb-6 bg-[#04050F] border-t border-white/10 overscroll-contain"
+        >
           {nav_links.map((item, index) => {
             const id = getHashId(item);
             const isActive = id && id === activeId;
@@ -314,13 +392,18 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                 <div key={item.key ?? index}>
                   {/* Accordion trigger */}
                   <button
+                    ref={eventsTriggerRef}
+                    type="button"
                     onClick={() => setEventsAccordionOpen((prev) => !prev)}
-                    className={`flex items-center justify-between w-full py-3 text-base font-medium uppercase tracking-wide transition-colors ${
+                    aria-expanded={eventsAccordionOpen}
+                    aria-controls="mobile-events-panel"
+                    className={`flex items-center justify-between w-full py-3 text-base font-medium uppercase tracking-wide transition-colors rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation ${
                       isActive ? "text-white" : "text-white/50"
                     }`}
                   >
                     <span className="flex items-center gap-3">
                       <span
+                        aria-hidden="true"
                         className={`w-2 h-2 rounded-full inline-block shrink-0 transition-colors ${
                           isActive
                             ? "bg-[#FF6A50]"
@@ -339,7 +422,9 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className={`transition-transform duration-200 ${eventsAccordionOpen ? "rotate-180" : ""}`}
+                      aria-hidden="true"
+                      focusable="false"
+                      className={`motion-safe:transition-transform motion-safe:duration-200 ${eventsAccordionOpen ? "rotate-180" : ""}`}
                     >
                       <polyline points="6 9 12 15 18 9" />
                     </svg>
@@ -347,15 +432,25 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
                   {/* Accordion body */}
                   {eventsAccordionOpen && (
-                    <div className="flex flex-col pl-5 mb-2 border-l border-white/10">
+                    <div
+                      id="mobile-events-panel"
+                      className="flex flex-col pl-5 mb-2 border-l border-white/10"
+                    >
                       {DROPDOWN_ITEMS.map(({ label, tab }) => (
                         <button
                           key={tab}
+                          type="button"
                           onClick={() => handleMobileEventClick(tab)}
-                          className="flex items-center gap-2 py-2.5 text-sm font-medium uppercase tracking-wide transition-colors text-left"
+                          aria-current={
+                            isActive && activeEventTab === tab
+                              ? "true"
+                              : undefined
+                          }
+                          className="flex items-center gap-2 py-2.5 text-sm font-medium uppercase tracking-wide transition-colors text-left rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation]"
                         >
-                          {/* ✅ only orange when this tab is active AND user is in the events section */}
+                          {/* only orange when this tab is active AND user is in the events section */}
                           <span
+                            aria-hidden="true"
                             className={`w-1.5 h-1.5 rounded-full shrink-0 transition-colors ${
                               isActive && activeEventTab === tab
                                 ? "bg-[#FF6A50]"
@@ -383,12 +478,20 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
               <a
                 key={item.key ?? index}
                 href={item?.url ?? "#"}
-                onClick={(e) => id && handleNavClick(e, id)}
-                className={`flex items-center gap-3 py-3 text-base font-medium uppercase tracking-wide transition-colors ${
+                aria-current={isActive ? "location" : undefined}
+                onClick={(e) => {
+                  if (id) {
+                    handleNavClick(e, id);
+                  } else if (!item?.url) {
+                    e.preventDefault();
+                  }
+                }}
+                className={`flex items-center gap-3 py-3 text-base font-medium uppercase tracking-wide transition-colors rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] [touch-action:manipulation] ${
                   isActive ? "text-white" : "text-white/50"
                 }`}
               >
                 <span
+                  aria-hidden="true"
                   className={`w-2 h-2 rounded-full inline-block shrink-0 transition-colors ${
                     isActive
                       ? "bg-[#FF6A50]"

@@ -16,8 +16,8 @@ const OldPrimaryButton = ({ buttonText, onClick, className }) => {
           font-semibold
           text-black
 
-          transition-all
-          duration-250
+          transition-color
+          duration-450
 
           hover:bg-[#FF6A50]
           hover:text-[#04050F]
