@@ -197,6 +197,7 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         loop
         playsInline
         controls={false}
+        loading="lazy"
         style={{
           width: "100%",
           height: "100%",
@@ -208,6 +209,7 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       <wistia-player
         ref={playerRef}
         media-id={videoId}
+        loading="lazy"
         muted
         seo="false"
         aria-hidden="true"

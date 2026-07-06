@@ -1,5 +1,14 @@
+"use client";
+
+import { useRef, useEffect } from "react";
 import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText } from "@prismicio/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 /**
  * @typedef {import("@prismicio/client").Content.AboutSectionSlice} AboutSectionSlice
@@ -7,6 +16,75 @@ import { PrismicRichText } from "@prismicio/react";
  * @type {import("react").FC<AboutSectionProps>}
  */
 const AboutSection = ({ slice }) => {
+  const headingRef = useRef(null);
+  const cardsRef = useRef([]);
+  cardsRef.current = [];
+
+  const addCardRef = (el) => {
+    if (el && !cardsRef.current.includes(el)) {
+      cardsRef.current.push(el);
+    }
+  };
+
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const ctx = gsap.context(() => {
+      if (prefersReducedMotion) {
+        gsap.set([headingRef.current, ...cardsRef.current], {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+        });
+        return;
+      }
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: headingRef.current,
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+      });
+
+      const tlTwo = gsap.timeline({
+        scrollTrigger: {
+          trigger: cardsRef.current,
+          start: "top 80%",
+          toggleActions: "play none none none",
+          // markers: true,
+        },
+      });
+
+      tl.fromTo(
+        headingRef.current,
+        { opacity: 0, y: 40, filter: "blur(6px)" },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.9,
+          ease: "power3.out",
+        },
+      );
+
+      tlTwo.fromTo(
+        cardsRef.current,
+        { opacity: 0, y: 80, filter: "blur(10px)" },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          ease: "power3.out",
+          stagger: 0.15,
+        },
+      );
+    });
+
+    return () => ctx.revert();
+  }, []);
   return (
     // Main Container
     <section
@@ -18,7 +96,10 @@ const AboutSection = ({ slice }) => {
       {/* Inner Container */}
       <div className="lg:px-15 xl:px-24 2xl:px-30 4xl:px-33.25">
         {/* Top */}
-        <div className="text-base md:text-[26px] lg:text-[28px] xl:text-[34px] 2xl:text-[36px] 4xl:text-[44px] text-white md:leading-[1.1] lg:leading-none lg:w-[84%] xl:w-[84%] 2xl:w-[84%] 4xl:w-[84%] mb-12.5 md:mb-27 lg:mb-27 xl:mb-35  2xl:mb-45">
+        <div
+          ref={headingRef}
+          className="text-base md:text-[26px] lg:text-[28px] xl:text-[34px] 2xl:text-[36px] 4xl:text-[44px] text-white opacity-0 md:leading-[1.1] lg:leading-none lg:w-[84%] xl:w-[84%] 2xl:w-[84%] 4xl:w-[84%] mb-12.5 md:mb-27 lg:mb-27 xl:mb-35  2xl:mb-45"
+        >
           <PrismicRichText field={slice.primary.intro_text} />
         </div>
         {/* Bottom */}
@@ -28,14 +109,10 @@ const AboutSection = ({ slice }) => {
             {slice.primary.overview_cards.map((item, i) => (
               <div
                 key={i}
+                ref={addCardRef}
                 className="  md:w-95 lg:w-100 xl:w-115 2xl:w-113 4xl:w-120"
               >
                 <div>
-                  {/* Line */}
-                  {/* {i !== 0 && (
-                    <div className="sm:hidden w-full h-px my-5 bg-[#A2A2A2]" />
-                  )} */}
-
                   <div className="mb-3 md:mb-6 lg:mb-7.5 2xl:mb-9.5 h-auto w-20 md:w-20 lg:w-25 xl:w-30 ">
                     <PrismicNextImage field={item.icon} className="" />
                   </div>

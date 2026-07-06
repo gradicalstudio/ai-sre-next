@@ -21,7 +21,7 @@ const ArrowIcon = ({ className }) => (
 
 const HeroButton = ({ link }) => {
   return (
-    <div className="group bg-[#FF6A50] lg:bg-[#04050F] w-fit transition-all duration-350  lg:hover:bg-[#FF6A50] inline-flex  md:w-fit cursor-pointer items-center  rounded-sm px-2 py-1 lg:px-3 lg:py-[6.5px]">
+    <div className="group bg-[#FF6A50] lg:bg-[#04050F] w-fit transition-color duration-450  lg:hover:bg-[#FF6A50] inline-flex  md:w-fit cursor-pointer items-center  rounded-sm px-2 py-1 lg:px-3 lg:py-[6.5px]">
       <PrismicNextLink
         field={link}
         className="text-white lg:border w-fit md:w-fit rounded-full pl-2.5 pr-1.5 py-2.5 lg:pl-4 lg:pr-2.5 lg:py-2 flex items-center group-hover:border-[#FF6A50] bg-[#04050F]"

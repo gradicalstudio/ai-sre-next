@@ -1,6 +1,5 @@
 import VideoPlayer from "@/components/VIdeoplayer";
 import { PrismicRichText } from "@prismicio/react";
-// import VideoPlayer from "./VideoPlayer";
 
 /**
  * @typedef {import("@prismicio/client").Content.VideoShowcaseSlice} VideoShowcaseSlice
@@ -33,7 +32,7 @@ const VideoShowcase = ({ slice }) => {
       </div>
 
       {/* Hand off to the client boundary — only this part ships JS */}
-      <div className="lg:px-15 xl:px-24 2xl:px-30 4xl:px-40  ">
+      <div className="lg:px-15 xl:px-24 2xl:px-30 4xl:px-50  ">
         <VideoPlayer items={items} />
       </div>
     </section>

@@ -69,6 +69,168 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
+type DevstagingDocumentDataSlicesSlice =
+  | SpeakersOfBangaloreEditionSlice
+  | VideoShowcaseSlice
+  | VideoWithBigTitleSlice
+  | OldHeroSectionSlice
+  | ReportSliceSlice
+  | ParticipantsSlice
+  | ImageCarouselSlice
+  | MarqueeSlice
+  | EventsSlice
+  | AboutSectionSlice
+  | AgendaSlice
+  | HeroSectionSlice;
+
+/**
+ * Content for DevStaging documents
+ */
+interface DevstagingDocumentData {
+  /**
+   * Slice Zone field in *DevStaging*
+   *
+   * - **Field Type**: Slice Zone
+   * - **Placeholder**: *None*
+   * - **API ID Path**: devstaging.slices[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/slices
+   */
+  slices: prismic.SliceZone<DevstagingDocumentDataSlicesSlice>; /**
+   * Meta Title field in *DevStaging*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A title of the page used for social media and search engines
+   * - **API ID Path**: devstaging.meta_title
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_title: prismic.KeyTextField;
+
+  /**
+   * Meta Description field in *DevStaging*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: A brief summary of the page
+   * - **API ID Path**: devstaging.meta_description
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  meta_description: prismic.KeyTextField;
+
+  /**
+   * Meta Image field in *DevStaging*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: devstaging.meta_image
+   * - **Tab**: SEO & Metadata
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  meta_image: prismic.ImageField<never>;
+}
+
+/**
+ * DevStaging document from Prismic
+ *
+ * - **API ID**: `devstaging`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type DevstagingDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<
+    Simplify<DevstagingDocumentData>,
+    "devstaging",
+    Lang
+  >;
+
+/**
+ * Item in *FloatingPopUp → PopUps*
+ */
+export interface FloatingpopupDocumentDataPopupsItem {
+  /**
+   * Image field in *FloatingPopUp → PopUps*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: floatingpopup.popups[].image
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  image: prismic.ImageField<never>;
+
+  /**
+   * Title field in *FloatingPopUp → PopUps*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: floatingpopup.popups[].title
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  title: prismic.RichTextField;
+
+  /**
+   * PopUp Link field in *FloatingPopUp → PopUps*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: floatingpopup.popups[].popup_link
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  popup_link: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+}
+
+/**
+ * Content for FloatingPopUp documents
+ */
+interface FloatingpopupDocumentData {
+  /**
+   * Show Hide Toggle field in *FloatingPopUp*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: floatingpopup.show_hide_toggle
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  show_hide_toggle: prismic.BooleanField;
+
+  /**
+   * PopUps field in *FloatingPopUp*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: floatingpopup.popups[]
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  popups: prismic.GroupField<Simplify<FloatingpopupDocumentDataPopupsItem>>;
+}
+
+/**
+ * FloatingPopUp document from Prismic
+ *
+ * - **API ID**: `floatingpopup`
+ * - **Repeatable**: `false`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type FloatingpopupDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithoutUID<
+    Simplify<FloatingpopupDocumentData>,
+    "floatingpopup",
+    Lang
+  >;
+
 /**
  * Content for Footer documents
  */
@@ -338,6 +500,8 @@ export type PageDocument<Lang extends string = string> =
   prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 
 export type AllDocumentTypes =
+  | DevstagingDocument
+  | FloatingpopupDocument
   | FooterDocument
   | HeaderDocument
   | HomePageDocument
@@ -2107,6 +2271,12 @@ declare module "@prismicio/client" {
 
   namespace Content {
     export type {
+      DevstagingDocument,
+      DevstagingDocumentData,
+      DevstagingDocumentDataSlicesSlice,
+      FloatingpopupDocument,
+      FloatingpopupDocumentData,
+      FloatingpopupDocumentDataPopupsItem,
       FooterDocument,
       FooterDocumentData,
       HeaderDocument,

@@ -1,15 +1,17 @@
 "use client";
 import { useState, useRef } from "react";
-import Link from "next/link";
+import { useEventsStore } from "@/store/eventsStore";
 
 const DROPDOWN_ITEMS = [
   { label: "Upcoming Events", tab: "upcoming" },
   { label: "Past Events", tab: "past" },
 ];
 
-export default function NavDropdown({ item, isActive, activeEventTab, onTabChange }) {
+export default function NavDropdown({ item, isActive }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef(null);
+  const activeTab = useEventsStore((state) => state.activeTab);
+  const setActiveTab = useEventsStore((state) => state.setActiveTab);
 
   const handleMouseEnter = () => {
     clearTimeout(closeTimer.current);
@@ -67,12 +69,11 @@ export default function NavDropdown({ item, isActive, activeEventTab, onTabChang
       {open && (
         <div className="absolute top-full -left-10 mt-3 w-44 bg-[#04050F] flex flex-col z-200">
           {DROPDOWN_ITEMS.map(({ label, tab }) => (
-            <Link
+            <button
               key={tab}
-              href={`?tab=${tab}`}
-              scroll={false}
+              type="button"
               onClick={() => {
-                onTabChange(tab); 
+                setActiveTab(tab);
                 setOpen(false);
                 setTimeout(() => {
                   document
@@ -80,25 +81,25 @@ export default function NavDropdown({ item, isActive, activeEventTab, onTabChang
                     ?.scrollIntoView({ behavior: "smooth" });
                 }, 50);
               }}
-              className="flex items-center  group  gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wide hover:bg-white/5 transition-colors"
+              className="flex items-center group gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wide hover:bg-white/5 transition-colors text-left"
             >
               <span
                 className={`w-1.5 h-1.5 group-hover:bg-[#FF6A50]  group-hover:border-[#FF6A50] rounded-full shrink-0 transition-colors ${
-                  isActive && activeEventTab === tab
+                  isActive && activeTab === tab
                     ? "bg-[#FF6A50]"
                     : "bg-transparent border border-white/30"
                 }`}
               />
               <span
                 className={` group-hover:text-[white] ${
-                  isActive && activeEventTab === tab
+                  isActive && activeTab === tab
                     ? "text-white"
                     : "text-white/60"
                 }`}
               >
                 {label}
               </span>
-            </Link>
+            </button>
           ))}
         </div>
       )}

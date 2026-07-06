@@ -28,7 +28,7 @@ const EventCTA = ({
 }) => {
   return (
     <div
-      className={`group bg-[#FF6A50] lg:bg-[#04050F] w-fit transition-all duration-350  lg:hover:bg-[#FF6A50] inline-flex  md:w-fit cursor-pointer items-center justify-center  rounded-xs px-2 py-1 lg:px-3 lg:py-[6.5px]${outerClassName} `}
+      className={`group bg-[#FF6A50] lg:bg-[#04050F] w-fit transition-color duration-450  lg:hover:bg-[#FF6A50] inline-flex  md:w-fit cursor-pointer items-center justify-center  rounded-xs px-2 py-1 lg:px-3 lg:py-[6.5px]${outerClassName} `}
     >
       <PrismicNextLink
         field={link}
