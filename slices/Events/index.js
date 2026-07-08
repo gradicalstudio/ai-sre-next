@@ -128,10 +128,10 @@ const Events = ({ slice }) => {
       data-slice-variation={slice.variation}
       className=" max-w-[1920px] mx-auto w-full  lg:px-9  mb-22.5 md:mb-45"
     >
-      <div className="">
+      <div className="h-full">
         <div
           ref={iframeRef}
-          className="lg:px-15 h-110 lg:h-120 xl:h-150 relative opacity-0 flex items-center justify-center xl:px-24 2xl:px-30 4xl:px-33.25"
+          className="lg:px-15 h-170 md:h-130 lg:h-120 xl:h-150 relative opacity-0 flex items-center justify-center xl:px-24 2xl:px-30 4xl:px-33.25"
         >
           {shouldLoadEmbed && (
             <iframe
