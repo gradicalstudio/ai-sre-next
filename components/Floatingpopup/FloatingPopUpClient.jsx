@@ -129,7 +129,7 @@ function usePopupVisibility(isHidden) {
       opacity: isHidden ? 0 : 1,
       y: isHidden ? 16 : 0,
       duration: 0.9,
-      ease: isHidden ? "power4.out" : "power4.out", 
+      ease: isHidden ? "power4.out" : "power4.out",
       overwrite: "auto",
       onStart: () => {
         if (!isHidden) gsap.set(el, { pointerEvents: "auto" });
@@ -192,6 +192,8 @@ function SinglePopup({ item, onDismiss, isHidden }) {
         <PrismicNextImage
           field={item.image}
           className="h-15 w-20 shrink-0 object-cover"
+          width={115}
+          height={115}
         />
         <div className="text-sm font-medium text-black [&_p]:m-0">
           <PrismicRichText field={item.title} />
@@ -261,7 +263,8 @@ function PopupSlider({ items, onDismiss, isHidden }) {
                 <PrismicNextImage
                   field={item.image}
                   className="h-15 w-20 shrink-0 object-cover"
-              
+                  width={115}
+                  height={115}
                 />
                 <div className="truncate text-sm font-medium text-black [&_p]:m-0">
                   <PrismicRichText field={item.title} />
@@ -347,7 +350,8 @@ function MobileSinglePopup({ item, onDismiss, isHidden }) {
         <PrismicNextImage
           field={item.image}
           className="h-12 w-18 shrink-0 object-cover"
-         
+          width={70}
+          height={70}
         />
         <div className="min-w-0 truncate text-sm font-medium text-black [&_p]:m-0">
           <PrismicRichText field={item.title} />
@@ -400,14 +404,13 @@ function MobilePopupSlider({ items, onDismiss, isHidden }) {
   return (
     <div
       ref={wrapperRef}
-     className="fixed opacity-0 w-full md:w-[50%] md:right-2 bottom-0 md:bottom-2 z-250 flex items-center border border-[#E4E4E4]  bg-white shadow-[0_0_20px_rgba(255,255,255,0.35),0_0_30px_rgba(255,255,255,0.35)] md:shadow-none"
+      className="fixed opacity-0 w-full md:w-[50%] md:right-2 bottom-0 md:bottom-2 z-250 flex items-center border border-[#E4E4E4]  bg-white shadow-[0_0_20px_rgba(255,255,255,0.35),0_0_30px_rgba(255,255,255,0.35)] md:shadow-none"
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div
         ref={emblaRef}
         className="min-w-0 flex-1 touch-pan-y overflow-hidden [-webkit-tap-highlight-color:transparent]"
       >
-
         <div className="flex">
           {items.map((item, index) => (
             <PrismicNextLink
@@ -419,7 +422,8 @@ function MobilePopupSlider({ items, onDismiss, isHidden }) {
               <PrismicNextImage
                 field={item.image}
                 className="h-12 w-18 shrink-0 object-cover"
-              
+                width={70}
+                height={70}
               />
               <div className="min-w-0 truncate text-sm font-medium text-black [&_p]:m-0">
                 <PrismicRichText field={item.title} />
