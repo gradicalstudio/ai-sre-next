@@ -26,8 +26,8 @@ const OldHeroSection = ({ slice }) => {
       <section
         data-slice-type={slice.slice_type}
         data-slice-variation={slice.variation}
-        className="w-full bg-[#04050F]  px-6 md:px-6 
-          pt-4 md:pt-10 lg:pb-0  flex  overflow-hidden w-full max-w-[1000px] xl:max-w-[1280px] 2xl:max-w-[1440px] px-6 md:px-14  mx-auto flex-col gap-6 text-white   "
+        className="bg-[#04050F]  px-6 
+          pt-4 md:pt-10 lg:pb-0  flex  overflow-hidden w-full max-w-250 xl:max-w-7xl 2xl:max-w-360  md:px-14  mx-auto flex-col gap-6 text-white   "
       >
         <img
           src="/Old Final Logo.svg"
@@ -45,7 +45,7 @@ const OldHeroSection = ({ slice }) => {
             </div>
             <div className="flex flex-col gap-4 ">
               {/* Heading */}
-              <div className="max-w-4xl text-4xl md:text-5xl lg:text-[50px] xl:text-5xl 2xl:text-[65px] font-medium lg:leading-[1.1] xl:leading-[1]">
+              <div className="max-w-4xl text-4xl md:text-5xl lg:text-[50px] xl:text-5xl 2xl:text-[65px] font-medium lg:leading-[1.1] xl:leading-none">
                 <PrismicRichText
                   field={slice.primary.heading}
                   components={{

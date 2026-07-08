@@ -1,7 +1,7 @@
 {
   "id": "old_hero_section",
   "type": "SharedSlice",
-  "name": "OldHeroSection",
+  "name": "HeroSectionTwoColumnLayout",
   "description": "OldHeroSection",
   "variations": [
     {

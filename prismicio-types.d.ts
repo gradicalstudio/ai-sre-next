@@ -1389,11 +1389,11 @@ export type ImageCarouselSlice = prismic.SharedSlice<
 >;
 
 /**
- * Item in *Marquee → Default → Primary → Marquee*
+ * Item in *LogoMarquee → Default → Primary → Marquee*
  */
 export interface MarqueeSliceDefaultPrimaryMarqueeItem {
   /**
-   * Logo field in *Marquee → Default → Primary → Marquee*
+   * Logo field in *LogoMarquee → Default → Primary → Marquee*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
@@ -1404,11 +1404,11 @@ export interface MarqueeSliceDefaultPrimaryMarqueeItem {
 }
 
 /**
- * Primary content in *Marquee → Default → Primary*
+ * Primary content in *LogoMarquee → Default → Primary*
  */
 export interface MarqueeSliceDefaultPrimary {
   /**
-   * Heading field in *Marquee → Default → Primary*
+   * Heading field in *LogoMarquee → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1418,7 +1418,7 @@ export interface MarqueeSliceDefaultPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Marquee field in *Marquee → Default → Primary*
+   * Marquee field in *LogoMarquee → Default → Primary*
    *
    * - **Field Type**: Group
    * - **Placeholder**: *None*
@@ -1429,7 +1429,7 @@ export interface MarqueeSliceDefaultPrimary {
 }
 
 /**
- * Default variation for Marquee Slice
+ * Default variation for LogoMarquee Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
@@ -1442,12 +1442,12 @@ export type MarqueeSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
- * Slice variation for *Marquee*
+ * Slice variation for *LogoMarquee*
  */
 type MarqueeSliceVariation = MarqueeSliceDefault;
 
 /**
- * Marquee Shared Slice
+ * LogoMarquee Shared Slice
  *
  * - **API ID**: `marquee`
  * - **Description**: Marquee
@@ -1459,11 +1459,11 @@ export type MarqueeSlice = prismic.SharedSlice<
 >;
 
 /**
- * Primary content in *OldHeroSection → Default → Primary*
+ * Primary content in *HeroSectionTwoColumnLayout → Default → Primary*
  */
 export interface OldHeroSectionSliceDefaultPrimary {
   /**
-   * Heading field in *OldHeroSection → Default → Primary*
+   * Heading field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1473,7 +1473,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Description field in *OldHeroSection → Default → Primary*
+   * Description field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1483,7 +1483,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   description: prismic.RichTextField;
 
   /**
-   * Date text field in *OldHeroSection → Default → Primary*
+   * Date text field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Text
    * - **Placeholder**: *None*
@@ -1493,7 +1493,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   date_text: prismic.KeyTextField;
 
   /**
-   * Date field in *OldHeroSection → Default → Primary*
+   * Date field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -1503,7 +1503,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   date: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
 
   /**
-   * Time field in *OldHeroSection → Default → Primary*
+   * Time field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Text
    * - **Placeholder**: *None*
@@ -1513,7 +1513,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   time: prismic.KeyTextField;
 
   /**
-   * Location field in *OldHeroSection → Default → Primary*
+   * Location field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -1529,7 +1529,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   >;
 
   /**
-   * Image or Video field in *OldHeroSection → Default → Primary*
+   * Image or Video field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
@@ -1539,7 +1539,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   image_or_video: prismic.ImageField<never>;
 
   /**
-   * Video Toggle field in *OldHeroSection → Default → Primary*
+   * Video Toggle field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Boolean
    * - **Placeholder**: *None*
@@ -1550,7 +1550,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
   video_toggle: prismic.BooleanField;
 
   /**
-   * CTA Link field in *OldHeroSection → Default → Primary*
+   * CTA Link field in *HeroSectionTwoColumnLayout → Default → Primary*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -1567,7 +1567,7 @@ export interface OldHeroSectionSliceDefaultPrimary {
 }
 
 /**
- * Default variation for OldHeroSection Slice
+ * Default variation for HeroSectionTwoColumnLayout Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
@@ -1580,12 +1580,12 @@ export type OldHeroSectionSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
- * Slice variation for *OldHeroSection*
+ * Slice variation for *HeroSectionTwoColumnLayout*
  */
 type OldHeroSectionSliceVariation = OldHeroSectionSliceDefault;
 
 /**
- * OldHeroSection Shared Slice
+ * HeroSectionTwoColumnLayout Shared Slice
  *
  * - **API ID**: `old_hero_section`
  * - **Description**: OldHeroSection
@@ -1680,11 +1680,11 @@ export type ParticipantsSlice = prismic.SharedSlice<
 >;
 
 /**
- * Primary content in *ReportSlice → Default → Primary*
+ * Primary content in *GetReport → Default → Primary*
  */
 export interface ReportSliceSliceDefaultPrimary {
   /**
-   * Asset field in *ReportSlice → Default → Primary*
+   * Asset field in *GetReport → Default → Primary*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
@@ -1694,7 +1694,7 @@ export interface ReportSliceSliceDefaultPrimary {
   asset: prismic.ImageField<never>;
 
   /**
-   * Heading field in *ReportSlice → Default → Primary*
+   * Heading field in *GetReport → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1704,7 +1704,7 @@ export interface ReportSliceSliceDefaultPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Description field in *ReportSlice → Default → Primary*
+   * Description field in *GetReport → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1714,7 +1714,7 @@ export interface ReportSliceSliceDefaultPrimary {
   description: prismic.RichTextField;
 
   /**
-   * Subscription info field in *ReportSlice → Default → Primary*
+   * Subscription info field in *GetReport → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1725,7 +1725,7 @@ export interface ReportSliceSliceDefaultPrimary {
 }
 
 /**
- * Default variation for ReportSlice Slice
+ * Default variation for GetReport Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
@@ -1738,12 +1738,12 @@ export type ReportSliceSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
- * Slice variation for *ReportSlice*
+ * Slice variation for *GetReport*
  */
 type ReportSliceSliceVariation = ReportSliceSliceDefault;
 
 /**
- * ReportSlice Shared Slice
+ * GetReport Shared Slice
  *
  * - **API ID**: `report_slice`
  * - **Description**: ReportSlice
@@ -1755,11 +1755,11 @@ export type ReportSliceSlice = prismic.SharedSlice<
 >;
 
 /**
- * Item in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+ * Item in *Speakers → Default → Primary → Speaker*
  */
 export interface SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem {
   /**
-   * Speaker Image field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   * Speaker Image field in *Speakers → Default → Primary → Speaker*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
@@ -1769,7 +1769,7 @@ export interface SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem {
   speaker_image: prismic.ImageField<never>;
 
   /**
-   * Name field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   * Name field in *Speakers → Default → Primary → Speaker*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1779,7 +1779,7 @@ export interface SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem {
   name_rich: prismic.RichTextField;
 
   /**
-   * Role field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   * Role field in *Speakers → Default → Primary → Speaker*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1789,7 +1789,7 @@ export interface SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem {
   role_rich: prismic.RichTextField;
 
   /**
-   * LinkedIn field in *SpeakersOfBangaloreEdition → Default → Primary → Speaker*
+   * LinkedIn field in *Speakers → Default → Primary → Speaker*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -1806,11 +1806,11 @@ export interface SpeakersOfBangaloreEditionSliceDefaultPrimarySpeakerItem {
 }
 
 /**
- * Item in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+ * Item in *Speakers → secondaryVar → Primary → Speaker*
  */
 export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem {
   /**
-   * Speaker Image field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   * Speaker Image field in *Speakers → secondaryVar → Primary → Speaker*
    *
    * - **Field Type**: Image
    * - **Placeholder**: *None*
@@ -1820,7 +1820,7 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem {
   speaker_image: prismic.ImageField<never>;
 
   /**
-   * Name field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   * Name field in *Speakers → secondaryVar → Primary → Speaker*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1830,7 +1830,7 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem {
   name_rich_text: prismic.RichTextField;
 
   /**
-   * Role field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   * Role field in *Speakers → secondaryVar → Primary → Speaker*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1840,7 +1840,7 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem {
   role_rich_text: prismic.RichTextField;
 
   /**
-   * LinkedIn field in *SpeakersOfBangaloreEdition → secondaryVar → Primary → Speaker*
+   * LinkedIn field in *Speakers → secondaryVar → Primary → Speaker*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -1857,11 +1857,11 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimarySpeakerItem {
 }
 
 /**
- * Primary content in *SpeakersOfBangaloreEdition → Default → Primary*
+ * Primary content in *Speakers → Default → Primary*
  */
 export interface SpeakersOfBangaloreEditionSliceDefaultPrimary {
   /**
-   * Heading field in *SpeakersOfBangaloreEdition → Default → Primary*
+   * Heading field in *Speakers → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1871,7 +1871,7 @@ export interface SpeakersOfBangaloreEditionSliceDefaultPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Speaker field in *SpeakersOfBangaloreEdition → Default → Primary*
+   * Speaker field in *Speakers → Default → Primary*
    *
    * - **Field Type**: Group
    * - **Placeholder**: *None*
@@ -1884,7 +1884,7 @@ export interface SpeakersOfBangaloreEditionSliceDefaultPrimary {
 }
 
 /**
- * Default variation for SpeakersOfBangaloreEdition Slice
+ * Default variation for Speakers Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
@@ -1898,11 +1898,11 @@ export type SpeakersOfBangaloreEditionSliceDefault =
   >;
 
 /**
- * Primary content in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+ * Primary content in *Speakers → secondaryVar → Primary*
  */
 export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimary {
   /**
-   * Show Slice field in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+   * Show Slice field in *Speakers → secondaryVar → Primary*
    *
    * - **Field Type**: Boolean
    * - **Placeholder**: *None*
@@ -1913,7 +1913,7 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimary {
   show_slice: prismic.BooleanField;
 
   /**
-   * Heading field in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+   * Heading field in *Speakers → secondaryVar → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -1923,7 +1923,7 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Speaker field in *SpeakersOfBangaloreEdition → secondaryVar → Primary*
+   * Speaker field in *Speakers → secondaryVar → Primary*
    *
    * - **Field Type**: Group
    * - **Placeholder**: *None*
@@ -1936,7 +1936,7 @@ export interface SpeakersOfBangaloreEditionSliceSecondaryVarPrimary {
 }
 
 /**
- * secondaryVar variation for SpeakersOfBangaloreEdition Slice
+ * secondaryVar variation for Speakers Slice
  *
  * - **API ID**: `secondaryVar`
  * - **Description**: Default
@@ -1950,14 +1950,14 @@ export type SpeakersOfBangaloreEditionSliceSecondaryVar =
   >;
 
 /**
- * Slice variation for *SpeakersOfBangaloreEdition*
+ * Slice variation for *Speakers*
  */
 type SpeakersOfBangaloreEditionSliceVariation =
   | SpeakersOfBangaloreEditionSliceDefault
   | SpeakersOfBangaloreEditionSliceSecondaryVar;
 
 /**
- * SpeakersOfBangaloreEdition Shared Slice
+ * Speakers Shared Slice
  *
  * - **API ID**: `speakers_of_bangalore_edition`
  * - **Description**: SpeakersOfBangaloreEdition
@@ -2107,11 +2107,11 @@ export type VideoShowcaseSlice = prismic.SharedSlice<
 >;
 
 /**
- * Primary content in *VideoWithBigTitle → Default → Primary*
+ * Primary content in *HeadingAndVideo → Default → Primary*
  */
 export interface VideoWithBigTitleSliceDefaultPrimary {
   /**
-   * Heading field in *VideoWithBigTitle → Default → Primary*
+   * Heading field in *HeadingAndVideo → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -2121,7 +2121,7 @@ export interface VideoWithBigTitleSliceDefaultPrimary {
   heading: prismic.RichTextField;
 
   /**
-   * Video Link field in *VideoWithBigTitle → Default → Primary*
+   * Video Link field in *HeadingAndVideo → Default → Primary*
    *
    * - **Field Type**: Link
    * - **Placeholder**: *None*
@@ -2137,7 +2137,7 @@ export interface VideoWithBigTitleSliceDefaultPrimary {
   >;
 
   /**
-   * Preview Video field in *VideoWithBigTitle → Default → Primary*
+   * Preview Video field in *HeadingAndVideo → Default → Primary*
    *
    * - **Field Type**: Link to Media
    * - **Placeholder**: *None*
@@ -2147,7 +2147,7 @@ export interface VideoWithBigTitleSliceDefaultPrimary {
   preview_video: prismic.LinkToMediaField<prismic.FieldState, never>;
 
   /**
-   * Short description field in *VideoWithBigTitle → Default → Primary*
+   * Short description field in *HeadingAndVideo → Default → Primary*
    *
    * - **Field Type**: Rich Text
    * - **Placeholder**: *None*
@@ -2158,7 +2158,7 @@ export interface VideoWithBigTitleSliceDefaultPrimary {
 }
 
 /**
- * Default variation for VideoWithBigTitle Slice
+ * Default variation for HeadingAndVideo Slice
  *
  * - **API ID**: `default`
  * - **Description**: Default
@@ -2171,12 +2171,12 @@ export type VideoWithBigTitleSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
- * Slice variation for *VideoWithBigTitle*
+ * Slice variation for *HeadingAndVideo*
  */
 type VideoWithBigTitleSliceVariation = VideoWithBigTitleSliceDefault;
 
 /**
- * VideoWithBigTitle Shared Slice
+ * HeadingAndVideo Shared Slice
  *
  * - **API ID**: `video_with_big_title`
  * - **Description**: VideoWithBigTitle

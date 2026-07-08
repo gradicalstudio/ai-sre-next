@@ -1,7 +1,7 @@
 {
   "id": "report_slice",
   "type": "SharedSlice",
-  "name": "ReportSlice",
+  "name": "GetReport",
   "description": "ReportSlice",
   "variations": [
     {

@@ -1,7 +1,7 @@
 {
   "id": "marquee",
   "type": "SharedSlice",
-  "name": "Marquee",
+  "name": "LogoMarquee",
   "description": "Marquee",
   "variations": [
     {
