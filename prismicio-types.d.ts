@@ -147,91 +147,6 @@ export type DevstagingDocument<Lang extends string = string> =
   >;
 
 /**
- * Item in *FloatingPopUp → PopUps*
- */
-export interface FloatingpopupDocumentDataPopupsItem {
-  /**
-   * Image field in *FloatingPopUp → PopUps*
-   *
-   * - **Field Type**: Image
-   * - **Placeholder**: *None*
-   * - **API ID Path**: floatingpopup.popups[].image
-   * - **Documentation**: https://prismic.io/docs/fields/image
-   */
-  image: prismic.ImageField<never>;
-
-  /**
-   * Title field in *FloatingPopUp → PopUps*
-   *
-   * - **Field Type**: Rich Text
-   * - **Placeholder**: *None*
-   * - **API ID Path**: floatingpopup.popups[].title
-   * - **Documentation**: https://prismic.io/docs/fields/rich-text
-   */
-  title: prismic.RichTextField;
-
-  /**
-   * PopUp Link field in *FloatingPopUp → PopUps*
-   *
-   * - **Field Type**: Link
-   * - **Placeholder**: *None*
-   * - **API ID Path**: floatingpopup.popups[].popup_link
-   * - **Documentation**: https://prismic.io/docs/fields/link
-   */
-  popup_link: prismic.LinkField<
-    string,
-    string,
-    unknown,
-    prismic.FieldState,
-    never
-  >;
-}
-
-/**
- * Content for FloatingPopUp documents
- */
-interface FloatingpopupDocumentData {
-  /**
-   * Show Hide Toggle field in *FloatingPopUp*
-   *
-   * - **Field Type**: Boolean
-   * - **Placeholder**: *None*
-   * - **Default Value**: false
-   * - **API ID Path**: floatingpopup.show_hide_toggle
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/boolean
-   */
-  show_hide_toggle: prismic.BooleanField;
-
-  /**
-   * PopUps field in *FloatingPopUp*
-   *
-   * - **Field Type**: Group
-   * - **Placeholder**: *None*
-   * - **API ID Path**: floatingpopup.popups[]
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
-   */
-  popups: prismic.GroupField<Simplify<FloatingpopupDocumentDataPopupsItem>>;
-}
-
-/**
- * FloatingPopUp document from Prismic
- *
- * - **API ID**: `floatingpopup`
- * - **Repeatable**: `false`
- * - **Documentation**: https://prismic.io/docs/content-modeling
- *
- * @typeParam Lang - Language API ID of the document.
- */
-export type FloatingpopupDocument<Lang extends string = string> =
-  prismic.PrismicDocumentWithoutUID<
-    Simplify<FloatingpopupDocumentData>,
-    "floatingpopup",
-    Lang
-  >;
-
-/**
  * Content for Footer documents
  */
 interface FooterDocumentData {
@@ -375,6 +290,18 @@ type HomePageDocumentDataSlicesSlice =
  */
 interface HomePageDocumentData {
   /**
+   * Floating PopUp field in *Home Page*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: home_page.floating_popup
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  floating_popup: prismic.BooleanField;
+
+  /**
    * Slice Zone field in *Home Page*
    *
    * - **Field Type**: Slice Zone
@@ -501,7 +428,6 @@ export type PageDocument<Lang extends string = string> =
 
 export type AllDocumentTypes =
   | DevstagingDocument
-  | FloatingpopupDocument
   | FooterDocument
   | HeaderDocument
   | HomePageDocument
@@ -1179,6 +1105,17 @@ export type AgendaSlice = prismic.SharedSlice<"agenda", AgendaSliceVariation>;
  * Item in *Events → Default → Primary → Events*
  */
 export interface EventsSliceDefaultPrimaryEventsItem {
+  /**
+   * Floating PopUp field in *Events → Default → Primary → Events*
+   *
+   * - **Field Type**: Boolean
+   * - **Placeholder**: *None*
+   * - **Default Value**: false
+   * - **API ID Path**: events.default.primary.events[].floating_popup
+   * - **Documentation**: https://prismic.io/docs/fields/boolean
+   */
+  floating_popup: prismic.BooleanField;
+
   /**
    * Icon field in *Events → Default → Primary → Events*
    *
@@ -2274,9 +2211,6 @@ declare module "@prismicio/client" {
       DevstagingDocument,
       DevstagingDocumentData,
       DevstagingDocumentDataSlicesSlice,
-      FloatingpopupDocument,
-      FloatingpopupDocumentData,
-      FloatingpopupDocumentDataPopupsItem,
       FooterDocument,
       FooterDocumentData,
       HeaderDocument,

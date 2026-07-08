@@ -45,6 +45,15 @@
             "label": "Events",
             "repeat": true,
             "fields": {
+              "floating_popup": {
+                "type": "Boolean",
+                "config": {
+                  "label": "Floating PopUp",
+                  "placeholder_false": "Hide",
+                  "placeholder_true": "Show",
+                  "default_value": false
+                }
+              },
               "icon": {
                 "type": "Image",
                 "config": {

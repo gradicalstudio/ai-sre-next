@@ -5,6 +5,9 @@ import { PrismicNextLink, PrismicNextImage } from "@prismicio/next";
 import Link from "next/link";
 import NavDropdown from "../NavDropdown";
 import { useEventsStore } from "@/store/eventsStore";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 const MenuIcon = ({ size = 24 }) => (
   <svg
@@ -107,10 +110,6 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const [activeId, setActiveId] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [eventsAccordionOpen, setEventsAccordionOpen] = useState(false);
-  const observerRef = useRef(null);
-  const mutationObserverRef = useRef(null);
-  const observedIdsRef = useRef(new Set());
-  const ratiosRef = useRef(new Map());
   const menuToggleRef = useRef(null);
   const mobileNavRef = useRef(null);
   const eventsTriggerRef = useRef(null);
@@ -122,61 +121,85 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     const ids = nav_links.map((item) => getHashId(item)).filter(Boolean);
     if (ids.length === 0) return;
 
-    observedIdsRef.current = new Set();
-    ratiosRef.current = new Map();
+    let triggers = [];
+    let mo;
+    let mm;
 
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          ratiosRef.current.set(
-            entry.target.id,
-            entry.isIntersecting ? entry.intersectionRatio : 0,
+    const setup = () => {
+      mm = gsap.matchMedia();
+
+      mm.add(
+        {
+          isMobile: "(max-width: 1023px)",
+          isLg: "(min-width: 1024px) and (max-width: 1279px)",
+          isXl: "(min-width: 1280px) and (max-width: 1535px)",
+          is2xl: "(min-width: 1536px) and (max-width: 1799px)",
+          is4xl: "(min-width: 1800px)",
+        },
+        (context) => {
+          const { isMobile, isLg, isXl, is2xl, is4xl } = context.conditions;
+
+          const getStart = () => {
+            if (isMobile) return "top 40%";
+            if (isLg) return "bottom bottom-=150";
+            if (isXl) return "bottom bottom";
+            if (is2xl) return "bottom bottom";
+            if (is4xl) return "bottom bottom";
+            return "bottom bottom";
+          };
+
+          const elements = ids
+            .map((id) => document.getElementById(id))
+            .filter(Boolean);
+
+          triggers = elements.map((el) =>
+            ScrollTrigger.create({
+              trigger: el,
+              start: getStart(),
+              end: isMobile ? "bottom 70%" : "20% 0%",
+              // markers: process.env.NODE_ENV === "development",
+              onEnter: () => setActiveId(el.id),
+              onEnterBack: () => setActiveId(el.id),
+              onLeave: () => setActiveId((cur) => (cur === el.id ? null : cur)),
+              onLeaveBack: () =>
+                setActiveId((cur) => (cur === el.id ? null : cur)),
+            }),
           );
-        });
 
-        let bestId = null;
-        let bestRatio = 0;
-        ratiosRef.current.forEach((ratio, id) => {
-          if (ratio > bestRatio) {
-            bestRatio = ratio;
-            bestId = id;
-          }
-        });
-
-        setActiveId(bestRatio > 0 ? bestId : null);
-      },
-      { rootMargin: "-60% 0px 0px 0px", threshold: 0 },
-    );
-
-    const tryObserveAll = () => {
-      ids.forEach((id) => {
-        if (observedIdsRef.current.has(id)) return;
-        const el = document.getElementById(id);
-        if (el) {
-          observerRef.current.observe(el);
-          observedIdsRef.current.add(id);
-        }
-      });
+          return () => {
+            triggers.forEach((t) => t.kill());
+            triggers = [];
+          };
+        },
+      );
     };
 
-    tryObserveAll();
-
-    if (observedIdsRef.current.size < ids.length) {
-      mutationObserverRef.current = new MutationObserver(() => {
-        tryObserveAll();
-        if (observedIdsRef.current.size >= ids.length) {
-          mutationObserverRef.current?.disconnect();
+    if (ids.every((id) => document.getElementById(id))) {
+      setup();
+    } else {
+      mo = new MutationObserver(() => {
+        if (ids.every((id) => document.getElementById(id))) {
+          setup();
+          mo.disconnect();
         }
       });
-      mutationObserverRef.current.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+      mo.observe(document.body, { childList: true, subtree: true });
     }
 
+    let resizeTimeout;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => ScrollTrigger.refresh(), 200);
+    };
+    window.addEventListener("resize", debouncedResize);
+    window.addEventListener("orientationchange", () => ScrollTrigger.refresh());
+
     return () => {
-      observerRef.current?.disconnect();
-      mutationObserverRef.current?.disconnect();
+      mo?.disconnect();
+      mm?.revert();
+      triggers.forEach((t) => t.kill());
+      window.removeEventListener("resize", debouncedResize);
+      clearTimeout(resizeTimeout);
     };
   }, [nav_links]);
 

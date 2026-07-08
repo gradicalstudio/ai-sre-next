@@ -44,7 +44,7 @@ const MinimalHeaderClient = ({ brand_logo, nav_cta }) => {
     <header className="sticky top-0 z-350 bg-[#04050F] text-white">
       <div className="max-w-[1920px] mx-auto flex items-center justify-between px-4 lg:px-9 h-16 lg:h-15">
         
-        {/* Logo — clicks back to homepage */}
+        {/* Logo */}
         <Link href="/">
           <PrismicNextImage field={brand_logo} className="h-8 lg:h-8 w-auto cursor-pointer" />
         </Link>
