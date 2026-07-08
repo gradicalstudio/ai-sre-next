@@ -1,7 +1,7 @@
 {
   "id": "video_with_big_title",
   "type": "SharedSlice",
-  "name": "VideoWithBigTitle",
+  "name": "HeadingAndVideo",
   "description": "VideoWithBigTitle",
   "variations": [
     {

@@ -9,9 +9,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const MARK_COVER_OFFSET = -453;
-const MASK_REVEAL_WIDTH = 460;
+const MASK_X_PAD = 20;
+const MASK_REVEAL_WIDTH = 460 + MASK_X_PAD;
 const REVEAL_DURATION = 1.4;
-const COVER_DURATION = 0.9;
+const COVER_DURATION = 1.4;
 const REVEAL_EASE = "circ.inOut";
 const COVER_EASE = "power4.out";
 const INTRO_DEMO_HOLD = 5;
@@ -94,6 +95,7 @@ export default function FooterClient({ title, email_block, footer_links }) {
         { x: 0, duration: REVEAL_DURATION, ease: REVEAL_EASE },
         ">-0.4",
       );
+
       tl.to(
         maskRectRef.current,
         {
@@ -308,11 +310,29 @@ function StackgenLogo({ markRef, maskRectRef, className }) {
       aria-hidden="true"
     >
       <defs>
-        <clipPath id="stackgen-wordmark-clip">
-          <rect ref={maskRectRef} x="0" y="0" width="0" height="108" />
-        </clipPath>
+        <filter
+          id="stackgen-wordmark-feather"
+          x="0"
+          y="0"
+          width="536"
+          height="108"
+          filterUnits="userSpaceOnUse"
+        >
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6 0" />
+        </filter>
+        <mask id="stackgen-wordmark-mask">
+          <rect
+            ref={maskRectRef}
+            x={-MASK_X_PAD}
+            y="0"
+            width="0"
+            height="108"
+            fill="#fff"
+            filter="url(#stackgen-wordmark-feather)"
+          />
+        </mask>
       </defs>
-      <g id="logo-text" clipPath="url(#stackgen-wordmark-clip)">
+      <g id="logo-text" mask="url(#stackgen-wordmark-mask)">
         <path
           d="M9.41653 87.2859C5.17992 84.4934 2.13485 80.8567 0.347534 76.5056C-0.115845 75.4016 -0.115845 74.2326 0.347534 73.1935C0.810914 72.0895 1.67147 71.3102 2.79682 70.8556C3.92217 70.401 5.11372 70.401 6.17287 70.8556C7.29822 71.3102 8.09259 72.1545 8.55596 73.2585C9.68131 76.051 11.601 78.3889 14.3151 80.1423C17.0292 81.8958 20.0081 82.8049 23.1855 82.8049C26.363 82.8049 30.07 81.636 32.6517 79.363C35.2996 77.0251 36.6235 74.2326 36.6235 71.0505C36.6235 67.8683 35.4982 65.0109 33.2475 63.3224C31.3939 61.9586 27.6207 60.5299 21.994 59.0362C15.5729 57.2828 10.9391 55.4644 8.15878 53.4512C3.3264 50.0742 0.943308 45.2036 0.943308 38.8393C0.943308 32.475 3.12781 28.3837 7.43061 24.4222C11.7996 20.3958 17.0292 18.4475 23.1855 18.4475C29.3418 18.4475 32.9165 19.8763 36.8221 22.7987C40.7939 25.721 43.4418 29.5526 44.8981 34.4232C45.2291 35.5922 45.0967 36.6962 44.5672 37.7353C43.9714 38.7743 43.1108 39.4887 41.9193 39.8134C40.7939 40.1381 39.6686 40.0082 38.5432 39.4887C37.4841 38.9042 36.7559 38.06 36.4249 36.891C35.5644 33.9037 33.9094 31.5009 31.5263 29.7474C29.1432 27.994 26.363 27.1498 23.1855 27.1498C20.0081 27.1498 16.3672 28.3187 13.7193 30.5917C11.0715 32.9296 9.74751 35.7221 9.74751 38.9042C9.74751 42.0864 10.8729 44.8139 13.1236 46.4375C14.9109 47.7363 18.6179 49.165 24.2447 50.7236C30.732 52.4771 35.432 54.3604 38.2122 56.3736C43.0446 59.8155 45.4277 64.7511 45.4277 71.1803C45.4277 77.6096 43.2432 81.636 38.9404 85.5974C34.5714 89.6238 29.3418 91.5721 23.1855 91.5721C17.0292 91.5721 13.7193 90.2083 9.48272 87.4158L9.41653 87.2859Z"
           fill="#04050F"
