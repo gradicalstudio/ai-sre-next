@@ -260,9 +260,8 @@ function PopupSlider({ items, onDismiss, isHidden }) {
               >
                 <PrismicNextImage
                   field={item.image}
-                  className="h-15 w-15 shrink-0 object-cover"
-                  width={60}
-                  height={60}
+                  className="h-15 w-20 shrink-0 object-cover"
+              
                 />
                 <div className="truncate text-sm font-medium text-black [&_p]:m-0">
                   <PrismicRichText field={item.title} />
@@ -347,9 +346,8 @@ function MobileSinglePopup({ item, onDismiss, isHidden }) {
       >
         <PrismicNextImage
           field={item.image}
-          className="h-12 w-12 shrink-0 object-cover"
-          width={48}
-          height={48}
+          className="h-12 w-18 shrink-0 object-cover"
+         
         />
         <div className="min-w-0 truncate text-sm font-medium text-black [&_p]:m-0">
           <PrismicRichText field={item.title} />
@@ -420,9 +418,8 @@ function MobilePopupSlider({ items, onDismiss, isHidden }) {
             >
               <PrismicNextImage
                 field={item.image}
-                className="h-12 w-12 shrink-0 object-cover"
-                width={48}
-                height={48}
+                className="h-12 w-18 shrink-0 object-cover"
+              
               />
               <div className="min-w-0 truncate text-sm font-medium text-black [&_p]:m-0">
                 <PrismicRichText field={item.title} />

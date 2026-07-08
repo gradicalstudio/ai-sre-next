@@ -11,10 +11,6 @@ export default async function FloatingPopup() {
     (s) => s.slice_type === "events",
   );
   const events = eventsSlice?.primary.events ?? [];
-  console.log("floating_popup:", homepage?.data.floating_popup);
-  console.log("events found:", events.length);
-  console.log("raw events:", JSON.stringify(events, null, 2));
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
