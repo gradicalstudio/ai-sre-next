@@ -32,12 +32,10 @@ const badgeComponents = {
     </span>
   ),
   image: ({ node }) => (
-    // eslint-disable-next-line @next/next/no-img-element
     <img src={node.url} alt={node.alt || ""} className="h-4 w-5 object-fill" />
   ),
 };
 
-// Reusable speaker row
 function SpeakerRow({
   image,
   name,
@@ -198,7 +196,7 @@ export default function AgendaItem({ item, defaultOpen = false }) {
           items-center 
         "
       >
-        {/* TIME + BADGE (mobile: stacked in col 1) */}
+        {/* TIME + BADGE */}
         <div className="flex flex-col items-start gap-2 row-start-1 ">
           <div className="flex flex-col items-center gap-2">
             <span className="text-white text-[13px] lg:text-base pt-1">

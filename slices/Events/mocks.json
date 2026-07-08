@@ -129,6 +129,13 @@
 										"text": "courage"
 									}
 								}
+							],
+							[
+								"floating_popup",
+								{
+									"__TYPE__": "BooleanContent",
+									"value": true
+								}
 							]
 						]
 					}
