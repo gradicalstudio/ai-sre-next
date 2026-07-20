@@ -238,6 +238,21 @@ function PopupSlider({ items, onDismiss, isHidden }) {
     };
   }, [emblaApi, onSelect]);
 
+  useEffect(() => {
+    if (!emblaApi) return;
+    const releaseFocus = () => {
+      const active = document.activeElement;
+      if (
+        active instanceof HTMLElement &&
+        emblaApi.rootNode().contains(active)
+      ) {
+        active.blur();
+      }
+    };
+    emblaApi.on("pointerUp", releaseFocus);
+    return () => emblaApi.off("pointerUp", releaseFocus);
+  }, [emblaApi]);
+
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
@@ -274,14 +289,14 @@ function PopupSlider({ items, onDismiss, isHidden }) {
           </div>
         </div>
 
-        <div className="ml-1 flex flex-col justify-evenly pl-1.5">
+        <div className="ml-1 flex flex-col justify-evenly ">
           <button
             type="button"
             onClick={scrollNext}
             disabled={!canScrollNext}
             aria-label="Show next"
             style={{ touchAction: "manipulation" }}
-            className="flex h-6 w-6 items-center justify-center text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
+            className="flex h-6 w-6 items-center justify-center cursor-pointer text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
           >
             <ChevronIcon direction="right" />
           </button>
@@ -291,7 +306,7 @@ function PopupSlider({ items, onDismiss, isHidden }) {
             disabled={!canScrollPrev}
             aria-label="Show previous"
             style={{ touchAction: "manipulation" }}
-            className="flex h-6 w-6 items-center justify-center text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
+            className="flex h-6 w-6 items-center justify-center cursor-pointer text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
           >
             <ChevronIcon direction="left" />
           </button>

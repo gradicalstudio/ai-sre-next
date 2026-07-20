@@ -23,12 +23,12 @@ function resolveVideoSrc(linkField) {
     };
   }
 
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeoMatch) {
+  const wistiaMatch = url.match(/wistia\.(?:com|net)\/(?:medias|embed\/iframe)\/([a-zA-Z0-9]+)/);
+  if (wistiaMatch) {
     return {
-      type: "vimeo",
-      embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`,
-      muteEmbedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1&muted=1&loop=1&background=1`,
+      type: "wistia",
+      embedUrl: `https://fast.wistia.net/embed/iframe/${wistiaMatch[1]}?autoPlay=true`,
+      muteEmbedUrl: `https://fast.wistia.net/embed/iframe/${wistiaMatch[1]}?autoPlay=true&muted=true&loop=true&silentAutoPlay=true`,
     };
   }
 
@@ -42,7 +42,6 @@ function VideoModal({ item, onClose }) {
   const containerRef = useRef(null);
   const hideControlsTimer = useRef(null);
   const flashTimer = useRef(null);
-
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -54,6 +53,7 @@ function VideoModal({ item, onClose }) {
   const isDirect = resolved?.type === "direct";
 
   // Escape key + scroll lock
+
   useEffect(() => {
     const handler = (e) => e.key === "Escape" && onClose();
     window.addEventListener("keydown", handler);
@@ -65,6 +65,7 @@ function VideoModal({ item, onClose }) {
   }, [onClose]);
 
   // Video event sync
+
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
@@ -184,7 +185,7 @@ function VideoModal({ item, onClose }) {
           onClick={isDirect ? togglePlay : undefined}
           style={{ cursor: isDirect ? "pointer" : "default" }}
         >
-          {resolved?.type === "youtube" || resolved?.type === "vimeo" ? (
+          {resolved?.type === "youtube" || resolved?.type === "wistia" ? (
             <iframe
               src={resolved.embedUrl}
               className="w-full h-full"
@@ -287,7 +288,7 @@ function VideoModal({ item, onClose }) {
                     className="absolute inset-y-0 left-0 rounded-full bg-white"
                     style={{ width: `${progress}%` }}
                   />
-                  {/* Native range (invisible, sits on top for interaction) */}
+                  {/* Native range */}
                   <input
                     type="range"
                     min={0}
@@ -308,7 +309,7 @@ function VideoModal({ item, onClose }) {
                   className="text-white hover:text-white/70 transition-colors"
                 >
                   {muted ? (
-                    // muted — show crossed out speaker
+                    // Muted 
                     <svg
                       width="20"
                       height="20"
@@ -318,7 +319,7 @@ function VideoModal({ item, onClose }) {
                       <path d="M16.5 12A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM19 12c0 3.17-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
                     </svg>
                   ) : (
-                    // unmuted — show full volume speaker
+                    // Unmuted
                     <svg
                       width="20"
                       height="20"
@@ -352,6 +353,7 @@ function VideoModal({ item, onClose }) {
     </div>
   );
 }
+
 // VIDEO CARD
 
 function VideoCard({ item, isActive, onActivate, onOpenModal }) {
@@ -390,7 +392,7 @@ function VideoCard({ item, isActive, onActivate, onOpenModal }) {
               title="Active video"
               tabIndex={-1}
             />
-          ) : resolved?.type === "vimeo" ? (
+          ) : resolved?.type === "wistia" ? (
             <iframe
               src={resolved.muteEmbedUrl}
               className="absolute inset-0 w-full h-full pointer-events-none scale-110"

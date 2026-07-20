@@ -11,9 +11,10 @@ import { PrismicRichText } from "@prismicio/react";
 const ReportSlice = ({ slice }) => {
   return (
     <section
+    id="getreport"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
-      className=" max-w-[1920px] mx-auto w-full px-3 lg:px-9 h-auto mb-22.5 md:mb-45"
+      className=" max-w-[1920px] mx-auto w-full px-3 lg:px-9 h-auto mb-22.5 md:mb-45 bg-[#04050F]"
     >
       <div className="text-white flex flex-col items-center justify-center">
         {/* Image */}

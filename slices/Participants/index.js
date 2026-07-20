@@ -154,8 +154,8 @@ const Participants = ({ slice }) => {
         <PrismicNextImage
           field={item.logo}
           className="
-            max-h-[40px]
-            max-w-[180px]
+            max-h-10
+            max-w-45
 
             w-auto
             h-auto
@@ -168,15 +168,15 @@ const Participants = ({ slice }) => {
       <PrismicNextImage
         field={item.logo}
         className="
-          md:max-h-[40px]
-          md:max-w-[180px]
+          md:max-h-10
+          md:max-w-45
 
           md:w-auto
           md:h-auto
-          max-h-[40px]
-  h-[30px]
+          max-h-10
+  h-7.5
   w-full
-  max-w-[300px]
+  max-w-75
   object-center
           md:object-contain
         "
@@ -189,10 +189,10 @@ const Participants = ({ slice }) => {
         bg-[#04050F]
         mx-auto
         w-full
-      overflow-hidden mx-auto w-full max-w-[1000px] xl:max-w-[1280px] 2xl:max-w-[1440px] px-6 md:px-14
+      overflow-hidden max-w-250 xl:max-w-7xl 2xl:max-w-360 px-6 md:px-14
         my-13
         md:my-20
-        md:pb-[15px]
+        md:pb-3.75
         xl:my-20
 
       "
@@ -219,10 +219,10 @@ const Participants = ({ slice }) => {
                   flex
                   flex-[1_1_25%]
 
-                  min-w-[220px]
+                  min-w-55
 
-                  min-h-[90px]
-                  md:min-h-[110px]
+                  min-h-22.5
+                  md:min-h-27.5
 
                   items-center
                   justify-center
@@ -263,10 +263,10 @@ const Participants = ({ slice }) => {
                             items-center
                             justify-center
 
-                            md:w-[180px]
-                            md:h-[40px]
-h-[42px]
-w-[auto]
+                            md:w-45
+                            md:h-10
+h-10.5
+w-auto
           px-6
                             shrink-0
                             
@@ -289,10 +289,10 @@ w-[auto]
                           flex
                           flex-[1_1_25%]
 
-                          min-w-[220px]
+                          min-w-55
 
-                          min-h-[90px]
-                          md:min-h-[110px]
+                          min-h-22.5
+                          md:min-h-27.5
 
                           items-center
                           justify-center

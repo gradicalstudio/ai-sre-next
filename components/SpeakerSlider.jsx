@@ -34,6 +34,7 @@ const SpeakerSlider = ({ speakers = [] }) => {
     onSelect();
 
     // IntersectionObserver
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -56,6 +57,7 @@ const SpeakerSlider = ({ speakers = [] }) => {
   }, [emblaApi]);
 
   // Group into pairs
+  
   const slides = [];
   for (let i = 0; i < speakers.length; i += 2) {
     slides.push(speakers.slice(i, i + 2));
@@ -87,12 +89,11 @@ const SpeakerSlider = ({ speakers = [] }) => {
 
         {/* Embla viewport */}
         <div ref={emblaRef} className="overflow-hidden mx-8">
-          {/* Embla container — no gap here, handle spacing inside slides */}
+          {/* Embla container */}
           <div className="flex">
             {loopSlides.map((pair, slideIndex) => (
               <div
                 key={slideIndex}
-                // This is the critical Embla fix — flex: 0 0 100% + min-w-0
                 style={{ flex: "0 0 100%", minWidth: 0 }}
                 className="grid grid-cols-2 gap-6 px-2"
               >

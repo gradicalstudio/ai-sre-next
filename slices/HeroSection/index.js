@@ -30,7 +30,6 @@ const HeroSection = ({ slice }) => {
     const entranceTargets = [
       headingRef.current,
       descriptionRef.current,
-      ctaRef.current,
       iframeWrapRef.current,
       subtextRef.current,
       subtextTwoRef.current,
@@ -39,7 +38,6 @@ const HeroSection = ({ slice }) => {
 
     const ctx = gsap.context(() => {
       if (prefersReducedMotion) {
-        // Skip straight to the end state — no blur/slide, no infinite bounce.
         gsap.set(entranceTargets, {
           opacity: 1,
           y: 0,
@@ -65,16 +63,23 @@ const HeroSection = ({ slice }) => {
         { opacity: 1, y: 0, filter: "blur(0px)", duration: 1.1 },
       )
         .fromTo(
-          [descriptionRef.current, ctaRef.current],
-          { opacity: 0, y: 80, filter: "blur(5px)" },
+          descriptionRef.current,
+          { opacity: 0, y: 80, filter: "blur(10px)" },
+          { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.9 },
+          "-=0.55",
+        )
+        .fromTo(
+          ctaRef.current,
+          { opacity: 0, filter: "blur(10px)", y: 80 },
+
           {
             opacity: 1,
-            y: 0,
             filter: "blur(0px)",
+            y: 0,
             duration: 0.9,
-            stagger: 0.15,
+       
           },
-          "-=0.55",
+          "<",
         )
         .fromTo(
           iframeWrapRef.current,
@@ -155,7 +160,7 @@ const HeroSection = ({ slice }) => {
       id="hero-section"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
-      className=" max-w-[1920px] mx-auto w-full px-3 lg:px-9 h-auto mb-22.5 md:mb-45 "
+      className=" max-w-[1920px] mx-auto w-full px-3 lg:px-9 h-auto mb-22.5 md:mb-45 bg-[#04050F] "
     >
       {/* Main container */}
       <div className=" w-full h-full">

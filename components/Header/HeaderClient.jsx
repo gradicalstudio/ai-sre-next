@@ -7,6 +7,7 @@ import NavDropdown from "../NavDropdown";
 import { useEventsStore } from "@/store/eventsStore";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import NavCtaButton from "./NavCtaButton";
 gsap.registerPlugin(ScrollTrigger);
 
 const MenuIcon = ({ size = 24 }) => (
@@ -113,6 +114,10 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const menuToggleRef = useRef(null);
   const mobileNavRef = useRef(null);
   const eventsTriggerRef = useRef(null);
+  const logoRef = useRef(null);
+  const desktopNavRef = useRef(null);
+  const desktopCtaRef = useRef(null);
+  const mobileCtaRef = useRef(null);
 
   const activeEventTab = useEventsStore((state) => state.activeTab);
   const setActiveEventTab = useEventsStore((state) => state.setActiveTab);
@@ -203,6 +208,94 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     };
   }, [nav_links]);
 
+  useEffect(() => {
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const targets = [
+      logoRef.current,
+      ...(desktopNavRef.current
+        ? desktopNavRef.current.querySelectorAll(":scope > *")
+        : []),
+      desktopCtaRef.current,
+      mobileCtaRef.current,
+      menuToggleRef.current,
+    ].filter(Boolean);
+
+    if (prefersReduced) {
+      gsap.set(targets, { opacity: 1, filter: "blur(0px)" });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(targets, { opacity: 0, filter: "blur(16px)", x: -24 });
+
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+
+      tl.to(logoRef.current, {
+        opacity: 1,
+        filter: "blur(0px)",
+        x: 0,
+        duration: 1,
+      })
+        .to(
+          desktopNavRef.current
+            ? desktopNavRef.current.querySelectorAll(":scope > *")
+            : [],
+          {
+            opacity: 1,
+            filter: "blur(0px)",
+            x: 0,
+            duration: 0.9,
+            stagger: 0.08,
+          },
+          "-=0.6",
+        )
+        .to(
+          [desktopCtaRef.current, mobileCtaRef.current, menuToggleRef.current],
+          { opacity: 1, filter: "blur(0px)", x: 0, duration: 0.7 },
+          "-=0.4",
+        )
+        .set(targets, { clearProps: "opacity,filter,transform" });
+    });
+
+    return () => ctx.revert();
+  }, [nav_links]);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    const panel = mobileNavRef.current;
+    const items = panel ? panel.querySelectorAll(":scope > *") : [];
+    if (items.length === 0) return;
+
+    if (prefersReduced) {
+      gsap.set(items, { opacity: 1, filter: "blur(0px)", x: 0 });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(items, { opacity: 0, filter: "blur(16px)", x: -24 });
+      gsap.to(items, {
+        opacity: 1,
+        filter: "blur(0px)",
+        x: 0,
+        duration: 0.7,
+        stagger: 0.06,
+        ease: "power4.out",
+        onComplete: () =>
+          gsap.set(items, { clearProps: "opacity,filter,transform" }),
+      });
+    });
+
+    return () => ctx.revert();
+  }, [mobileOpen]);
+
   const closeMobileMenu = useCallback(({ returnFocus = true } = {}) => {
     setMobileOpen(false);
     setEventsAccordionOpen(false);
@@ -269,12 +362,13 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   };
 
   return (
-    <header className="sticky top-0 z-500 bg-[#04050F] text-white">
+    <header className=" sticky top-0 z-500 bg-[#04050F] text-white">
       <div className="max-w-[1920px] mx-auto flex items-center justify-between px-4 lg:px-9 h-16 lg:h-15">
         {/* Brand logo */}
         <Link
+          ref={logoRef}
           href="/"
-          className="rounded-sm  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
+          className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
         >
           <PrismicNextImage
             field={brand_logo}
@@ -282,9 +376,10 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           />
         </Link>
 
-        <div className="flex gap-10">
+        <div className="flex items-center gap-10">
           {/* Desktop nav */}
           <nav
+            ref={desktopNavRef}
             aria-label="Primary"
             className="hidden lg:flex font-mono text-white items-center gap-8"
           >
@@ -322,7 +417,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                 >
                   <span
                     aria-hidden="true"
-                    className={`w-2 h-2 rounded-full inline-block transition-colors ${
+                    className={`w-2 h-2  rounded-full inline-block transition-colors ${
                       isActive
                         ? "bg-[#FF6A50]"
                         : "bg-transparent border border-white"
@@ -335,25 +430,19 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           </nav>
 
           {/* Desktop CTA */}
-          <div className="hidden lg:block">
-            <PrismicNextLink
-              field={nav_cta}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 bg-[#242424] hover:bg-white/20 transition-colors text-sm font-medium px-4 py-2 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
-            >
-              {nav_cta?.text || "Register for Meetup"}
-              <span className="sr-only"> (opens in a new tab)</span>
-              <span className="text-[#FF6A50]">
-                <ArrowIcon className="size-4 mt-0.5" />
-              </span>
-            </PrismicNextLink>
-          </div>
+          <NavCtaButton
+            ref={desktopCtaRef}
+            field={nav_cta}
+            className="hidden lg:block"
+          >
+            {nav_cta?.text || "Register for Meetup"}
+          </NavCtaButton>
         </div>
 
         {/* Mobile: CTA + hamburger */}
         <div className="flex lg:hidden items-center gap-4">
           <PrismicNextLink
+            ref={mobileCtaRef}
             field={nav_cta}
             target="_blank"
             rel="noopener noreferrer"

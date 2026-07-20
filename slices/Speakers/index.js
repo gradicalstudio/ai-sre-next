@@ -169,8 +169,8 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
           data-slice-type={slice.slice_type}
           data-slice-variation={slice.variation}
           className="relative   mx-auto w-full
-          max-w-[1000px]
-          2xl:max-w-[1320px]
+          max-w-250
+          2xl:max-w-330
           px-6 md:px-6 lg:px-8
           py-10 md:py-14 lg:py-30 mt-0 lg:-mt-40 xl:mb-15  overflow-hidden  text-white"
         >
@@ -183,10 +183,10 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
     hidden lg:block
     left-pattern
     pointer-events-none absolute opacity-60
-    left-[0px] top-[0px] w-[260px]
-    md:left-[-90px] md:top-[-10px] md:w-[420px]
-    lg:left-[60px] lg:top-[75px] lg:w-[620px]
-    xl:left-[0px] xl:top-[100px] xl:w-[620px]
+    left-0 top-0 w-65
+    md:-left-22.5 md:-top-2.5 md:w-105
+    lg:left-15 lg:top-18.75 lg:w-155
+    xl:left-0 xl:top-25 xl:w-155
   "
           />
 
@@ -199,10 +199,10 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
     right-pattern
     hidden lg:block
     pointer-events-none absolute opacity-60
-    right-[60px] top-[10px] w-[260px]
-    md:right-[-220px] md:top-[-20px] md:w-[420px]
-    lg:right-[-190px] lg:top-[80px] lg:w-[620px]
-    xl:right-[0px] xl:top-[100px] xl:w-[520px]
+    right-15 top-2.5 w-65
+    md:-right-55 md:-top-5 md:w-105
+    lg:-right-47.5 lg:top-20 lg:w-155
+    xl:right-0 xl:top-25 xl:w-130
   "
           />
 
@@ -223,12 +223,12 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
                 src="/speakers.svg"
                 alt=""
                 className="
-              w-[45px]
+              w-11.25
               shrink-0
 
-              md:w-[70px]
+              md:w-17.5
 
-              lg:w-[90px]
+              lg:w-22.5
             "
               />
 
@@ -237,9 +237,9 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
               <div
                 className="
               max-w-[320px]
-              text-left text-3xl leading-[1]
+              text-left text-3xl leading-none
 
-              md:max-w-[500px]
+              md:max-w-125
               md:text-[34px]
               lg:text-[40px]
             "
@@ -264,9 +264,9 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
                   ref={(el) => (cardsRef.current[index] = el)}
                   className="
                 group relative
-              w-[160px]
-md:w-[220px]
-lg:w-[200px]
+              w-40
+md:w-55
+lg:w-50
               "
                 >
                   {/* IMAGE */}
@@ -274,8 +274,8 @@ lg:w-[200px]
                   <div
                     className="
                   relative overflow-hidden rounded-full
-                  mt-0 h-[160px] w-[160px]
-md:mt-8 md:h-[186px] md:w-[186px]
+                  mt-0 h-40 w-40
+md:mt-8 md:h-46.5 md:w-46.5
 lg:mt-20 
                 "
                   >
@@ -385,10 +385,10 @@ lg:mt-20
     w-41
     rounded-full
     bg-transparent
-    p-[2px]
+    p-0.5
     transition-all
     duration-300
-    hover:bg-gradient-to-b
+    hover:bg-linear-to-b
     hover:from-[#FA6D55]
     hover:to-[#3FD9FB]
   "
