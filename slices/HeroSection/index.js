@@ -77,13 +77,12 @@ const HeroSection = ({ slice }) => {
             filter: "blur(0px)",
             y: 0,
             duration: 0.9,
-       
           },
           "<",
         )
         .fromTo(
           iframeWrapRef.current,
-          { opacity: 0, filter: "blur(5px)" },
+          { filter: "blur(5px)" },
           { opacity: 1, filter: "blur(0px)", duration: 0.9 },
           "-=0.35",
         )
@@ -167,7 +166,7 @@ const HeroSection = ({ slice }) => {
         {/* iframe container — decorative background embed, hidden from AT */}
         <div
           ref={iframeWrapRef}
-          className="w-full mb-10 xl:mb-12 2xl:mb-19.5 h-30 md:h-55 lg:h-50 2xl:h-55 4xl:h-75 "
+          className="w-full opacity-0 mb-10 xl:mb-12 2xl:mb-19.5 h-30 md:h-55 lg:h-50 2xl:h-55 4xl:h-75 "
         >
           <iframe
             src="https://www.unicorn.studio/embed/2wYzUuTwklWbYOVWOlkR"

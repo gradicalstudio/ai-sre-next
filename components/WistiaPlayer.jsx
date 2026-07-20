@@ -55,19 +55,47 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
   useEffect(() => {
     if (!videoId || scriptLoaded.current) return;
-    scriptLoaded.current = true;
 
-    const script1 = document.createElement("script");
-    script1.src = "https://fast.wistia.com/player.js";
-    script1.async = true;
+    const container =
+      playerRef.current?.closest?.(".relative.group") ??
+      document.getElementById(`wistia-wrapper-${videoId}`);
 
-    const script2 = document.createElement("script");
-    script2.src = `https://fast.wistia.com/embed/${videoId}.js`;
-    script2.async = true;
-    script2.type = "module";
+    const loadScripts = () => {
+      if (scriptLoaded.current) return;
+      scriptLoaded.current = true;
 
-    document.body.appendChild(script1);
-    document.body.appendChild(script2);
+      const script1 = document.createElement("script");
+      script1.src = "https://fast.wistia.com/player.js";
+      script1.async = true;
+
+      const script2 = document.createElement("script");
+      script2.src = `https://fast.wistia.com/embed/${videoId}.js`;
+      script2.async = true;
+      script2.type = "module";
+
+      document.body.appendChild(script1);
+      document.body.appendChild(script2);
+    };
+
+    if (!("IntersectionObserver" in window) || !container) {
+      // Fallback: no IO support, just load normally
+      loadScripts();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          loadScripts();
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" }, // start loading ~600px before it's visible
+    );
+
+    observer.observe(container);
+
+    return () => observer.disconnect();
   }, [videoId]);
 
   const setPlayerInteractive = (interactive) => {
@@ -83,7 +111,6 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
       player.removeAttribute("inert");
     }
   };
-
 
   const resumePreview = () => {
     const player = playerRef.current;
