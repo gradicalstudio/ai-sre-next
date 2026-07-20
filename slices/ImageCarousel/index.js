@@ -47,10 +47,13 @@ const ImageCarousel = ({ slice }) => {
               key={index}
               className="flex-none  w-[50%] md:w-[30%] xl:w-[23%] pr-4"
             >
-              <div className="relative bg-[#222433] h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100">
+              <div className="relative bg-[#222433] w-full h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100">
                 <PrismicNextImage
                   field={item.image}
-                  className="object-cover object-center"
+                  fill
+                  preload={index < 3}
+                  sizes="(max-width: 768px) 50vw, (max-width: 1280px) 30vw, 23vw"
+                  className="object-cover"
                 />
               </div>
             </div>

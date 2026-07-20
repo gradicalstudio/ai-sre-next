@@ -64,8 +64,7 @@ export default function VideoPlayerOld({
 
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        // CRITICAL FIX: Since the user explicitly clicked the video to play it,
-        // we can now safely unmute the audio without the browser blocking it.
+      
         videoRef.current.muted = false;
         setIsMuted(false);
 

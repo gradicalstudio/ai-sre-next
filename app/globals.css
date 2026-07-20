@@ -51,3 +51,7 @@ html.lenis body {
     scroll-margin-top: 90px;
   }
 }
+
+.no-js .nav-fade-target {
+  opacity: 1 !important;
+}

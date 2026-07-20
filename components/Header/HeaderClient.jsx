@@ -229,7 +229,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     }
 
     const ctx = gsap.context(() => {
-      gsap.set(targets, { opacity: 0, filter: "blur(16px)", x: -24 });
+      gsap.set(targets, { filter: "blur(16px)", x: -24 });
 
       const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
 
@@ -368,6 +368,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
         <Link
           ref={logoRef}
           href="/"
+          style={{ opacity: 0 }}
           className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
         >
           <PrismicNextImage
@@ -391,11 +392,9 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
 
               if (isEventsLink) {
                 return (
-                  <NavDropdown
-                    key={item.key ?? index}
-                    item={item}
-                    isActive={isActive}
-                  />
+                  <div key={item.key ?? index} style={{ opacity: 0 }}>
+                    <NavDropdown item={item} isActive={isActive} />
+                  </div>
                 );
               }
 
@@ -403,6 +402,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
                 <a
                   key={item.key ?? index}
                   href={item?.url ?? "#"}
+                  style={{ opacity: 0 }}
                   aria-current={isActive ? "location" : undefined}
                   onClick={(e) => {
                     if (id) {
@@ -430,13 +430,11 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           </nav>
 
           {/* Desktop CTA */}
-          <NavCtaButton
-            ref={desktopCtaRef}
-            field={nav_cta}
-            className="hidden lg:block"
-          >
-            {nav_cta?.text || "Register for Meetup"}
-          </NavCtaButton>
+          <div ref={desktopCtaRef} style={{ opacity: 0 }}>
+            <NavCtaButton field={nav_cta} className="hidden lg:block">
+              {nav_cta?.text || "Register for Meetup"}
+            </NavCtaButton>
+          </div>
         </div>
 
         {/* Mobile: CTA + hamburger */}
@@ -446,6 +444,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             field={nav_cta}
             target="_blank"
             rel="noopener noreferrer"
+            style={{ opacity: 0 }}
             className="flex items-center gap-1.5 text-xs font-medium rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
           >
             {nav_cta?.text || "Register for Meetup"}
@@ -466,6 +465,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-nav"
+            style={{ opacity: 0 }}
             className="cursor-pointer p-2.5 -m-2.5 rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
           >
             {mobileOpen ? <CloseIcon size={24} /> : <MenuIcon size={24} />}
