@@ -76,11 +76,15 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
     player.style.pointerEvents = interactive ? "auto" : "none";
     player.style.zIndex = interactive ? "9999" : "-1";
     player.removeAttribute("aria-hidden");
-    if (!interactive) player.setAttribute("aria-hidden", "true");
+    if (!interactive) {
+      player.setAttribute("aria-hidden", "true");
+      player.setAttribute("inert", "");
+    } else {
+      player.removeAttribute("inert");
+    }
   };
 
-  // Shared resume logic — called from both fullscreenchange and
-  // webkitendfullscreen so either path reliably restores the preview
+
   const resumePreview = () => {
     const player = playerRef.current;
     const previewVideo = previewVideoRef.current;
@@ -148,8 +152,7 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         if (innerVideo?.webkitEnterFullscreen) {
           setPlayerInteractive(true);
 
-          // webkitendfullscreen fires on the inner <video> element directly
-          // on iOS — more reliable than document fullscreenchange for this path
+          //IOS
           innerVideo.addEventListener("webkitendfullscreen", resumePreview, {
             once: true,
           });
