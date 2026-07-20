@@ -29,13 +29,25 @@ html.lenis body {
 
 @media (max-width: 1023px) {
   #about,
-  #events {
+  #events,
+  #getreport,
+  #headingandvideo,
+  #hero-section,
+  #image-carousel,
+  #logo-marquee,
+  #video-showcase {
     scroll-margin-top: 250px;
   }
 }
 @media (min-width: 1024px) {
   #about,
-  #events {
-    scroll-margin-top: 90px; /* desktop header height */
+  #events,
+  #getreport,
+  #headingandvideo,
+  #hero-section,
+  #image-carousel,
+  #logo-marquee,
+  #video-showcase {
+    scroll-margin-top: 90px;
   }
 }

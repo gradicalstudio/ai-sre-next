@@ -173,17 +173,6 @@ interface FooterDocumentData {
   email_block: prismic.RichTextField;
 
   /**
-   * Logo field in *Footer*
-   *
-   * - **Field Type**: Image
-   * - **Placeholder**: *None*
-   * - **API ID Path**: footer.logo
-   * - **Tab**: Main
-   * - **Documentation**: https://prismic.io/docs/fields/image
-   */
-  logo: prismic.ImageField<never>;
-
-  /**
    * Footer links field in *Footer*
    *
    * - **Field Type**: Link

@@ -1,5 +1,6 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import gsap from "gsap";
 import { useEventsStore } from "@/store/eventsStore";
 
 const DROPDOWN_ITEMS = [
@@ -10,6 +11,8 @@ const DROPDOWN_ITEMS = [
 export default function NavDropdown({ item, isActive }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef(null);
+  const dropdownRef = useRef(null);
+  const tweenRef = useRef(null);
   const activeTab = useEventsStore((state) => state.activeTab);
   const setActiveTab = useEventsStore((state) => state.setActiveTab);
 
@@ -22,9 +25,44 @@ export default function NavDropdown({ item, isActive }) {
     closeTimer.current = setTimeout(() => setOpen(false), 120);
   };
 
+  useEffect(() => {
+    const el = dropdownRef.current;
+    if (!el) return;
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    tweenRef.current?.kill();
+
+    if (open) {
+      gsap.set(el, { display: "flex" });
+      tweenRef.current = gsap.fromTo(
+        el,
+        { opacity: 0, y: -6 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: reduceMotion ? 0 : 0.22,
+          ease: "power1.out",
+        },
+      );
+    } else {
+      tweenRef.current = gsap.to(el, {
+        opacity: 0,
+        y: -6,
+        duration: reduceMotion ? 0 : 0.16,
+        ease: "power2.in",
+        onComplete: () => gsap.set(el, { display: "none" }),
+      });
+    }
+
+    return () => tweenRef.current?.kill();
+  }, [open]);
+
   return (
     <div
-      className="relative z-999"
+      className="relative py-3 cursor-pointer z-999"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -66,43 +104,44 @@ export default function NavDropdown({ item, isActive }) {
         </svg>
       </a>
 
-      {open && (
-        <div className="absolute top-full -left-10 mt-3 w-44 bg-[#04050F] flex flex-col z-200">
-          {DROPDOWN_ITEMS.map(({ label, tab }) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => {
-                setActiveTab(tab);
-                setOpen(false);
-                setTimeout(() => {
-                  document
-                    .getElementById("events")
-                    ?.scrollIntoView({ behavior: "smooth" });
-                }, 50);
-              }}
-              className="flex items-center group gap-2 px-4 py-3 text-xs font-semibold uppercase tracking-wide hover:bg-white/5 transition-colors text-left"
+      <div
+        ref={dropdownRef}
+        className="absolute top-full -left-10 mt-2 w-44 bg-[#04050F] flex-col z-200"
+        style={{ display: "none", opacity: 0, transform: "translateY(-6px)" }}
+        aria-hidden={!open}
+      >
+        {DROPDOWN_ITEMS.map(({ label, tab }) => (
+          <button
+            key={tab}
+            type="button"
+            onClick={() => {
+              setActiveTab(tab);
+              setOpen(false);
+              setTimeout(() => {
+                document
+                  .getElementById("events")
+                  ?.scrollIntoView({ behavior: "smooth" });
+              }, 50);
+            }}
+            className="flex items-center group gap-2 px-4 py-3 text-xs cursor-pointer font-semibold uppercase tracking-wide hover:bg-white/5 transition-colors text-left"
+          >
+            <span
+              className={`w-1.5 h-1.5 group-hover:bg-[#FF6A50]  group-hover:border-[#FF6A50] rounded-full shrink-0 transition-colors ${
+                isActive && activeTab === tab
+                  ? "bg-[#FF6A50]"
+                  : "bg-transparent border border-white/30"
+              }`}
+            />
+            <span
+              className={` group-hover:text-[white] ${
+                isActive && activeTab === tab ? "text-white" : "text-white/60"
+              }`}
             >
-              <span
-                className={`w-1.5 h-1.5 group-hover:bg-[#FF6A50]  group-hover:border-[#FF6A50] rounded-full shrink-0 transition-colors ${
-                  isActive && activeTab === tab
-                    ? "bg-[#FF6A50]"
-                    : "bg-transparent border border-white/30"
-                }`}
-              />
-              <span
-                className={` group-hover:text-[white] ${
-                  isActive && activeTab === tab
-                    ? "text-white"
-                    : "text-white/60"
-                }`}
-              >
-                {label}
-              </span>
-            </button>
-          ))}
-        </div>
-      )}
+              {label}
+            </span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

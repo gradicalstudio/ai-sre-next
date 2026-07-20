@@ -32,7 +32,10 @@ const ImageCarousel = ({ slice }) => {
   };
 
   return (
-    <div className="max-w-[1920px] mx-auto w-full px-3 lg:px-9  mb-22.5 md:mb-45">
+    <section
+      id="image-carousel"
+      className="max-w-[1920px] mx-auto w-full px-3 lg:px-9  mb-22.5 md:mb-45 bg-[#04050F]"
+    >
       <div
         className="  overflow-hidden select-none"
         ref={emblaRef}
@@ -40,11 +43,13 @@ const ImageCarousel = ({ slice }) => {
       >
         <div className="flex">
           {slice.primary.carousel_image.map((item, index) => (
-            <div key={index} className="flex-none  w-[50%] md:w-[30%] xl:w-[23%] pr-4">
+            <div
+              key={index}
+              className="flex-none  w-[50%] md:w-[30%] xl:w-[23%] pr-4"
+            >
               <div className="relative bg-[#222433] h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100">
                 <PrismicNextImage
                   field={item.image}
-                  fill
                   className="object-cover object-center"
                 />
               </div>
@@ -52,7 +57,7 @@ const ImageCarousel = ({ slice }) => {
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

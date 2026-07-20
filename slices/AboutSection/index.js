@@ -91,7 +91,7 @@ const AboutSection = ({ slice }) => {
       id="about"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
-      className=" max-w-[1920px] mx-auto w-full px-3 md:px-6 lg:px-9 mb-22.5 md:mb-45"
+      className=" max-w-[1920px] mx-auto w-full px-3 md:px-6 lg:px-9 mb-22.5 md:mb-45 bg-[#04050F]"
     >
       {/* Inner Container */}
       <div className="lg:px-15 xl:px-24 2xl:px-30 4xl:px-33.25">

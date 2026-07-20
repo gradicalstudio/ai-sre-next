@@ -11,11 +11,12 @@ const VideoShowcase = ({ slice }) => {
 
   return (
     <section
+    id="video-showcase"
       data-slice-type={slice.slice_type}
       data-slice-variation={slice.variation}
-      className=" max-w-[1920px] mx-auto w-full px-3 lg:px-9 h-auto mb-22.5 md:mb-45"
+      className=" max-w-[1920px] mx-auto w-full px-3 lg:px-9 h-auto mb-22.5 md:mb-45 bg-[#04050F]"
     >
-      {/* Heading + Description — server rendered, zero JS */}
+      {/* Heading + Description  */}
       <div>
         <div className=" mb-10 max-w-2xl mx-auto">
           {slice.primary?.heading && (
@@ -31,7 +32,7 @@ const VideoShowcase = ({ slice }) => {
         </div>
       </div>
 
-      {/* Hand off to the client boundary — only this part ships JS */}
+      {/* Video */}
       <div className="lg:px-15 xl:px-24 2xl:px-30 4xl:px-50  ">
         <VideoPlayer items={items} />
       </div>
