@@ -97,14 +97,6 @@
 								}
 							],
 							[
-								"date_text",
-								{
-									"__TYPE__": "FieldContent",
-									"type": "Date",
-									"value": "2012-02-03"
-								}
-							],
-							[
 								"date",
 								{
 									"__TYPE__": "StructuredTextContent",
