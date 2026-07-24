@@ -87,13 +87,6 @@
                   "placeholder": ""
                 }
               },
-              "date_text": {
-                "type": "Date",
-                "config": {
-                  "label": "Date Text",
-                  "placeholder": ""
-                }
-              },
               "date": {
                 "type": "StructuredText",
                 "config": {

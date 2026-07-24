@@ -1146,16 +1146,6 @@ export interface EventsSliceDefaultPrimaryEventsItem {
   event_datetime: prismic.TimestampField;
 
   /**
-   * Date Text field in *Events → Default → Primary → Events*
-   *
-   * - **Field Type**: Date
-   * - **Placeholder**: *None*
-   * - **API ID Path**: events.default.primary.events[].date_text
-   * - **Documentation**: https://prismic.io/docs/fields/date
-   */
-  date_text: prismic.DateField;
-
-  /**
    * Date field in *Events → Default → Primary → Events*
    *
    * - **Field Type**: Rich Text
