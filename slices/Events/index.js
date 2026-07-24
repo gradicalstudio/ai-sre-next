@@ -144,22 +144,19 @@ const Events = ({ slice }) => {
     return () => ctx.revert();
   }, []);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
   const events = slice.primary.events ?? [];
 
   const { upcomingEvents, pastEvents } = useMemo(() => {
+    const now = new Date();
     const upcoming = [];
     const past = [];
 
     events.forEach((item) => {
-      const rawDate = item.date_text;
-      if (!rawDate) return;
-      const eventDate = new Date(rawDate);
-      eventDate.setHours(0, 0, 0, 0);
+      const rawDateTime = item.event_datetime;
+      if (!rawDateTime) return;
+      const eventDate = new Date(rawDateTime);
       const entry = { item, eventDate };
-      if (eventDate >= today) {
+      if (eventDate >= now) {
         upcoming.push(entry);
       } else {
         past.push(entry);

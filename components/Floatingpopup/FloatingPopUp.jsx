@@ -11,18 +11,16 @@ export default async function FloatingPopup() {
     (s) => s.slice_type === "events",
   );
   const events = eventsSlice?.primary.events ?? [];
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+ const now = new Date();
 
-  const popups = events
-    .filter((item) => {
-      if (!item.floating_popup) return false;
-      const rawDate = item.date?.[0]?.text;
-      if (!rawDate) return false;
-      const eventDate = new Date(rawDate);
-      eventDate.setHours(0, 0, 0, 0);
-      return eventDate >= today;
-    })
+const popups = events
+  .filter((item) => {
+    if (!item.floating_popup) return false;
+    const rawDateTime = item.event_datetime;
+    if (!rawDateTime) return false;
+    const eventDate = new Date(rawDateTime);
+    return eventDate >= now;
+  })
     .map((item) => ({
       image: item.icon,
       title: item.title,
