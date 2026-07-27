@@ -502,7 +502,7 @@ export default function VideoPlayer({ items }) {
 
   return (
     <>
-      <div className="hidden lg:flex lg:min-h-80 xl:min-h-130 2xl:min-h-120  gap-2 w-full overflow-hidden">
+      <div className={`hidden lg:flex lg:min-h-80 xl:min-h-130 2xl:min-h-120 gap-2 w-full overflow-hidden ${items.length <= 2 ? "justify-center" : ""}`}>
         {items.map((item, index) => (
           <VideoCard
             key={index}

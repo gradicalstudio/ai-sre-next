@@ -302,7 +302,7 @@ function PopupSlider({ items, onDismiss, isHidden }) {
             disabled={!canScrollNext}
             aria-label="Show next"
             style={{ touchAction: "manipulation" }}
-            className="flex h-6 w-6 items-center justify-center cursor-pointer text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
+            className="flex h-6 w-6 items-center justify-center cursor-pointer disabled:cursor-default text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
           >
             <ChevronIcon direction="right" />
           </button>
@@ -312,7 +312,7 @@ function PopupSlider({ items, onDismiss, isHidden }) {
             disabled={!canScrollPrev}
             aria-label="Show previous"
             style={{ touchAction: "manipulation" }}
-            className="flex h-6 w-6 items-center justify-center cursor-pointer text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
+            className="flex h-6 w-6 items-center justify-center cursor-pointer disabled:cursor-default text-black transition-colors duration-150 hover:text-[#FF6A50] disabled:text-black/25 disabled:hover:text-black/25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#FF6A50]"
           >
             <ChevronIcon direction="left" />
           </button>
