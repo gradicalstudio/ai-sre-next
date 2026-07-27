@@ -148,7 +148,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             if (isMobile) return "top 40%";
             if (isLg) return "bottom bottom-=150";
             if (isXl) return "bottom bottom";
-            if (is2xl) return "bottom bottom";
+            if (is2xl) return "90% bottom";
             if (is4xl) return "bottom bottom";
             return "bottom bottom";
           };
