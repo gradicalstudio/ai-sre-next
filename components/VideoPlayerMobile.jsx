@@ -43,29 +43,51 @@ function getIsIOS() {
 // ─── Flash Icon ───────────────────────────────────────────────────────────────
 
 function FlashIcon({ icon }) {
-  if (icon === "play") return (
-    <svg width="22" height="22" viewBox="0 0 20 20" fill="white">
-      <path d="M5 3.5l12 6.5-12 6.5V3.5z" />
-    </svg>
-  );
-  if (icon === "pause") return (
-    <svg width="22" height="22" viewBox="0 0 20 20" fill="white">
-      <rect x="4" y="3" width="4" height="14" rx="1" />
-      <rect x="12" y="3" width="4" height="14" rx="1" />
-    </svg>
-  );
-  if (icon === "rewind") return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
-      <text x="12" y="14" textAnchor="middle" fontSize="5" fill="white" fontWeight="bold">5</text>
-    </svg>
-  );
-  if (icon === "forward") return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-      <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z" />
-      <text x="12" y="14" textAnchor="middle" fontSize="5" fill="white" fontWeight="bold">5</text>
-    </svg>
-  );
+  if (icon === "play")
+    return (
+      <svg width="22" height="22" viewBox="0 0 20 20" fill="white">
+        <path d="M5 3.5l12 6.5-12 6.5V3.5z" />
+      </svg>
+    );
+  if (icon === "pause")
+    return (
+      <svg width="22" height="22" viewBox="0 0 20 20" fill="white">
+        <rect x="4" y="3" width="4" height="14" rx="1" />
+        <rect x="12" y="3" width="4" height="14" rx="1" />
+      </svg>
+    );
+  if (icon === "rewind")
+    return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+        <text
+          x="12"
+          y="14"
+          textAnchor="middle"
+          fontSize="5"
+          fill="white"
+          fontWeight="bold"
+        >
+          5
+        </text>
+      </svg>
+    );
+  if (icon === "forward")
+    return (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
+        <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z" />
+        <text
+          x="12"
+          y="14"
+          textAnchor="middle"
+          fontSize="5"
+          fill="white"
+          fontWeight="bold"
+        >
+          5
+        </text>
+      </svg>
+    );
   return null;
 }
 
@@ -77,7 +99,9 @@ function MobileVideoModal({ item, onClose }) {
   const hideControlsTimer = useRef(null);
   const flashTimer = useRef(null);
   const onCloseRef = useRef(onClose);
-  useEffect(() => { onCloseRef.current = onClose; }, [onClose]);
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   const [playing, setPlaying] = useState(false);
   const [muted, setMuted] = useState(false);
@@ -92,7 +116,9 @@ function MobileVideoModal({ item, onClose }) {
 
   // Escape key + scroll lock
   useEffect(() => {
-    const handler = (e) => { if (e.key === "Escape") onCloseRef.current(); };
+    const handler = (e) => {
+      if (e.key === "Escape") onCloseRef.current();
+    };
     window.addEventListener("keydown", handler);
     document.body.style.overflow = "hidden";
     return () => {
@@ -149,8 +175,13 @@ function MobileVideoModal({ item, onClose }) {
   const togglePlay = useCallback(() => {
     const vid = videoRef.current;
     if (!vid) return;
-    if (vid.paused) { vid.play(); triggerFlash("play"); }
-    else { vid.pause(); triggerFlash("pause"); }
+    if (vid.paused) {
+      vid.play();
+      triggerFlash("play");
+    } else {
+      vid.pause();
+      triggerFlash("pause");
+    }
     resetHideTimer();
   }, [triggerFlash, resetHideTimer]);
 
@@ -161,13 +192,19 @@ function MobileVideoModal({ item, onClose }) {
     setMuted(vid.muted);
   }, []);
 
-  const skip = useCallback((seconds) => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.currentTime = Math.min(Math.max(vid.currentTime + seconds, 0), vid.duration || 0);
-    triggerFlash(seconds > 0 ? "forward" : "rewind");
-    resetHideTimer();
-  }, [triggerFlash, resetHideTimer]);
+  const skip = useCallback(
+    (seconds) => {
+      const vid = videoRef.current;
+      if (!vid) return;
+      vid.currentTime = Math.min(
+        Math.max(vid.currentTime + seconds, 0),
+        vid.duration || 0,
+      );
+      triggerFlash(seconds > 0 ? "forward" : "rewind");
+      resetHideTimer();
+    },
+    [triggerFlash, resetHideTimer],
+  );
 
   const handleSeek = useCallback((e) => {
     const vid = videoRef.current;
@@ -178,8 +215,12 @@ function MobileVideoModal({ item, onClose }) {
 
   const fmt = (s) => {
     if (!isFinite(s)) return "00:00";
-    const m = Math.floor(s / 60).toString().padStart(2, "0");
-    const sec = Math.floor(s % 60).toString().padStart(2, "0");
+    const m = Math.floor(s / 60)
+      .toString()
+      .padStart(2, "0");
+    const sec = Math.floor(s % 60)
+      .toString()
+      .padStart(2, "0");
     return `${m}:${sec}`;
   };
 
@@ -238,12 +279,12 @@ function MobileVideoModal({ item, onClose }) {
           )}
 
           {resolved?.type !== "youtube" &&
-           resolved?.type !== "vimeo" &&
-           resolved?.type !== "direct" && (
-            <div className="w-full h-full flex items-center justify-center text-white/30 text-sm">
-              No video source available
-            </div>
-          )}
+            resolved?.type !== "vimeo" &&
+            resolved?.type !== "direct" && (
+              <div className="w-full h-full flex items-center justify-center text-white/30 text-sm">
+                No video source available
+              </div>
+            )}
 
           {/* ── Android custom controls (not shown on iOS) ── */}
           {isDirect && !isIOS && (
@@ -280,10 +321,17 @@ function MobileVideoModal({ item, onClose }) {
                     aria-label="Rewind 5 seconds"
                     className="flex flex-col items-center gap-1 text-white/80 active:scale-90 transition-transform"
                   >
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
                       <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
                     </svg>
-                    <span className="text-white text-[10px] font-medium -mt-1">5s</span>
+                    <span className="text-white text-[10px] font-medium -mt-1">
+                      5s
+                    </span>
                   </button>
 
                   {/* Play / Pause */}
@@ -293,12 +341,22 @@ function MobileVideoModal({ item, onClose }) {
                     className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center active:scale-90 transition-transform"
                   >
                     {playing ? (
-                      <svg width="24" height="24" viewBox="0 0 20 20" fill="white">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 20 20"
+                        fill="white"
+                      >
                         <rect x="4" y="3" width="4" height="14" rx="1" />
                         <rect x="12" y="3" width="4" height="14" rx="1" />
                       </svg>
                     ) : (
-                      <svg width="24" height="24" viewBox="0 0 20 20" fill="white">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 20 20"
+                        fill="white"
+                      >
                         <path d="M5 3.5l12 6.5-12 6.5V3.5z" />
                       </svg>
                     )}
@@ -310,10 +368,17 @@ function MobileVideoModal({ item, onClose }) {
                     aria-label="Forward 5 seconds"
                     className="flex flex-col items-center gap-1 text-white/80 active:scale-90 transition-transform"
                   >
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
                       <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z" />
                     </svg>
-                    <span className="text-white text-[10px] font-medium -mt-1">5s</span>
+                    <span className="text-white text-[10px] font-medium -mt-1">
+                      5s
+                    </span>
                   </button>
                 </div>
 
@@ -328,7 +393,10 @@ function MobileVideoModal({ item, onClose }) {
                     {fmt(duration)}
                   </span>
 
-                  <div className="relative flex-1 h-1" style={{ cursor: "pointer" }}>
+                  <div
+                    className="relative flex-1 h-1"
+                    style={{ cursor: "pointer" }}
+                  >
                     <div className="absolute inset-0 rounded-full bg-white/20" />
                     <div
                       className="absolute inset-y-0 left-0 rounded-full bg-white"
@@ -353,11 +421,21 @@ function MobileVideoModal({ item, onClose }) {
                     className="text-white shrink-0"
                   >
                     {muted ? (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
                         <path d="M16.5 12A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM19 12c0 3.17-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
                       </svg>
                     ) : (
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
                         <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0014 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z" />
                       </svg>
                     )}
@@ -374,13 +452,12 @@ function MobileVideoModal({ item, onClose }) {
 
 // ─── Single Card ─────────────────────────────────────────────────────────────
 
-function MobileVideoCard({ item, isActive, onOpenModal }) {
+function MobileVideoCard({ item, isActive, onOpenModal, singleItem }) {
   const resolved = resolveVideoSrc(item?.video_link);
 
   return (
     <div
-      className="relative shrink-0 w-[75vw]  max-w-90 md:max-w-120 select-none rounded-xl overflow-hidden cursor-pointer"
-     
+      className={`relative shrink-0 select-none rounded-xl overflow-hidden cursor-pointer ${singleItem ? "w-full max-w-none" : "w-[85vw] md:w-[90vw]  "}`}
       onClick={() => isActive && onOpenModal(item)}
     >
       <div className="relative h-80 md:h-100">
@@ -415,7 +492,7 @@ function MobileVideoCard({ item, isActive, onOpenModal }) {
             field={item.thumbnail_image}
             fill
             className="object-cover object-top"
-            sizes="75vw"
+            sizes="85vw"
           />
         )}
 
@@ -445,7 +522,8 @@ function MobileVideoCard({ item, isActive, onOpenModal }) {
         <div
           className="absolute bottom-0 left-0 right-0 p-5 flex flex-col gap-1"
           style={{
-            background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
+            background:
+              "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
           }}
         >
           {item?.name_of_person && (
@@ -476,12 +554,11 @@ function MobileVideoCard({ item, isActive, onOpenModal }) {
 
 export default function VideoPlayerMobile({ items, onOpenModal }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
-    containScroll: false,
+    align: items.length > 2 ? "center" : "start",
+    containScroll: "trimSnaps",
     dragFree: false,
     loop: false,
   });
-
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState([]);
   const [modalItem, setModalItem] = useState(null);
@@ -517,59 +594,89 @@ export default function VideoPlayerMobile({ items, onOpenModal }) {
       <div className="flex flex-col gap-6">
         {/* Carousel */}
         <div className="overflow-hidden" ref={emblaRef}>
-          <div className="flex gap-3 pl-4">
+          <div className={`flex gap-3 ${items.length === 1 ? "" : "pl-0"}`}>
             {items.map((item, index) => (
               <MobileVideoCard
                 key={index}
                 item={item}
                 isActive={index === selectedIndex}
                 onOpenModal={handleOpenModal}
+                singleItem={items.length === 1}
               />
             ))}
           </div>
         </div>
 
         {/* Dots + arrows */}
-        <div className="flex items-center gap-4 pl-4">
-          <button
-            onClick={scrollPrev}
-            disabled={selectedIndex === 0}
-            className="w-9 h-9 rounded-full  bg-[#1D1E27]  flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-colors disabled:opacity-30"
-            aria-label="Previous"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            </svg>
-          </button>
+        {items.length > 1 && (
+          <div className="flex items-center gap-4 pl-4">
+            <button
+              onClick={scrollPrev}
+              disabled={selectedIndex === 0}
+              className="w-9 h-9 rounded-full  bg-[#1D1E27]  flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-colors disabled:opacity-30"
+              aria-label="Previous"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path
+                  d="M10 12L6 8l4-4"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              </svg>
+            </button>
 
-          <div className="flex items-center gap-2">
-            {scrollSnaps.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => emblaApi?.scrollTo(index)}
-                aria-label={`Go to slide ${index + 1}`}
-                className="transition-all duration-300"
-                style={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: "50%",
-                  background: index === selectedIndex ? "#FF6A50" : "rgba(255,255,255,0.3)",
-                }}
-              />
-            ))}
+            <div className="flex items-center gap-2">
+              {scrollSnaps.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => emblaApi?.scrollTo(index)}
+                  aria-label={`Go to slide ${index + 1}`}
+                  className="transition-all duration-300"
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background:
+                      index === selectedIndex
+                        ? "#FF6A50"
+                        : "rgba(255,255,255,0.3)",
+                  }}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={scrollNext}
+              disabled={selectedIndex === scrollSnaps.length - 1}
+              className="w-9 h-9 rounded-full bg-[#1D1E27] flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-colors disabled:opacity-30"
+              aria-label="Next"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+              >
+                <path
+                  d="M6 4l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              </svg>
+            </button>
           </div>
-
-          <button
-            onClick={scrollNext}
-            disabled={selectedIndex === scrollSnaps.length - 1}
-            className="w-9 h-9 rounded-full bg-[#1D1E27] flex items-center justify-center text-white/60 hover:text-white hover:border-white/40 transition-colors disabled:opacity-30"
-            aria-label="Next"
-          >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-            </svg>
-          </button>
-        </div>
+        )}
       </div>
 
       {/* Mobile-only modal with iOS/Android split */}
