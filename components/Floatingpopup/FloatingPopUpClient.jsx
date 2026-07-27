@@ -11,6 +11,12 @@ const SCROLL_TRIGGER_PX = 200;
 
 export default function FloatingPopupClient({ popups }) {
   const [isDismissed, setIsDismissed] = useState(false);
+  const [validPopups, setValidPopups] = useState([]);
+
+  useEffect(() => {
+    const now = new Date();
+    setValidPopups(popups.filter((p) => new Date(p.event_datetime) >= now));
+  }, [popups]);
   const [isPastHero, setIsPastHero] = useState(false);
   const [isNearFooter, setIsNearFooter] = useState(false);
 
@@ -48,10 +54,10 @@ export default function FloatingPopupClient({ popups }) {
 
   if (isDismissed) return null;
 
-  const commonProps = {
+ const commonProps = {
     onDismiss: () => setIsDismissed(true),
     isHidden: !isPastHero || isNearFooter,
-    popups,
+    popups: validPopups,
   };
 
   return (

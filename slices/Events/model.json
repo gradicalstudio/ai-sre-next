@@ -54,6 +54,17 @@
                   "default_value": false
                 }
               },
+              "type_of_event": {
+                "type": "Select",
+                "config": {
+                  "label": "Type of event",
+                  "placeholder": "",
+                  "options": [
+                    "Event",
+                    "MeetUp"
+                  ]
+                }
+              },
               "icon": {
                 "type": "Image",
                 "config": {

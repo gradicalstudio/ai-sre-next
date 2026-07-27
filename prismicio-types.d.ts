@@ -1106,6 +1106,16 @@ export interface EventsSliceDefaultPrimaryEventsItem {
   floating_popup: prismic.BooleanField;
 
   /**
+   * Type of event field in *Events → Default → Primary → Events*
+   *
+   * - **Field Type**: Select
+   * - **Placeholder**: *None*
+   * - **API ID Path**: events.default.primary.events[].type_of_event
+   * - **Documentation**: https://prismic.io/docs/fields/select
+   */
+  type_of_event: prismic.SelectField<"Event" | "MeetUp">;
+
+  /**
    * Icon field in *Events → Default → Primary → Events*
    *
    * - **Field Type**: Image
