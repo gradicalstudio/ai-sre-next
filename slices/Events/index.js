@@ -19,35 +19,44 @@ const EMBED_SRC = "https://www.unicorn.studio/embed/ATGD5bKuLj8x2tOWjnD7";
  */
 const EVENTS_PER_PAGE = 2;
 
-const EventCard = ({ item }) => (
-  <div className="flex items-center gap-4 p-4 md:p-2 border border-[#FF6A50] lg:border-[#04050F] lg:hover:border-[#FF6A50] duration-500 transition-colors">
-    <div className="hidden lg:block lg:w-30 xl:w-40 h-auto shrink-0 overflow-hidden bg-white/5">
-      <PrismicNextImage
-        field={item.icon}
-        className="w-full h-full object-cover"
-      />
-    </div>
-    <div className="flex flex-col flex-1 min-w-0">
-      <span className="text-white/50 text-base lg:text-sm xl:text-base mb-1 font-mono font-normal tracking-wide">
-        <PrismicRichText field={item.location} />
-      </span>
-      <span className="text-white font-medium text-xl lg:text-xl xl:text-2xl leading-tight">
-        <PrismicRichText field={item.title} />
-      </span>
-      <span className="text-white/50 text-sm lg:text-base xl:text-lg mt-0.5">
-        <PrismicRichText field={item.date} />
-      </span>
-      <div className="md:hidden mt-3">
-        {item.cta_button && (
-          <EventCTA innerClassName="text-sm!" link={item.cta_button} />
-        )}
+const EventCard = ({ item, isPast }) => {
+  const hideCTA = isPast && item.type_of_event === "MeetUp";
+
+  const ctaLink =
+    item.cta_button && isPast && item.cta_button.text === "Register"
+      ? { ...item.cta_button, text: "View" }
+      : item.cta_button;
+
+  return (
+    <div className="flex items-center gap-4 p-4 md:p-2 border border-[#FF6A50] lg:border-[#04050F] lg:hover:border-[#FF6A50] duration-500 transition-colors">
+      <div className="hidden lg:block lg:w-30 xl:w-40 h-auto shrink-0 overflow-hidden bg-white/5">
+        <PrismicNextImage
+          field={item.icon}
+          className="w-full h-full object-cover"
+        />
+      </div>
+      <div className="flex flex-col flex-1 min-w-0">
+        <span className="text-white/50 text-base lg:text-sm xl:text-base mb-1 font-mono font-normal tracking-wide">
+          <PrismicRichText field={item.location} />
+        </span>
+        <span className="text-white font-medium text-xl lg:text-xl xl:text-2xl leading-tight">
+          <PrismicRichText field={item.title} />
+        </span>
+        <span className="text-white/50 text-sm lg:text-base xl:text-lg mt-0.5">
+          <PrismicRichText field={item.date} />
+        </span>
+        <div className="md:hidden mt-3">
+          {!hideCTA && ctaLink && (
+            <EventCTA innerClassName="text-sm!" link={ctaLink} />
+          )}
+        </div>
+      </div>
+      <div className="hidden md:block">
+        {!hideCTA && ctaLink && <EventCTA link={ctaLink} />}
       </div>
     </div>
-    <div className="hidden md:block">
-      {item.cta_button && <EventCTA link={item.cta_button} />}
-    </div>
-  </div>
-);
+  );
+};
 
 const Events = ({ slice }) => {
   const activeTab = useEventsStore((state) => state.activeTab);
@@ -343,6 +352,7 @@ const Events = ({ slice }) => {
                                     slideIndex * 2 + itemIndex,
                                   )}
                                   item={item}
+                                  isPast={activeTab === "past"}
                                 />
                               ))}
                             </div>
@@ -389,7 +399,11 @@ const Events = ({ slice }) => {
                       </p>
                     ) : (
                       displayedEvents.map((item, index) => (
-                        <EventCard key={getEventKey(item, index)} item={item} />
+                        <EventCard
+                          key={getEventKey(item, index)}
+                          item={item}
+                          isPast={activeTab === "past"}
+                        />
                       ))
                     )}
                   </div>

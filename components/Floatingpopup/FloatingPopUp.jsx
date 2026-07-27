@@ -11,20 +11,14 @@ export default async function FloatingPopup() {
     (s) => s.slice_type === "events",
   );
   const events = eventsSlice?.primary.events ?? [];
- const now = new Date();
 
-const popups = events
-  .filter((item) => {
-    if (!item.floating_popup) return false;
-    const rawDateTime = item.event_datetime;
-    if (!rawDateTime) return false;
-    const eventDate = new Date(rawDateTime);
-    return eventDate >= now;
-  })
+  const popups = events
+    .filter((item) => item.floating_popup && item.event_datetime)
     .map((item) => ({
       image: item.icon,
       title: item.title,
       popup_link: item.cta_button,
+      event_datetime: item.event_datetime,
     }));
 
   if (popups.length === 0) return null;
