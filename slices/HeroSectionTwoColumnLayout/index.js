@@ -61,12 +61,12 @@ const OldHeroSection = ({ slice }) => {
                 <PrismicRichText field={slice.primary.description} />
               </div>
               <div className="mt-6 flex flex-wrap lg:flex-nowrap items-center gap-6 lg:gap-3 xl:gap-6">
-                <PrismicNextLink field={slice.primary.cta_link}>
+                {/* <PrismicNextLink field={slice.primary.cta_link}>
                   <OldPrimaryButton
                     className=" text-[12px]! md:text-[14px]! xl:text-[16px]!  w-full! md:w-fit!  md:px-8! md:py-3! lg:px-5! text-nowrap  lg:py-3! xl:py-3! xl:px-9!  "
                     buttonText="Register For Upcoming AI SRE Meet Up"
                   />
-                </PrismicNextLink>
+                </PrismicNextLink> */}
               </div>
               <div className="hidden md:block lg:hidden pb-5 mt-4">
                 <div className="w-full rounded-2xl">
