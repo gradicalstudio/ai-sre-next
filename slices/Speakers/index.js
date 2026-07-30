@@ -155,7 +155,12 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
       }
     }, sectionRef);
 
-    return () => ctx.revert();
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, [slice.variation, showSlice]);
   if (!showSlice) {
     return null;
