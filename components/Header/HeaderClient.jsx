@@ -479,7 +479,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           id="mobile-nav"
           aria-label="Primary"
           ref={mobileNavRef}
-          className="lg:hidden flex flex-col gap-1 px-4 pb-6 bg-[#04050F] border-t border-white/10 overscroll-contain"
+          className="lg:hidden absolute top-full inset-x-0 flex flex-col gap-1 px-4 pb-6 max-h-[calc(100vh-4rem)] overflow-y-auto bg-[#04050F] border-t border-white/10 overscroll-contain"
         >
           {nav_links.map((item, index) => {
             const id = getHashId(item);

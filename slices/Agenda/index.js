@@ -62,7 +62,12 @@ const Agenda = ({ slice }) => {
       );
     }, sectionRef);
 
-    return () => ctx.revert();
+    const refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+
+    return () => {
+      clearTimeout(refreshTimer);
+      ctx.revert();
+    };
   }, []);
   return (
     <section

@@ -36,7 +36,7 @@ html.lenis body {
   #image-carousel,
   #logo-marquee,
   #video-showcase {
-    scroll-margin-top: 250px;
+    scroll-margin-top:90px;
   }
 }
 @media (min-width: 1024px) {
