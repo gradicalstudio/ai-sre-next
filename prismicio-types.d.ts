@@ -2170,9 +2170,86 @@ export type VideoWithBigTitleSliceDefault = prismic.SharedSliceVariation<
 >;
 
 /**
+ * Primary content in *HeadingAndVideo → FlippedWithoutIcon → Primary*
+ */
+export interface VideoWithBigTitleSliceFlippedWithoutIconPrimary {
+  /**
+   * Heading field in *HeadingAndVideo → FlippedWithoutIcon → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_with_big_title.flippedWithoutIcon.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Event Banner field in *HeadingAndVideo → FlippedWithoutIcon → Primary*
+   *
+   * - **Field Type**: Image
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_with_big_title.flippedWithoutIcon.primary.event_banner
+   * - **Documentation**: https://prismic.io/docs/fields/image
+   */
+  event_banner: prismic.ImageField<never>;
+
+  /**
+   * Video Link field in *HeadingAndVideo → FlippedWithoutIcon → Primary*
+   *
+   * - **Field Type**: Link
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_with_big_title.flippedWithoutIcon.primary.video_link
+   * - **Documentation**: https://prismic.io/docs/fields/link
+   */
+  video_link: prismic.LinkField<
+    string,
+    string,
+    unknown,
+    prismic.FieldState,
+    never
+  >;
+
+  /**
+   * Preview Video field in *HeadingAndVideo → FlippedWithoutIcon → Primary*
+   *
+   * - **Field Type**: Link to Media
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_with_big_title.flippedWithoutIcon.primary.preview_video
+   * - **Documentation**: https://prismic.io/docs/fields/link-to-media
+   */
+  preview_video: prismic.LinkToMediaField<prismic.FieldState, never>;
+
+  /**
+   * Short description field in *HeadingAndVideo → FlippedWithoutIcon → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: video_with_big_title.flippedWithoutIcon.primary.short_description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  short_description: prismic.RichTextField;
+}
+
+/**
+ * FlippedWithoutIcon variation for HeadingAndVideo Slice
+ *
+ * - **API ID**: `flippedWithoutIcon`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type VideoWithBigTitleSliceFlippedWithoutIcon =
+  prismic.SharedSliceVariation<
+    "flippedWithoutIcon",
+    Simplify<VideoWithBigTitleSliceFlippedWithoutIconPrimary>,
+    never
+  >;
+
+/**
  * Slice variation for *HeadingAndVideo*
  */
-type VideoWithBigTitleSliceVariation = VideoWithBigTitleSliceDefault;
+type VideoWithBigTitleSliceVariation =
+  | VideoWithBigTitleSliceDefault
+  | VideoWithBigTitleSliceFlippedWithoutIcon;
 
 /**
  * HeadingAndVideo Shared Slice
@@ -2278,8 +2355,10 @@ declare module "@prismicio/client" {
       VideoShowcaseSliceDefault,
       VideoWithBigTitleSlice,
       VideoWithBigTitleSliceDefaultPrimary,
+      VideoWithBigTitleSliceFlippedWithoutIconPrimary,
       VideoWithBigTitleSliceVariation,
       VideoWithBigTitleSliceDefault,
+      VideoWithBigTitleSliceFlippedWithoutIcon,
     };
   }
 }
