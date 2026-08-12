@@ -32,7 +32,7 @@ const badgeComponents = {
     </span>
   ),
   image: ({ node }) => (
-    <img src={node.url} alt={node.alt || ""} className="h-4 w-5 object-fill" />
+    <img src={node.url}  className="h-4 w-5 object-fill" />
   ),
 };
 
