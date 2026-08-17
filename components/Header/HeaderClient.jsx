@@ -135,13 +135,13 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
     const setup = () => {
       mm = gsap.matchMedia();
 
-      mm.add(
+     mm.add(
         {
           isMobile: "(max-width: 1023px)",
           isLg: "(min-width: 1024px) and (max-width: 1279px)",
           isXl: "(min-width: 1280px) and (max-width: 1535px)",
           is2xl: "(min-width: 1536px) and (max-width: 1799px)",
-          is4xl: "(min-width: 2000px)",
+          is4xl: "(min-width: 1800px)",
         },
         (context) => {
           const { isMobile, isLg, isXl, is2xl, is4xl } = context.conditions;
@@ -151,7 +151,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             if (isLg) return "bottom bottom-=150";
             if (isXl) return "bottom bottom";
             if (is2xl) return "90% bottom";
-            if (is4xl) return "bottom 70%";
+            if (is4xl) return "bottom bottom";
             return "bottom bottom";
           };
 
