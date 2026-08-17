@@ -122,6 +122,8 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
   const activeEventTab = useEventsStore((state) => state.activeTab);
   const setActiveEventTab = useEventsStore((state) => state.setActiveTab);
 
+  const isFieldEmpty = (field) => !field || field.link_type === "Any";
+
   useEffect(() => {
     const ids = nav_links.map((item) => getHashId(item)).filter(Boolean);
     if (ids.length === 0) return;
@@ -139,7 +141,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           isLg: "(min-width: 1024px) and (max-width: 1279px)",
           isXl: "(min-width: 1280px) and (max-width: 1535px)",
           is2xl: "(min-width: 1536px) and (max-width: 1799px)",
-          is4xl: "(min-width: 1800px)",
+          is4xl: "(min-width: 2000px)",
         },
         (context) => {
           const { isMobile, isLg, isXl, is2xl, is4xl } = context.conditions;
@@ -149,7 +151,7 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
             if (isLg) return "bottom bottom-=150";
             if (isXl) return "bottom bottom";
             if (is2xl) return "90% bottom";
-            if (is4xl) return "bottom bottom";
+            if (is4xl) return "bottom 70%";
             return "bottom bottom";
           };
 
@@ -253,7 +255,11 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           "-=0.6",
         )
         .to(
-          [desktopCtaRef.current, mobileCtaRef.current, menuToggleRef.current],
+          [
+            desktopCtaRef.current,
+            mobileCtaRef.current,
+            menuToggleRef.current,
+          ].filter(Boolean),
           { opacity: 1, filter: "blur(0px)", x: 0, duration: 0.7 },
           "-=0.4",
         )
@@ -430,29 +436,34 @@ const HeaderClient = ({ brand_logo, nav_links = [], nav_cta }) => {
           </nav>
 
           {/* Desktop CTA */}
-          <div ref={desktopCtaRef} style={{ opacity: 0 }}>
-            <NavCtaButton field={nav_cta} className="hidden lg:block">
-              {nav_cta?.text || "Register for Meetup"}
-            </NavCtaButton>
-          </div>
+          {/* Desktop CTA */}
+          {!isFieldEmpty(nav_cta) && (
+            <div ref={desktopCtaRef} style={{ opacity: 0 }}>
+              <NavCtaButton field={nav_cta} className="hidden lg:block">
+                {nav_cta?.text || "Register for Meetup"}
+              </NavCtaButton>
+            </div>
+          )}
         </div>
 
         {/* Mobile: CTA + hamburger */}
         <div className="flex lg:hidden items-center gap-4">
-          <PrismicNextLink
-            ref={mobileCtaRef}
-            field={nav_cta}
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ opacity: 0 }}
-            className="flex items-center gap-1.5 text-xs font-medium rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
-          >
-            {nav_cta?.text || "Register for Meetup"}
-            <span className="sr-only"> (opens in a new tab)</span>
-            <span className="text-[#FF6A50]">
-              <ArrowAsset arrowAssetClass="size-4 mt-px" />
-            </span>
-          </PrismicNextLink>
+          {!isFieldEmpty(nav_cta) && (
+            <PrismicNextLink
+              ref={mobileCtaRef}
+              field={nav_cta}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ opacity: 0 }}
+              className="flex items-center gap-1.5 text-xs font-medium rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB] touch-manipulation"
+            >
+              {nav_cta?.text || "Register for Meetup"}
+              <span className="sr-only"> (opens in a new tab)</span>
+              <span className="text-[#FF6A50]">
+                <ArrowAsset arrowAssetClass="size-4 mt-px" />
+              </span>
+            </PrismicNextLink>
+          )}
 
           <button
             ref={menuToggleRef}

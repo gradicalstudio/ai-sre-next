@@ -36,7 +36,7 @@ html.lenis body {
   #image-carousel,
   #logo-marquee,
   #video-showcase {
-    scroll-margin-top:90px;
+    scroll-margin-top: 90px;
   }
 }
 @media (min-width: 1024px) {
@@ -49,6 +49,23 @@ html.lenis body {
   #logo-marquee,
   #video-showcase {
     scroll-margin-top: 90px;
+  }
+}
+
+@media (min-width: 2024px) {
+  #getreport,
+  #events,
+  #headingandvideo,
+  #hero-section,
+  #image-carousel,
+  #logo-marquee,
+  #video-showcase {
+    scroll-margin-top: 100px;
+  }
+}
+@media (min-width: 2024px) {
+  #about {
+    scroll-margin-top: 190px;
   }
 }
 
