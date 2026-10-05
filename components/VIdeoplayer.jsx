@@ -1,136 +1,34 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import { PrismicRichText } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
 import VideoPlayerMobile from "./VideoPlayerMobile";
-
-// ─── Helpers ────────────────────────────────────────────────────────────────
-
-function resolveVideoSrc(linkField) {
-  if (!linkField) return null;
-  const url = linkField.url || linkField;
-  if (!url || typeof url !== "string") return null;
-
-  const ytMatch = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
-  );
-  if (ytMatch) {
-    return {
-      type: "youtube",
-      embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=0&rel=0`,
-      muteEmbedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&playlist=${ytMatch[1]}&rel=0&controls=0&modestbranding=1`,
-    };
-  }
-
-  const wistiaMatch = url.match(/wistia\.(?:com|net)\/(?:medias|embed\/iframe)\/([a-zA-Z0-9]+)/);
-  if (wistiaMatch) {
-    return {
-      type: "wistia",
-      embedUrl: `https://fast.wistia.net/embed/iframe/${wistiaMatch[1]}?autoPlay=true`,
-      muteEmbedUrl: `https://fast.wistia.net/embed/iframe/${wistiaMatch[1]}?autoPlay=true&muted=true&loop=true&silentAutoPlay=true`,
-    };
-  }
-
-  return { type: "direct", src: url };
-}
+import VideoFlashIcon from "./VideoFlashIcon";
+import { useVideoModalPlayer } from "@/hooks/useVideoModalPlayer";
+import { resolveVideoSrc, formatTime } from "@/lib/video";
 
 // ─── Modal ───────────────────────────────────────────────────────────────────
 
 function VideoModal({ item, onClose }) {
-  const videoRef = useRef(null);
   const containerRef = useRef(null);
-  const hideControlsTimer = useRef(null);
-  const flashTimer = useRef(null);
-  const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [showControls, setShowControls] = useState(true);
-  const [flashIcon, setFlashIcon] = useState(false); // center play/pause flash
-
   const resolved = resolveVideoSrc(item?.video_link);
   const isDirect = resolved?.type === "direct";
 
-  // Escape key + scroll lock
-
-  useEffect(() => {
-    const handler = (e) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-
-  // Video event sync
-
-  useEffect(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    const onTimeUpdate = () => setCurrentTime(vid.currentTime);
-    const onLoadedMeta = () => {
-      setDuration(vid.duration);
-      vid.play().catch(() => {});
-    };
-    vid.addEventListener("play", onPlay);
-    vid.addEventListener("pause", onPause);
-    vid.addEventListener("timeupdate", onTimeUpdate);
-    vid.addEventListener("loadedmetadata", onLoadedMeta);
-    return () => {
-      vid.removeEventListener("play", onPlay);
-      vid.removeEventListener("pause", onPause);
-      vid.removeEventListener("timeupdate", onTimeUpdate);
-      vid.removeEventListener("loadedmetadata", onLoadedMeta);
-    };
-  }, [isDirect]);
-
-  // Auto-hide controls
-  const resetHideTimer = useCallback(() => {
-    setShowControls(true);
-    clearTimeout(hideControlsTimer.current);
-    hideControlsTimer.current = setTimeout(() => {
-      if (videoRef.current && !videoRef.current.paused) {
-        setShowControls(false);
-      }
-    }, 3000);
-  }, []);
-
-  useEffect(() => {
-    resetHideTimer();
-    return () => clearTimeout(hideControlsTimer.current);
-  }, [resetHideTimer]);
-
-  const triggerFlash = () => {
-    setFlashIcon(true);
-    clearTimeout(flashTimer.current);
-    flashTimer.current = setTimeout(() => setFlashIcon(false), 600);
-  };
-
-  const togglePlay = useCallback(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.paused ? vid.play() : vid.pause();
-    triggerFlash();
-    resetHideTimer();
-  }, [resetHideTimer]);
-
-  const toggleMute = () => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.muted = !vid.muted;
-    setMuted(vid.muted);
-  };
-
-  const handleSeek = (e) => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.currentTime = Number(e.target.value);
-    setCurrentTime(vid.currentTime);
-  };
+  const {
+    videoRef,
+    playing,
+    muted,
+    currentTime,
+    duration,
+    showControls,
+    flashIcon,
+    progress,
+    resetHideTimer,
+    togglePlay,
+    toggleMute,
+    handleSeek,
+  } = useVideoModalPlayer({ onClose, isDirect });
 
   const handleFullscreen = () => {
     const el = containerRef.current;
@@ -141,19 +39,6 @@ function VideoModal({ item, onClose }) {
       el.requestFullscreen?.();
     }
   };
-
-  const fmt = (s) => {
-    if (!isFinite(s)) return "00:00";
-    const m = Math.floor(s / 60)
-      .toString()
-      .padStart(2, "0");
-    const sec = Math.floor(s % 60)
-      .toString()
-      .padStart(2, "0");
-    return `${m}:${sec}`;
-  };
-
-  const progress = duration ? (currentTime / duration) * 100 : 0;
 
   return (
     <div
@@ -271,9 +156,9 @@ function VideoModal({ item, onClose }) {
 
                 {/* Timestamp */}
                 <span className="text-white text-xs tabular-nums tracking-wide">
-                  {fmt(currentTime)}
+                  {formatTime(currentTime)}
                   <span className="text-white/40 mx-1">/</span>
-                  {fmt(duration)}
+                  {formatTime(duration)}
                 </span>
 
                 {/* Seek bar */}
@@ -360,8 +245,13 @@ function VideoCard({ item, isActive, onActivate, onOpenModal }) {
   const resolved = resolveVideoSrc(item?.video_link);
   const videoRef = useRef(null);
 
+  const handleActivate = isActive ? onOpenModal : onActivate;
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={isActive ? "Open video" : "Show this video"}
       className="relative cursor-pointer  w-full overflow-hidden rounded-lg min-w-0 group"
       style={{
         flexBasis: isActive ? "70%" : "15%",
@@ -369,7 +259,13 @@ function VideoCard({ item, isActive, onActivate, onOpenModal }) {
         flexGrow: 0,
         transition: "flex-basis 200ms cubic-bezier(0.25,0.46,0.45,0.94)",
       }}
-      onClick={isActive ? onOpenModal : onActivate}
+      onClick={handleActivate}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleActivate();
+        }
+      }}
     >
       {/* Active — inline muted video */}
       {isActive && (
@@ -409,7 +305,7 @@ function VideoCard({ item, isActive, onActivate, onOpenModal }) {
         <PrismicNextImage
           field={item.thumbnail_image}
           fill
-          className="object-cover object-center grayscale group-hover:grayscale-0 transition-all opacity duration-100 group-hover:scale-105"
+          className="object-cover object-center grayscale group-hover:grayscale-0 transition-[filter,transform] opacity duration-100 group-hover:scale-105"
           sizes="(max-width: 768px) 50vw, 20vw"
         />
       )}
@@ -421,7 +317,7 @@ function VideoCard({ item, isActive, onActivate, onOpenModal }) {
       {isActive && (
         <>
           <button
-            className="absolute lg:bottom-20 lg:left-8  2xl:bottom-30 2xl:left-15 lg:w-10 lg:h-10 2xl:w-14 2xl:h-14 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm  flex items-center justify-center transition-all duration-100 hover:scale-105"
+            className="absolute lg:bottom-20 lg:left-8  2xl:bottom-30 2xl:left-15 lg:w-10 lg:h-10 2xl:w-14 2xl:h-14 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm  flex items-center justify-center transition-[background-color,transform] duration-100 hover:scale-105"
             aria-label="Play video with audio"
             onClick={(e) => {
               e.stopPropagation();
@@ -471,7 +367,7 @@ function VideoCard({ item, isActive, onActivate, onOpenModal }) {
       {/* Inactive — thumbnail logo */}
       {item?.thumbnail_logo && (
         <div
-          className={`absolute bottom-6 left-0 right-0 flex justify-center transition-all duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
+          className={`absolute bottom-6 left-0 right-0 flex justify-center transition-[opacity,transform] duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
             isActive
               ? "opacity-0 translate-y-20 pointer-events-none"
               : "opacity-70 translate-y-0"

@@ -94,8 +94,17 @@ export default function VideoPlayerOld({
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label={isPlaying ? "Pause video" : "Play video"}
       className="group relative w-full aspect-video cursor-pointer overflow-hidden rounded-2xl bg-black"
       onClick={togglePlay}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          togglePlay();
+        }
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
@@ -112,7 +121,7 @@ export default function VideoPlayerOld({
       {/* Overlay */}
       <div
         className={`
-          absolute inset-0 transition-all duration-500 pointer-events-none
+          absolute inset-0 transition-[background-color] duration-500 pointer-events-none
           ${isPlaying ? "bg-black/10" : "bg-black/20"}
         `}
       />
@@ -121,7 +130,7 @@ export default function VideoPlayerOld({
       <div
         className={`
           absolute inset-0 flex items-center justify-center
-          transition-all duration-500 ease-in-out
+          transition-[opacity,transform] duration-500 ease-in-out
           ${controlsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
         `}
       >
@@ -130,7 +139,7 @@ export default function VideoPlayerOld({
           {!isPlaying && (
             <div className="absolute inset-0 rounded-full p-0.5 overflow-hidden">
               <div className="absolute inset-0 rounded-full border border-[#3FD9FB]/20" />
-              <div className="absolute inset-0 rounded-full animate-[spin_5s_linear_forwards]">
+              <div className="absolute inset-0 rounded-full motion-safe:animate-[spin_5s_linear_forwards]">
                 <div className="absolute top-0 left-0 h-full w-14 bg-[#3FD9FB] blur-[10px]" />
               </div>
             </div>
@@ -147,7 +156,7 @@ export default function VideoPlayerOld({
               text-black
               border border-white/60
               shadow-[0_10px_40px_rgba(0,0,0,0.35)]
-              transition-all duration-300
+              transition-transform duration-300
               hover:scale-105
             "
           >
@@ -192,7 +201,7 @@ export default function VideoPlayerOld({
           backdrop-blur-md
           border border-white/10
           text-white
-          transition-all duration-500 ease-in-out
+          transition-[opacity,transform] duration-500 ease-in-out
           hover:scale-110
           ${controlsVisible ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
         `}

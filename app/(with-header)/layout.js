@@ -7,7 +7,7 @@ export default function WithHeaderLayout({ children }) {
   return (
     <>
       <Header />
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
       <FloatingPopup />
       <Footer />
     </>

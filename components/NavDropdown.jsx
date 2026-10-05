@@ -65,14 +65,24 @@ export default function NavDropdown({ item, isActive }) {
       className="relative py-3 cursor-pointer z-999"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          handleMouseLeave();
+        }
+      }}
     >
       <a
         href="#events"
+        aria-expanded={open}
         onClick={(e) => {
           e.preventDefault();
           document
             .getElementById("events")
             ?.scrollIntoView({ behavior: "smooth" });
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Escape") setOpen(false);
         }}
         className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-wide transition-colors ${
           isActive ? "text-white" : "text-white hover:text-white/80"

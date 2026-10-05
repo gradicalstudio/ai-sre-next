@@ -1,230 +1,36 @@
 "use client";
 
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText } from "@prismicio/react";
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
-function resolveVideoSrc(linkField) {
-  if (!linkField) return null;
-  const url = linkField.url || linkField;
-  if (!url || typeof url !== "string") return null;
-
-  const ytMatch = url.match(
-    /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
-  );
-  if (ytMatch) {
-    return {
-      type: "youtube",
-      embedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=0&rel=0`,
-      muteEmbedUrl: `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&mute=1&loop=1&playlist=${ytMatch[1]}&rel=0&controls=0&modestbranding=1`,
-    };
-  }
-
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeoMatch) {
-    return {
-      type: "vimeo",
-      embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`,
-      muteEmbedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1&muted=1&loop=1&background=1`,
-    };
-  }
-
-  return { type: "direct", src: url };
-}
-
-function getIsIOS() {
-  if (typeof navigator === "undefined") return false;
-  return /iP(hone|ad|od)/i.test(navigator.userAgent);
-}
-
-// ─── Flash Icon ───────────────────────────────────────────────────────────────
-
-function FlashIcon({ icon }) {
-  if (icon === "play")
-    return (
-      <svg width="22" height="22" viewBox="0 0 20 20" fill="white">
-        <path d="M5 3.5l12 6.5-12 6.5V3.5z" />
-      </svg>
-    );
-  if (icon === "pause")
-    return (
-      <svg width="22" height="22" viewBox="0 0 20 20" fill="white">
-        <rect x="4" y="3" width="4" height="14" rx="1" />
-        <rect x="12" y="3" width="4" height="14" rx="1" />
-      </svg>
-    );
-  if (icon === "rewind")
-    return (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
-        <text
-          x="12"
-          y="14"
-          textAnchor="middle"
-          fontSize="5"
-          fill="white"
-          fontWeight="bold"
-        >
-          5
-        </text>
-      </svg>
-    );
-  if (icon === "forward")
-    return (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="white">
-        <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z" />
-        <text
-          x="12"
-          y="14"
-          textAnchor="middle"
-          fontSize="5"
-          fill="white"
-          fontWeight="bold"
-        >
-          5
-        </text>
-      </svg>
-    );
-  return null;
-}
+import VideoFlashIcon from "./VideoFlashIcon";
+import { useVideoModalPlayer } from "@/hooks/useVideoModalPlayer";
+import { resolveVideoSrc, formatTime, getIsIOS } from "@/lib/video";
 
 // ─── Mobile Modal ─────────────────────────────────────────────────────────────
 // Separate from the desktop modal — handles iOS native controls vs Android custom controls
 
 function MobileVideoModal({ item, onClose }) {
-  const videoRef = useRef(null);
-  const hideControlsTimer = useRef(null);
-  const flashTimer = useRef(null);
-  const onCloseRef = useRef(onClose);
-  useEffect(() => {
-    onCloseRef.current = onClose;
-  }, [onClose]);
-
-  const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [showControls, setShowControls] = useState(true);
-  const [flashIcon, setFlashIcon] = useState(null);
   const [isIOS] = useState(getIsIOS);
-
   const resolved = resolveVideoSrc(item?.video_link);
   const isDirect = resolved?.type === "direct";
 
-  // Escape key + scroll lock
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.key === "Escape") onCloseRef.current();
-    };
-    window.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
-    };
-  }, []);
-
-  // Video event sync
-  useEffect(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-    const onTimeUpdate = () => setCurrentTime(vid.currentTime);
-    const onLoadedMeta = () => {
-      setDuration(vid.duration);
-      vid.play().catch(() => {});
-    };
-    vid.addEventListener("play", onPlay);
-    vid.addEventListener("pause", onPause);
-    vid.addEventListener("timeupdate", onTimeUpdate);
-    vid.addEventListener("loadedmetadata", onLoadedMeta);
-    return () => {
-      vid.removeEventListener("play", onPlay);
-      vid.removeEventListener("pause", onPause);
-      vid.removeEventListener("timeupdate", onTimeUpdate);
-      vid.removeEventListener("loadedmetadata", onLoadedMeta);
-    };
-  }, [isDirect]);
-
-  // Auto-hide controls
-  const resetHideTimer = useCallback(() => {
-    setShowControls(true);
-    clearTimeout(hideControlsTimer.current);
-    hideControlsTimer.current = setTimeout(() => {
-      if (videoRef.current && !videoRef.current.paused) {
-        setShowControls(false);
-      }
-    }, 3000);
-  }, []);
-
-  useEffect(() => {
-    resetHideTimer();
-    return () => clearTimeout(hideControlsTimer.current);
-  }, [resetHideTimer]);
-
-  const triggerFlash = useCallback((icon) => {
-    setFlashIcon(icon);
-    clearTimeout(flashTimer.current);
-    flashTimer.current = setTimeout(() => setFlashIcon(null), 600);
-  }, []);
-
-  const togglePlay = useCallback(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    if (vid.paused) {
-      vid.play();
-      triggerFlash("play");
-    } else {
-      vid.pause();
-      triggerFlash("pause");
-    }
-    resetHideTimer();
-  }, [triggerFlash, resetHideTimer]);
-
-  const toggleMute = useCallback(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.muted = !vid.muted;
-    setMuted(vid.muted);
-  }, []);
-
-  const skip = useCallback(
-    (seconds) => {
-      const vid = videoRef.current;
-      if (!vid) return;
-      vid.currentTime = Math.min(
-        Math.max(vid.currentTime + seconds, 0),
-        vid.duration || 0,
-      );
-      triggerFlash(seconds > 0 ? "forward" : "rewind");
-      resetHideTimer();
-    },
-    [triggerFlash, resetHideTimer],
-  );
-
-  const handleSeek = useCallback((e) => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    vid.currentTime = Number(e.target.value);
-    setCurrentTime(vid.currentTime);
-  }, []);
-
-  const fmt = (s) => {
-    if (!isFinite(s)) return "00:00";
-    const m = Math.floor(s / 60)
-      .toString()
-      .padStart(2, "0");
-    const sec = Math.floor(s % 60)
-      .toString()
-      .padStart(2, "0");
-    return `${m}:${sec}`;
-  };
-
-  const progress = duration ? (currentTime / duration) * 100 : 0;
+  const {
+    videoRef,
+    playing,
+    muted,
+    currentTime,
+    duration,
+    showControls,
+    flashIcon,
+    progress,
+    resetHideTimer,
+    togglePlay,
+    toggleMute,
+    skip,
+    handleSeek,
+  } = useVideoModalPlayer({ onClose, isDirect });
 
   return (
     <div
@@ -298,7 +104,7 @@ function MobileVideoModal({ item, onClose }) {
                 }}
               >
                 <div className="w-16 h-16 rounded-full border border-white/40 bg-white/10 backdrop-blur-sm flex items-center justify-center">
-                  <FlashIcon icon={flashIcon} />
+                  <VideoFlashIcon icon={flashIcon} />
                 </div>
               </div>
 
@@ -388,9 +194,9 @@ function MobileVideoModal({ item, onClose }) {
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="text-white text-xs tabular-nums shrink-0">
-                    {fmt(currentTime)}
+                    {formatTime(currentTime)}
                     <span className="text-white/40 mx-1">/</span>
-                    {fmt(duration)}
+                    {formatTime(duration)}
                   </span>
 
                   <div
@@ -457,8 +263,17 @@ function MobileVideoCard({ item, isActive, onOpenModal, singleItem }) {
 
   return (
     <div
+      role={isActive ? "button" : undefined}
+      tabIndex={isActive ? 0 : undefined}
+      aria-label={isActive ? "Open video" : undefined}
       className={`relative shrink-0 select-none rounded-xl overflow-hidden cursor-pointer ${singleItem ? "w-full max-w-none" : "w-[85vw] md:w-[90vw]  "}`}
       onClick={() => isActive && onOpenModal(item)}
+      onKeyDown={(e) => {
+        if (isActive && (e.key === "Enter" || e.key === " ")) {
+          e.preventDefault();
+          onOpenModal(item);
+        }
+      }}
     >
       <div className="relative h-80 md:h-100">
         {/* Active: muted autoplay video */}

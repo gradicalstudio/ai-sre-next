@@ -66,7 +66,7 @@ const Events = ({ slice }) => {
   const innerContainerRef = useRef(null);
   const sectionRef = useRef(null);
 
-  const [shouldLoadEmbed, setShouldLoadEmbed] = useState(false);
+  const [embedInView, setEmbedInView] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: "start",
@@ -92,22 +92,24 @@ const Events = ({ slice }) => {
   }, [activeTab, emblaApi]);
 
   useEffect(() => {
-    if (shouldLoadEmbed) return;
     const node = sectionRef.current;
     if (!node) return;
 
+    // Mount/unmount (not just hide) the embed based on visibility: its
+    // WebGL render loop keeps running once loaded, so leaving it mounted
+    // after scrolling away would burn frames indefinitely in the
+    // background — including when scrolling back over this section later.
+    // The large symmetric margin means it mounts well before it's on
+    // screen (avoiding a boot-time stall while scrolling into it) and
+    // only unmounts once genuinely well out of view (avoiding thrashing
+    // on small scroll wiggles near the boundary).
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShouldLoadEmbed(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "800px 0px" },
+      ([entry]) => setEmbedInView(entry.isIntersecting),
+      { rootMargin: "1600px 0px" },
     );
     observer.observe(node);
     return () => observer.disconnect();
-  }, [shouldLoadEmbed]);
+  }, []);
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
@@ -224,7 +226,7 @@ const Events = ({ slice }) => {
           ref={iframeRef}
           className={`${totalPages > 1 ? "  h-173 md:h-135 lg:h-145 xl:h-180" : " h-163 md:h-115 lg:h-135 xl:h-165 4xl:h-160"} lg:px-15 relative opacity-0 flex items-start justify-center xl:px-24 2xl:px-30 4xl:px-33.25`}
         >
-          {shouldLoadEmbed && (
+          {embedInView && (
             <iframe
               src={EMBED_SRC}
               title=""

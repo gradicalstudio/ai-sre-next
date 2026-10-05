@@ -131,7 +131,7 @@ function usePopupVisibility(isHidden) {
       return;
     }
 
-    gsap.to(el, {
+    const tween = gsap.to(el, {
       opacity: isHidden ? 0 : 1,
       y: isHidden ? 16 : 0,
       duration: 0.9,
@@ -144,6 +144,8 @@ function usePopupVisibility(isHidden) {
         if (isHidden) gsap.set(el, { pointerEvents: "none" });
       },
     });
+
+    return () => tween.kill();
   }, [isHidden]);
 
   return wrapperRef;

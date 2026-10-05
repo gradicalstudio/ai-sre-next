@@ -227,6 +227,8 @@ const SpeakersOfBangaloreEdition = ({ slice }) => {
               <img
                 src="/speakers.svg"
                 alt=""
+                width={47}
+                height={56}
                 className="
               w-11.25
               shrink-0
@@ -324,7 +326,7 @@ lg:mt-20
                         field={item.linkedin}
                         className="
       mt-4 inline-flex
-      transition-all duration-300
+      transition-[transform,opacity] duration-300
       hover:scale-110 hover:opacity-80
       lg:mt-6
     "
@@ -332,6 +334,8 @@ lg:mt-20
                         <img
                           src="/Linkden.svg"
                           alt="LinkedIn"
+                          width={21}
+                          height={21}
                           className="
         h-5 w-5
         md:h-6 md:w-6
@@ -355,11 +359,20 @@ lg:mt-20
                 <img
                   className=" h-full object-cover"
                   src="/Left side circuit.svg"
+                  alt=""
+                  width={369}
+                  height={202}
                 />
               </div>
               <div className="text-white text-pretty">
                 <div ref={headingRef} className="flex flex-2 gap-3">
-                  <img className="w-7 md:w-9 xl:w-11" src="/speakers.svg" />
+                  <img
+                    className="w-7 md:w-9 xl:w-11"
+                    src="/speakers.svg"
+                    alt=""
+                    width={47}
+                    height={56}
+                  />
                   <div className="leading-[1.1] text-3xl  md:text-[34px] lg:text-[36px] xl:text-[40px] font-medium">
                     <PrismicRichText field={slice.primary.heading} />
                   </div>
@@ -369,6 +382,9 @@ lg:mt-20
                 <img
                   className="w-full h-full md:object-contain"
                   src="/right new.svg"
+                  alt=""
+                  width={576}
+                  height={202}
                 />
               </div>
             </div>
@@ -391,7 +407,7 @@ lg:mt-20
     rounded-full
     bg-transparent
     p-0.5
-    transition-all
+    transition-[background-image]
     duration-300
     hover:bg-linear-to-b
     hover:from-[#FA6D55]
@@ -418,7 +434,13 @@ lg:mt-20
                     {item.linkedin?.url && (
                       <div className="flex mt-2 items-center gap-2">
                         <PrismicNextLink field={item.linkedin}>
-                          <img src="/Linkden.svg" className="w-5 h-5" />
+                          <img
+                            src="/Linkden.svg"
+                            alt="LinkedIn"
+                            width={21}
+                            height={21}
+                            className="w-5 h-5"
+                          />
                         </PrismicNextLink>
                       </div>
                     )}

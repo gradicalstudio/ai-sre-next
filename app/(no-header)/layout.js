@@ -5,7 +5,7 @@ export default function NoHeaderLayout({ children }) {
   return (
     <>
       <MinimalHeader />
-      <main>{children}</main>
+      <main id="main-content">{children}</main>
       <Footer />
     </>
   );
