@@ -15,6 +15,11 @@ gsap.registerPlugin(ScrollTrigger);
  */
 const Participants = ({ slice }) => {
   const [isMobile, setIsMobile] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
   const showSlice = slice?.primary?.show_slice ?? true;
 
   const sectionRef = useRef(null);
@@ -31,7 +36,16 @@ const Participants = ({ slice }) => {
 
     media.addEventListener("change", listener);
 
-    return () => media.removeEventListener("change", listener);
+    const reduceMotionMq = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+    const reduceMotionListener = (e) => setReduceMotion(e.matches);
+    reduceMotionMq.addEventListener("change", reduceMotionListener);
+
+    return () => {
+      media.removeEventListener("change", listener);
+      reduceMotionMq.removeEventListener("change", reduceMotionListener);
+    };
   }, []);
 
   useEffect(() => {
@@ -60,8 +74,12 @@ const Participants = ({ slice }) => {
         ease: "power3.out",
       });
 
+      const reduceMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+
       // Desktop shimmer only
-      if (!isMobile) {
+      if (!isMobile && !reduceMotion) {
         cells.forEach((cell, index) => {
           if (!cell || index === 0) return;
 
@@ -253,7 +271,7 @@ const Participants = ({ slice }) => {
                     py-4
                   "
                 >
-                  <Marquee speed={65} gradient={false}>
+                  <Marquee speed={65} gradient={false} play={!reduceMotion}>
                     {companies.map((item, index) => (
                       <div
                         key={index}

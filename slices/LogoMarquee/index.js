@@ -4,7 +4,7 @@ import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText } from "@prismicio/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MarqueeLib from "react-fast-marquee";
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -19,6 +19,18 @@ const Marquee = ({ slice }) => {
   const headingRef = useRef(null);
   const marqueeRef = useRef(null);
   const spanWordRef = useRef(null);
+  const [reduceMotion, setReduceMotion] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handler = (e) => setReduceMotion(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -80,7 +92,7 @@ const Marquee = ({ slice }) => {
       </div>
       {/* Marquee */}
       <div ref={marqueeRef} className="mt-7 opacity-0 2xl:mt-10">
-        <MarqueeLib speed={120} gradient={false}>
+        <MarqueeLib speed={120} gradient={false} play={!reduceMotion}>
           {slice.primary.marquee.map((item, index) => (
             <div key={index} className="mx-4">
               <PrismicNextImage field={item.logo} className="h-6 w-auto" />

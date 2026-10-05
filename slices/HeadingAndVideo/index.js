@@ -134,6 +134,8 @@ const VideoWithBigTitle = ({ slice }) => {
                   className="w-20 md:w-25 lg:w-30 xl:w-35 h-auto"
                   src="./devOps.png"
                   alt="devOps icon"
+                  width={199}
+                  height={99}
                 />
               </div>
             </div>

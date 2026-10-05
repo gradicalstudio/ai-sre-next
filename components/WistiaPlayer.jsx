@@ -53,6 +53,27 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
     };
   }, [previewSrc]);
 
+  // Pause the preview loop while off-screen so it isn't decoding/painting
+  // continuously in the background — otherwise it keeps costing frames
+  // long after it's scrolled away, and again when scrolled back over.
+  useEffect(() => {
+    const video = previewVideoRef.current;
+    if (!video) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      },
+      { rootMargin: "200px 0px" },
+    );
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!videoId || scriptLoaded.current) return;
 
@@ -213,9 +234,18 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      aria-label="Watch event recap"
       className="relative group cursor-pointer overflow-hidden"
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
       style={{ aspectRatio: "16/9" }}
     >
       <video
@@ -227,10 +257,11 @@ const WistiaPlayer = ({ wistiaUrl, previewSrc, posterSrc }) => {
         loop
         playsInline
         controls={false}
-        loading="lazy"
         style={{
           width: "100%",
           height: "100%",
+          transform: "translateZ(0)",
+          willChange: "transform",
           objectFit: "cover",
           display: "block",
         }}

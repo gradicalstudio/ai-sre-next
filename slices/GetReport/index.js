@@ -1,4 +1,5 @@
-import HeroButton from "@/components/HeroButton";
+"use client";
+
 import ReportButton from "@/components/ReportButton";
 import { PrismicNextImage } from "@prismicio/next";
 import { PrismicRichText } from "@prismicio/react";
@@ -30,21 +31,33 @@ const ReportSlice = ({ slice }) => {
           <PrismicRichText field={slice.primary.description} />
         </div>
         {/* Email input field */}
-        <div className="xl:max-w-173 2xl:max-w-175 md:max-w-150 lg:max-w-155 w-full mx-auto mt-9 mb-4 md:mt-10 md:mb-4 lg:mt-12 lg:mb-4 2xl:mt-14 xl:mt-13 xl:mb-4 ">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            // TODO: wire up email submission once the target endpoint is defined
+          }}
+          className="xl:max-w-173 2xl:max-w-175 md:max-w-150 lg:max-w-155 w-full mx-auto mt-9 mb-4 md:mt-10 md:mb-4 lg:mt-12 lg:mb-4 2xl:mt-14 xl:mt-13 xl:mb-4 "
+        >
           <div className="flex w-full">
+            <label htmlFor="getreport-email" className="sr-only">
+              Your email
+            </label>
             <input
+              id="getreport-email"
               type="email"
               name="email"
-              placeholder="Your email"
+              autoComplete="email"
+              placeholder="Your email…"
               required
               className="w-full bg-white px-3 py-2 md:px-6 md:py-3 text-black text-sm md:text-base placeholder-black outline-none"
             />
             <ReportButton
+              type="submit"
               buttonText="Register"
               innerClassName="2xl:text-base! xl:text-[15px]!"
             />
           </div>
-        </div>
+        </form>
         <div className="text-xs 2xl:text-sm  xl:max-w-173 md:max-w-150 lg:max-w-155 2xl:max-w-175 mx-auto text-center">
           <PrismicRichText
             field={slice.primary.subscription_info}

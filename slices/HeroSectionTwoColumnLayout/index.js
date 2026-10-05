@@ -32,6 +32,8 @@ const OldHeroSection = ({ slice }) => {
         <img
           src="/Old Final Logo.svg"
           alt="Logo"
+          width={360}
+          height={301}
           className="h-auto w-18 md:w-24 xl:w-44 object-contain"
         />
 

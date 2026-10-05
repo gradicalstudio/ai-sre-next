@@ -1,10 +1,13 @@
-const ArrowAsset = () => (
+const ArrowAsset = ({ arrowAssetClass }) => (
   <svg
     width="10"
     height="10"
     viewBox="0 0 10 10"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={arrowAssetClass}
+    aria-hidden="true"
+    focusable="false"
   >
     <path
       d="M4.19657 8.06376H2.90625V6.77344H4.19657V8.06376Z"

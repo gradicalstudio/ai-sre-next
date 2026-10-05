@@ -21,8 +21,10 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      style={{ colorScheme: "dark" }}
     >
       <head>
+        <meta name="theme-color" content="#04050F" />
         <link
           rel="preconnect"
           href="https://www.unicorn.studio"

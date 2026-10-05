@@ -32,7 +32,13 @@ const badgeComponents = {
     </span>
   ),
   image: ({ node }) => (
-    <img src={node.url}  className="h-4 w-5 object-fill" />
+    <img
+      src={node.url}
+      alt={node.alt ?? ""}
+      width={20}
+      height={16}
+      className="h-4 w-5 object-fill"
+    />
   ),
 };
 
@@ -205,35 +211,36 @@ export default function AgendaItem({ item, defaultOpen = false }) {
           </div>
         </div>
 
-        {/* TITLE */}
-        <div
+        {/* TITLE + CHEVRON — single toggle control for keyboard + screen readers */}
+        <button
+          type="button"
           onClick={handleToggle}
-          className="row-start-1 col-start-2 cursor-pointer"
+          disabled={!isExpandable}
+          aria-expanded={isExpandable ? isOpen : undefined}
+          className="row-start-1 col-start-2 col-end-4 lg:col-end-3 flex items-center justify-between gap-2 text-left disabled:cursor-default"
         >
           <PrismicRichText field={item.title} components={titleComponents} />
-        </div>
 
-        {/* CHEVRON */}
-        {isExpandable && (
-          <div
-            onClick={handleToggle}
-            className="row-start-1 col-start-3 lg:col-start-3 lg:pt-1 flex items-center cursor-pointer"
-          >
-            <svg
-              ref={chevronRef}
-              width="14"
-              height="10"
-              viewBox="0 0 18 10"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0.349979 9.65005C-0.116798 9.18328 -0.116521 8.42634 0.349979 7.95939L7.95915 0.350187C8.42607 -0.11673 9.1829 -0.11673 9.64981 0.350187L17.2589 7.95939C17.7254 8.42633 17.7258 9.18327 17.2589 9.65005C16.7922 10.1168 16.0352 10.1165 15.5683 9.65005L8.80448 2.88622L2.04065 9.65005C1.57371 10.1165 0.816759 10.1168 0.349979 9.65005Z"
-                fill="#3FD9FB"
-              />
-            </svg>
-          </div>
-        )}
+          {isExpandable && (
+            <span className="lg:pt-1 flex items-center shrink-0">
+              <svg
+                ref={chevronRef}
+                width="14"
+                height="10"
+                viewBox="0 0 18 10"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+                focusable="false"
+              >
+                <path
+                  d="M0.349979 9.65005C-0.116798 9.18328 -0.116521 8.42634 0.349979 7.95939L7.95915 0.350187C8.42607 -0.11673 9.1829 -0.11673 9.64981 0.350187L17.2589 7.95939C17.7254 8.42633 17.7258 9.18327 17.2589 9.65005C16.7922 10.1168 16.0352 10.1165 15.5683 9.65005L8.80448 2.88622L2.04065 9.65005C1.57371 10.1165 0.816759 10.1168 0.349979 9.65005Z"
+                  fill="#3FD9FB"
+                />
+              </svg>
+            </span>
+          )}
+        </button>
 
         {/* EXPANDABLE CONTENT */}
         {isExpandable && (
