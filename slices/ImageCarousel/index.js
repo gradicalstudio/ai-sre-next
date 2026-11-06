@@ -1,13 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AutoScroll from "embla-carousel-auto-scroll";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { PrismicNextImage } from "@prismicio/next";
+import ImageLightbox from "@/components/ImageLightbox";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Fisher-Yates, on a copy so the Prismic data isn't mutated.
+const shuffle = (items) => {
+  const shuffled = [...items];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 /**
  * @typedef {import("@prismicio/client").Content.ImageCarouselSlice} ImageCarouselSlice
@@ -31,6 +42,18 @@ const ImageCarousel = ({ slice }) => {
   );
 
   const sectionRef = useRef(null);
+
+  // Shuffled after mount, not during render, so the server HTML and first
+  // client render match. Slides show their placeholder background until then.
+  const images = slice.primary.carousel_image;
+  const [shuffledImages, setShuffledImages] = useState(null);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      setShuffledImages(shuffle(images));
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [images]);
 
   // Speed the carousel up while the user scrolls (either direction) with it in view.
   useEffect(() => {
@@ -96,11 +119,41 @@ const ImageCarousel = ({ slice }) => {
     };
   }, [emblaApi]);
 
-  const onPointerUp = () => {
-    const autoScroll = emblaApi?.plugins()?.autoScroll;
-    if (!autoScroll) return;
-    autoScroll.play();
+  // Index (into shuffledImages) of the photo open in the lightbox, or null.
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  const openLightbox = (index) => {
+    emblaApi?.plugins()?.autoScroll?.stop();
+    setLightboxIndex(index);
   };
+
+  // A photo opens on press-and-release in the same spot, decided here rather
+  // than by `click`: after a drag released outside the carousel, Embla
+  // swallows the next click, which made the first click on a photo do nothing.
+  const pressRef = useRef(null);
+
+  const onTilePointerDown = (e, index) => {
+    if (e.button !== 0) return;
+    pressRef.current = { index, x: e.clientX, y: e.clientY };
+  };
+
+  const onTilePointerUp = (e, index) => {
+    const press = pressRef.current;
+    pressRef.current = null;
+    if (!press || press.index !== index) return;
+    if (Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) return;
+    openLightbox(index);
+  };
+
+  // Pointer clicks are handled above; this covers Enter/Space (detail 0).
+  const onTileClick = (e, index) => {
+    if (e.detail === 0) openLightbox(index);
+  };
+
+  const closeLightbox = useCallback(() => {
+    setLightboxIndex(null);
+    emblaApi?.plugins()?.autoScroll?.play();
+  }, [emblaApi]);
 
   return (
     <section
@@ -111,27 +164,49 @@ const ImageCarousel = ({ slice }) => {
       <div
         className="  overflow-hidden select-none"
         ref={emblaRef}
-        onPointerUp={onPointerUp}
       >
         <div className="flex">
-          {slice.primary.carousel_image.map((item, index) => (
+          {(shuffledImages ?? images).map((item, index) => (
             <div
               key={index}
               className="flex-none  w-[60%] md:w-[30%] xl:w-[23%] pr-4"
             >
-              <div className="relative bg-[#222433] w-full h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100">
-                <PrismicNextImage
-                  field={item.image}
-                  fill
-                  preload={index < 3}
-                  sizes="(max-width: 768px) 50vw, (max-width: 1280px) 30vw, 23vw"
-                  className="object-cover"
-                />
-              </div>
+              <button
+                type="button"
+                // Keep a mouse press from moving focus between tiles: the
+                // AutoScroll plugin restarts on `focusout` from a slide, which
+                // overrode the drag whenever a press landed on another tile.
+                onMouseDown={(e) => e.preventDefault()}
+                onPointerDown={(e) => onTilePointerDown(e, index)}
+                onPointerUp={(e) => onTilePointerUp(e, index)}
+                onPointerCancel={() => (pressRef.current = null)}
+                onClick={(e) => onTileClick(e, index)}
+                disabled={!shuffledImages}
+                aria-label={`Open photo ${index + 1} of ${images.length}`}
+                className="relative block bg-[#222433] w-full h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100 cursor-pointer"
+              >
+                {shuffledImages && (
+                  <PrismicNextImage
+                    field={item.image}
+                    fill
+                    preload={index < 3}
+                    sizes="(max-width: 768px) 50vw, (max-width: 1280px) 30vw, 23vw"
+                    className="object-cover"
+                  />
+                )}
+              </button>
             </div>
           ))}
         </div>
       </div>
+
+      {lightboxIndex !== null && (
+        <ImageLightbox
+          images={shuffledImages}
+          startIndex={lightboxIndex}
+          onClose={closeLightbox}
+        />
+      )}
     </section>
   );
 };
