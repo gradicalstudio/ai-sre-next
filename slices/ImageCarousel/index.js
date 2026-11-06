@@ -129,9 +129,12 @@ const ImageCarousel = ({ slice }) => {
   // Embla's pointerUp (on mouseup) fires after the tile's pointerup has
   // already opened the modal, so it checks this before arming the resume.
   const lightboxOpenRef = useRef(false);
+  // True while a mouse is over the carousel: auto-scroll stays paused.
+  const hoverRef = useRef(false);
 
   useEffect(() => {
     if (!emblaApi) return;
+    const autoScroll = emblaApi.plugins()?.autoScroll;
     const onPointerDown = () => {
       resumeAfterDragRef.current = false;
     };
@@ -142,20 +145,49 @@ const ImageCarousel = ({ slice }) => {
       if (!resumeAfterDragRef.current) return;
       const velocity = emblaApi.internalEngine().scrollBody.velocity();
       if (Math.abs(velocity) > AUTO_SCROLL_SPEED) return;
+      // Glide is done; resume now unless hovered (then on pointer leave).
       resumeAfterDragRef.current = false;
-      emblaApi.plugins()?.autoScroll?.play();
+      if (!hoverRef.current) autoScroll?.play();
+    };
+    // The plugin also restarts itself (when a glide settles, or on slide
+    // focusout). Veto that while hovered or while the modal is open. It
+    // announces play before it becomes active, so stop on the next microtask.
+    const onPlay = () => {
+      if (hoverRef.current || lightboxOpenRef.current) {
+        queueMicrotask(() => autoScroll?.stop());
+      }
     };
     emblaApi
       .on("pointerDown", onPointerDown)
       .on("pointerUp", onPointerUp)
-      .on("scroll", onScroll);
+      .on("scroll", onScroll)
+      .on("autoScroll:play", onPlay);
     return () => {
       emblaApi
         .off("pointerDown", onPointerDown)
         .off("pointerUp", onPointerUp)
-        .off("scroll", onScroll);
+        .off("scroll", onScroll)
+        .off("autoScroll:play", onPlay);
     };
   }, [emblaApi]);
+
+  // Pause on mouse hover. Not the plugin's stopOnMouseEnter: that restarts
+  // auto-scroll on mouseleave even mid-drag, which overrides the drag.
+  const onCarouselPointerEnter = (e) => {
+    if (e.pointerType !== "mouse") return;
+    hoverRef.current = true;
+    emblaApi?.plugins()?.autoScroll?.stop();
+  };
+
+  const onCarouselPointerLeave = (e) => {
+    if (e.pointerType !== "mouse") return;
+    hoverRef.current = false;
+    if (lightboxOpenRef.current) return;
+    // Mid-drag or mid-glide: the drag-release logic above resumes it.
+    if (emblaApi?.internalEngine().dragHandler.pointerDown()) return;
+    if (resumeAfterDragRef.current) return;
+    emblaApi?.plugins()?.autoScroll?.play();
+  };
 
   // Index (into shuffledImages) of the photo open in the lightbox, or null.
   const [lightboxIndex, setLightboxIndex] = useState(null);
@@ -193,7 +225,10 @@ const ImageCarousel = ({ slice }) => {
   const closeLightbox = useCallback(() => {
     lightboxOpenRef.current = false;
     setLightboxIndex(null);
-    emblaApi?.plugins()?.autoScroll?.play();
+    // The modal covered the carousel, so the hover state is stale. If the
+    // mouse is back over the carousel, stay paused.
+    hoverRef.current = !!emblaApi?.rootNode().matches(":hover");
+    if (!hoverRef.current) emblaApi?.plugins()?.autoScroll?.play();
   }, [emblaApi]);
 
   return (
@@ -205,6 +240,8 @@ const ImageCarousel = ({ slice }) => {
       <div
         className="  overflow-hidden select-none"
         ref={emblaRef}
+        onPointerEnter={onCarouselPointerEnter}
+        onPointerLeave={onCarouselPointerLeave}
       >
         <div className="flex">
           {(shuffledImages ?? images).map((item, index) => (
@@ -224,7 +261,7 @@ const ImageCarousel = ({ slice }) => {
                 onClick={(e) => onTileClick(e, index)}
                 disabled={!shuffledImages}
                 aria-label={`Open photo ${index + 1} of ${images.length}`}
-                className="relative block bg-[#222433] w-full h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100 cursor-pointer"
+                className="group/tile relative block bg-[#222433] w-full h-50 md:h-55 lg:h-70 xl:h-80 2xl:h-90 4xl:h-100 cursor-pointer"
               >
                 {shuffledImages && (
                   <PrismicNextImage
@@ -235,6 +272,33 @@ const ImageCarousel = ({ slice }) => {
                     className="object-cover"
                   />
                 )}
+                {/* "Expand" hint, shown instantly on hover / keyboard focus;
+                    the arrows then nudge outward once. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute top-3 right-3 flex h-9 w-9 items-center justify-center rounded-md bg-black/50 text-white opacity-0 backdrop-blur-sm group-hover/tile:opacity-100 group-focus-visible/tile:opacity-100"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="overflow-visible"
+                  >
+                    <g className="-translate-x-0.5 translate-y-0.5 transition-transform duration-200 ease-out group-hover/tile:translate-x-0.5 group-hover/tile:-translate-y-0.5 motion-reduce:translate-none motion-reduce:transition-none motion-reduce:group-hover/tile:translate-none">
+                      <path d="M15 3h6v6" />
+                      <path d="M21 3l-7 7" />
+                    </g>
+                    <g className="translate-x-0.5 -translate-y-0.5 transition-transform duration-200 ease-out group-hover/tile:-translate-x-0.5 group-hover/tile:translate-y-0.5 motion-reduce:translate-none motion-reduce:transition-none motion-reduce:group-hover/tile:translate-none">
+                      <path d="M9 21H3v-6" />
+                      <path d="M3 21l7-7" />
+                    </g>
+                  </svg>
+                </span>
               </button>
             </div>
           ))}
