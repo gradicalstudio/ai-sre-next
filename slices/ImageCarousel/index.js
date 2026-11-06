@@ -10,6 +10,9 @@ import ImageLightbox from "@/components/ImageLightbox";
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Auto-scroll speed in px per frame.
+const AUTO_SCROLL_SPEED = 2;
+
 // Fisher-Yates, on a copy so the Prismic data isn't mutated.
 const shuffle = (items) => {
   const shuffled = [...items];
@@ -27,7 +30,7 @@ const shuffle = (items) => {
  */
 const ImageCarousel = ({ slice }) => {
   const autoScrollPlugin = AutoScroll({
-    speed: 2,
+    speed: AUTO_SCROLL_SPEED,
     startDelay: 0,
     stopOnInteraction: false,
   });
@@ -119,10 +122,47 @@ const ImageCarousel = ({ slice }) => {
     };
   }, [emblaApi]);
 
+  // After a drag, resume auto-scroll once the glide has slowed to auto-scroll
+  // speed. The plugin itself waits for Embla's `settle`, which on a free-drag
+  // glide comes ~3s after the carousel has visibly stopped.
+  const resumeAfterDragRef = useRef(false);
+  // Embla's pointerUp (on mouseup) fires after the tile's pointerup has
+  // already opened the modal, so it checks this before arming the resume.
+  const lightboxOpenRef = useRef(false);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const onPointerDown = () => {
+      resumeAfterDragRef.current = false;
+    };
+    const onPointerUp = () => {
+      resumeAfterDragRef.current = !lightboxOpenRef.current;
+    };
+    const onScroll = () => {
+      if (!resumeAfterDragRef.current) return;
+      const velocity = emblaApi.internalEngine().scrollBody.velocity();
+      if (Math.abs(velocity) > AUTO_SCROLL_SPEED) return;
+      resumeAfterDragRef.current = false;
+      emblaApi.plugins()?.autoScroll?.play();
+    };
+    emblaApi
+      .on("pointerDown", onPointerDown)
+      .on("pointerUp", onPointerUp)
+      .on("scroll", onScroll);
+    return () => {
+      emblaApi
+        .off("pointerDown", onPointerDown)
+        .off("pointerUp", onPointerUp)
+        .off("scroll", onScroll);
+    };
+  }, [emblaApi]);
+
   // Index (into shuffledImages) of the photo open in the lightbox, or null.
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
   const openLightbox = (index) => {
+    lightboxOpenRef.current = true;
+    resumeAfterDragRef.current = false;
     emblaApi?.plugins()?.autoScroll?.stop();
     setLightboxIndex(index);
   };
@@ -151,6 +191,7 @@ const ImageCarousel = ({ slice }) => {
   };
 
   const closeLightbox = useCallback(() => {
+    lightboxOpenRef.current = false;
     setLightboxIndex(null);
     emblaApi?.plugins()?.autoScroll?.play();
   }, [emblaApi]);
