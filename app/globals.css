@@ -19,6 +19,7 @@ html.lenis body {
 
 @custom-variant 3xl (@media (width >= 1536px));
 @custom-variant 4xl (@media (width >= 1800px));
+@custom-variant 5xl (@media (width >= 2400px));
 
 @theme inline {
   --color-background: var(--background);
