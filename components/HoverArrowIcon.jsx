@@ -3,7 +3,12 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 import gsap from "gsap";
 
-const ArrowIcon = forwardRef(function ArrowIcon({ className, style }, ref) {
+// Pixel-art right arrow. `color` defaults to white for the CTA buttons; pass
+// "currentColor" to follow the parent's text colour.
+export const ArrowIcon = forwardRef(function ArrowIcon(
+  { className, style, color = "white" },
+  ref,
+) {
   return (
     <svg
       ref={ref}
@@ -15,12 +20,12 @@ const ArrowIcon = forwardRef(function ArrowIcon({ className, style }, ref) {
       aria-hidden="true"
       focusable="false"
     >
-      <path d="M8.67057 16.6676H6.00391V14.001H8.67057V16.6676Z" fill="white" />
-      <path d="M11.3307 13.9997H8.66406V11.333H11.3307V13.9997Z" fill="white" />
-      <path d="M14.0026 11.3337H11.3359V8.66699H14.0026V11.3337Z" fill="white" />
-      <path d="M8.67057 11.3337H6.00391V8.66699H8.67057V11.3337Z" fill="white" />
-      <path d="M11.3307 8.66569H8.66406V5.99902H11.3307V8.66569Z" fill="white" />
-      <path d="M8.67057 5.99967H6.00391V3.33301H8.67057V5.99967Z" fill="white" />
+      <path d="M8.67057 16.6676H6.00391V14.001H8.67057V16.6676Z" fill={color} />
+      <path d="M11.3307 13.9997H8.66406V11.333H11.3307V13.9997Z" fill={color} />
+      <path d="M14.0026 11.3337H11.3359V8.66699H14.0026V11.3337Z" fill={color} />
+      <path d="M8.67057 11.3337H6.00391V8.66699H8.67057V11.3337Z" fill={color} />
+      <path d="M11.3307 8.66569H8.66406V5.99902H11.3307V8.66569Z" fill={color} />
+      <path d="M8.67057 5.99967H6.00391V3.33301H8.67057V5.99967Z" fill={color} />
     </svg>
   );
 });

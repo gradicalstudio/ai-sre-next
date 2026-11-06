@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import useEmblaCarousel from "embla-carousel-react";
 import { PrismicNextImage } from "@prismicio/next";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { ArrowIcon } from "@/components/HoverArrowIcon";
 
 const PHONE_LANDSCAPE = "(orientation: landscape) and (max-height: 500px)";
 const PHONE_PORTRAIT = "(max-width: 767px) and (orientation: portrait)";
@@ -220,18 +221,12 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
       aria-modal="true"
       aria-label="Photo gallery"
       data-lenis-prevent
-      className="fixed inset-0 z-650 flex flex-col bg-black/85 backdrop-blur-sm"
+      className="fixed inset-0 z-650 flex flex-col bg-[#04050F]/90 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
-      <p
-        aria-live="polite"
-        className={`absolute z-20 text-sm text-white/60 transition-all duration-300 ${
-          isPhotoOnly
-            ? "bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-0.5"
-            : "top-5 left-5"
-        }`}
-      >
-        {selected + 1} / {images.length}
+      {/* No visible counter; screen readers still hear the position. */}
+      <p aria-live="polite" className="sr-only">
+        Photo {selected + 1} of {images.length}
       </p>
 
       <button
@@ -239,9 +234,19 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
         data-autofocus
         onClick={onClose}
         aria-label="Close gallery"
-        className="absolute top-4 right-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-[#0E1618] text-sm text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+        className="absolute top-4 right-4 z-20 flex size-[clamp(40px,calc(1.5625vw_+_16px),56px)] cursor-pointer items-center justify-center rounded-full bg-[#04050F] text-white/70 transition-colors hover:text-[#FF6A50]"
       >
-        ✕
+        <svg
+          aria-hidden="true"
+          className="size-[clamp(24px,calc(1.758vw_-_3px),42px)]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+        >
+          <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
       </button>
 
       <div className="relative min-h-0 flex-1">
@@ -253,7 +258,7 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
                 onClick={onSlideClick}
                 className={`flex h-full min-w-0 flex-[0_0_100%] items-center justify-center transition-[padding] duration-300 ${
                   sizes.slide
-                } ${isPhotoOnly ? "pb-12" : "pb-3"}`}
+                } pb-3`}
               >
                 <PrismicNextImage
                   field={item.image}
@@ -277,17 +282,17 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
               type="button"
               onClick={() => emblaApi?.scrollPrev()}
               aria-label="Previous photo"
-              className="absolute top-1/2 left-4 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-white/10 text-xl text-white transition-colors hover:bg-white/20"
+              className="absolute top-1/2 left-4 z-10 flex size-[clamp(48px,calc(1.5625vw_+_24px),64px)] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#04050F]/60 text-white transition-colors hover:text-[#FF6A50]"
             >
-              ‹
+              <ArrowIcon color="currentColor" className="size-[clamp(32px,calc(2.734vw_-_10px),60px)] -scale-x-100" />
             </button>
             <button
               type="button"
               onClick={() => emblaApi?.scrollNext()}
               aria-label="Next photo"
-              className="absolute top-1/2 right-4 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/25 bg-white/10 text-xl text-white transition-colors hover:bg-white/20"
+              className="absolute top-1/2 right-4 z-10 flex size-[clamp(48px,calc(1.5625vw_+_24px),64px)] -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#04050F]/60 text-white transition-colors hover:text-[#FF6A50]"
             >
-              ›
+              <ArrowIcon color="currentColor" className="size-[clamp(32px,calc(2.734vw_-_10px),60px)]" />
             </button>
           </>
         )}
@@ -306,8 +311,13 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
 
       {layout === "phonePortrait" && (
         <div aria-hidden="true" className="pt-1 text-center">
-          <p className="text-xs text-white/60">← Swipe to browse →</p>
-          <div className="flex justify-center gap-1 pt-2">
+          <p className="flex items-center justify-center gap-1 text-xs text-white/60">
+            <ArrowIcon color="currentColor" className="size-4 -scale-x-100" />
+            Swipe to browse
+            <ArrowIcon color="currentColor" className="size-4" />
+          </p>
+          {/* Wraps rather than running off narrow screens if photos are added. */}
+          <div className="flex flex-wrap justify-center gap-1 pt-2">
             {images.map((_, index) => (
               <span
                 key={index}
@@ -342,11 +352,11 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
             onClick={() => emblaApi?.scrollTo(index)}
             aria-label={`Show photo ${index + 1}`}
             aria-current={index === selected}
-            className={`relative flex-none overflow-hidden rounded-[3px] border-2 transition-opacity ${
+            className={`relative flex-none cursor-pointer overflow-hidden rounded-[3px] border-2 transition-opacity ${
               sizes.thumb
             } ${
               index === selected
-                ? "border-white opacity-100"
+                ? "border-[#FF6A50] opacity-100"
                 : "border-transparent opacity-45 hover:opacity-80"
             }`}
           >
