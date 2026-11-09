@@ -5,11 +5,11 @@ import SmoothScroll from "@/components/SmoothScroll";
 
 export default function WithHeaderLayout({ children }) {
   return (
-    <>
+    <SmoothScroll>
       <Header />
       <main id="main-content">{children}</main>
       <FloatingPopup />
       <Footer />
-    </>
+    </SmoothScroll>
   );
 }
