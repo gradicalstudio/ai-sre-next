@@ -29,10 +29,12 @@ export function useVideoModalPlayer({ onClose, isDirect }) {
       if (e.key === "Escape") onCloseRef.current();
     };
     window.addEventListener("keydown", handler);
-    document.body.style.overflow = "hidden";
+    // Lock on <html> (like the other modals) so Lenis pauses too.
+    const previousOverflow = document.documentElement.style.overflow;
+    document.documentElement.style.overflow = "hidden";
     return () => {
       window.removeEventListener("keydown", handler);
-      document.body.style.overflow = "";
+      document.documentElement.style.overflow = previousOverflow;
     };
   }, []);
 
