@@ -11,6 +11,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Brand-orange text selection; navy text keeps it readable (~7:1). */
+::selection {
+  background-color: #ff6a50;
+  color: #04050f;
+}
+
 @media (max-width: 1023px) {
   #about,
   #events,
