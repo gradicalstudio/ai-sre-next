@@ -2,6 +2,7 @@
 import { PrismicRichText } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
 import EventCTA from "@/components/EventCTA";
+import { ArrowIcon } from "@/components/HoverArrowIcon";
 import { useEventsStore } from "@/store/eventsStore";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -57,6 +58,44 @@ const EventCard = ({ item, isPast }) => {
     </div>
   );
 };
+
+const ARROW_BUTTON =
+  "flex h-10 w-7 items-center justify-center text-white cursor-pointer transition-colors hover:text-[#FF6A50] disabled:cursor-default disabled:text-white/25 disabled:hover:text-white/25 touch-manipulation focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-[#3FD9FB]";
+
+const Pagination = ({ currentPage, totalPages, onChange }) => (
+  <nav
+    aria-label="Event pages"
+    className="flex items-center self-end overflow-hidden  border-white/15 "
+  >
+    <button
+      type="button"
+      onClick={() => onChange(Math.max(1, currentPage - 1))}
+      disabled={currentPage === 1}
+      aria-label="Previous page"
+      className={`${ARROW_BUTTON} rounded-l-full`}
+    >
+      <ArrowIcon color="currentColor" className="size-5 rotate-180" />
+    </button>
+
+    <p className="px-1 font-mono text-sm tabular-nums text-white/35">
+      <span className="sr-only">Page </span>
+      <span className="text-[#FF6A50]">{currentPage}</span>
+      <span aria-hidden="true"> / </span>
+      <span className="sr-only"> of </span>
+      {totalPages}
+    </p>
+
+    <button
+      type="button"
+      onClick={() => onChange(Math.min(totalPages, currentPage + 1))}
+      disabled={currentPage === totalPages}
+      aria-label="Next page"
+      className={`${ARROW_BUTTON} rounded-r-full`}
+    >
+      <ArrowIcon color="currentColor" className="size-5" />
+    </button>
+  </nav>
+);
 
 const Events = ({ slice }) => {
   const activeTab = useEventsStore((state) => state.activeTab);
@@ -410,65 +449,11 @@ const Events = ({ slice }) => {
                     )}
                   </div>
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-end gap-4">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCurrentPage((p) => Math.max(1, p - 1))
-                        }
-                        disabled={currentPage === 1}
-                        aria-label="Previous page"
-                        className="flex h-8 w-8 items-center justify-center rounded-full text-white cursor-pointer disabled:text-white/25 hover:text-[#FF6A50] disabled:hover:text-white/25 transition-colors touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
-                      >
-                        <svg
-                          width="8"
-                          height="14"
-                          viewBox="0 0 8 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M7 1L1 7L7 13"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-
-                      <span className="text-white/50 text-sm font-mono tabular-nums">
-                        {currentPage} / {totalPages}
-                      </span>
-
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCurrentPage((p) => Math.min(totalPages, p + 1))
-                        }
-                        disabled={currentPage === totalPages}
-                        aria-label="Next page"
-                        className="flex h-8 w-8 items-center justify-center rounded-full cursor-pointer text-white disabled:text-white/25 hover:text-[#FF6A50] disabled:hover:text-white/25 transition-colors touch-manipulation focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#3FD9FB]"
-                      >
-                        <svg
-                          width="8"
-                          height="14"
-                          viewBox="0 0 8 14"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                          aria-hidden="true"
-                        >
-                          <path
-                            d="M1 1L7 7L1 13"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </button>
-                    </div>
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      onChange={setCurrentPage}
+                    />
                   )}
                 </div>
               </div>
