@@ -221,7 +221,9 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
       aria-modal="true"
       aria-label="Photo gallery"
       data-lenis-prevent
-      className="fixed inset-0 z-650 flex flex-col bg-[#04050F]/90 backdrop-blur-sm"
+      // iOS Safari still scrolls the page under `overflow: hidden` on <html>,
+      // so the modal itself refuses touch panning (the strip opts back in).
+      className="fixed inset-0 z-650 flex touch-none flex-col bg-[#04050F]/90 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && onClose()}
     >
       {/* No visible counter; screen readers still hear the position. */}
@@ -251,7 +253,7 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
 
       <div className="relative min-h-0 flex-1">
         <div ref={emblaRef} className="h-full overflow-hidden">
-          <div className="flex h-full touch-pan-y">
+          <div className="flex h-full touch-none">
             {images.map((item, index) => (
               <div
                 key={index}
@@ -338,7 +340,7 @@ export default function ImageLightbox({ images, startIndex, onClose }) {
         onPointerUp={onStripPointerUp}
         onPointerCancel={() => (stripDrag.current = null)}
         onClickCapture={onStripClickCapture}
-        className={`flex gap-2 overflow-x-auto select-none [scrollbar-width:none] transition-all duration-300 [&>:first-child]:ml-auto [&>:last-child]:mr-auto ${
+        className={`flex touch-pan-x gap-2 overflow-x-auto overscroll-x-contain select-none [scrollbar-width:none] transition-all duration-300 [&>:first-child]:ml-auto [&>:last-child]:mr-auto ${
           isPhotoOnly ? "max-h-0 py-0 opacity-0" : `max-h-32 ${sizes.strip}`
         }`}
       >
