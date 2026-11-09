@@ -94,15 +94,15 @@
               "event_datetime": {
                 "type": "Timestamp",
                 "config": {
-                  "label": "event_datetime",
-                  "placeholder": ""
+                  "label": "Start time – YOUR local time (convert from venue time on Luma)",
+                  "placeholder": "e.g. 5:30 PM MST on Luma → 6:00 AM next day in IST"
                 }
               },
               "date": {
                 "type": "StructuredText",
                 "config": {
                   "label": "Date",
-                  "placeholder": "",
+                  "placeholder": "Venue's local date, as shown on Luma (e.g. 09 November 2026)",
                   "allowTargetBlank": true,
                   "multi": "paragraph,preformatted,heading2,heading3,heading4,heading5,heading6,strong,em,hyperlink,image,embed,list-item,o-list-item,rtl"
                 }
