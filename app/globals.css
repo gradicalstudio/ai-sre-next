@@ -11,9 +11,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
-/* Brand-orange text selection; navy text keeps it readable (~7:1). */
+/* Brand-orange text selection. Translucent, and text keeps its own colour,
+   so letters a tight next line's highlight overlaps still show through. */
 ::selection {
-  background-color: #ff6a50;
+  background-color: rgb(255 106 80 / 0.86);
   color: #04050f;
 }
 
