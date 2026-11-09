@@ -258,6 +258,10 @@ const ImageCarousel = ({ slice }) => {
                 onPointerDown={(e) => onTilePointerDown(e, index)}
                 onPointerUp={(e) => onTilePointerUp(e, index)}
                 onPointerCancel={() => (pressRef.current = null)}
+                // A tap's emulated click fires after pointerup has opened the
+                // modal, and lands on it: on the dark space that closed it
+                // straight away. Cancel it; pointerup already handled the tap.
+                onTouchEnd={(e) => e.preventDefault()}
                 onClick={(e) => onTileClick(e, index)}
                 disabled={!shuffledImages}
                 aria-label={`Open photo ${index + 1} of ${images.length}`}
