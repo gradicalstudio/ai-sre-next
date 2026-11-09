@@ -52,7 +52,8 @@ export default function FloatingPopupClient({ popups }) {
     };
   }, []);
 
-  if (isDismissed) return null;
+  // No upcoming flagged events (all past, or none flagged): render nothing.
+  if (isDismissed || validPopups.length === 0) return null;
 
  const commonProps = {
     onDismiss: () => setIsDismissed(true),
